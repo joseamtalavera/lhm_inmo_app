@@ -4,9 +4,8 @@ import React from 'react';
 import ResponsiveDrawer from './components/Menu/ResponsiveDrawer';
 import { 
   AppContainer, 
-  StyledTypography, 
   StyledSecondaryTypography, 
-  Overlay, DrawerContainer, 
+  DrawerContainer, 
   GlobalStyle, 
   StyledButton ,
   MainPicture
@@ -21,16 +20,17 @@ const App = () => {
     <>
       <GlobalStyle />
       <AppContainer>
-        <Overlay />
+       
         
         <DrawerContainer>
           <ResponsiveDrawer />
         </DrawerContainer>
-        <MainPicture />
+
+        <MainPicture>
+          <img src='/lha.intro.png' alt='Lha Inmobiliaria' />
+        </MainPicture>
         
-        <StyledTypography variant='h1'>
-          Lha Inmobiliaria!
-        </StyledTypography>
+       
 
         <StyledSecondaryTypography variant='h2'>
         Oficinas, casas y apartamentos adaptados a tus necesidades        

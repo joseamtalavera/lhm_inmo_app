@@ -8,7 +8,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import {
     StyledAppBar,
     StyledToolbar,
-    LogoImage,
     StyledIconButton,
     DesktopMenu,
     MenuItem,
@@ -20,7 +19,7 @@ import {
     DrawerContent
 } from '../../styles/ResponsiveDrawerStyles';
 
-const menuItems = ['Coworking', 'Aulas', 'Oficina Digital'];
+const menuItems = ['Propiedades', 'Opciones', 'Valora tu Propiedad', 'Partners'];
 
 const ResponsiveDrawer = () => {
     const [mobileOpen, setMobileOpen] = useState(false);

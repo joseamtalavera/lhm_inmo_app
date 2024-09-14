@@ -12,6 +12,7 @@ export const AppContainer = styled.div`
     /* background: url('/lha.intro.png') no-repeat center center fixed;
     background-size: cover; */
     min-height: 100vh;
+    top: 0;
 `;
 
 export const StyledSecondaryTypography = styled(Typography)`
@@ -24,23 +25,14 @@ export const StyledSecondaryTypography = styled(Typography)`
     line-height: 1.5;
     margin-botton: 100px;
     padding: 0 20px;
-`;
-
-export const Overlay = styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 1;
+    height: 150px;
 `;
 
 export const DrawerContainer = styled.div`
     position: absolute;
     top: 0;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     
 `;
 
@@ -61,15 +53,16 @@ export const StyledButton = styled(Button)`
 `;
 
 export const MainPicture = styled.div`
-    height: 400px;
+    height: 600px;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     overflow: hidden;
-    margin-bottom: 40px;
-    margin-top: 20px;
+    margin-top: 50px;
+    margin-bottom: 0;
+    padding: 0;
     img {
         width: 100%;
         height: 100%;

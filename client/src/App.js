@@ -20,20 +20,14 @@ const App = () => {
     <>
       <GlobalStyle />
       <AppContainer>
-       
-        
         <DrawerContainer>
           <ResponsiveDrawer />
         </DrawerContainer>
-
         <MainPicture>
           <img src='/lha.intro.png' alt='Lha Inmobiliaria' />
         </MainPicture>
-        
-       
-
         <StyledSecondaryTypography variant='h2'>
-        Oficinas, casas y apartamentos adaptados a tus necesidades        
+        Oficinas, casas y apartamentos de tus sueños
         </StyledSecondaryTypography>
         <StyledButton 
           variant='contained' 
@@ -43,9 +37,7 @@ const App = () => {
         >
           ¡Empieza ahora!
         </StyledButton>
-        
       </AppContainer>
-      
     </>
   );
 }

@@ -21,7 +21,7 @@ app.use(morgan('combined'));
 app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(cookieParser());
 
-const port = process.env.PORT || 5009;
+const port = process.env.PORT || 5010;
 
 const allowedOrigins = ['http://localhost:3008', 'http://16.16.183.230:3008', 'https://app.be-working.com'];
 app.use(cors({

@@ -1,0 +1,24 @@
+version: '3'
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3009:3000"  # Map local port 3000 to container port 3000 for client
+    volumes:
+      - ./client:/app
+    environment:
+      - NODE_ENV=development
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5009:5000"  # Map local port 5009 to container port 5000 for server
+    volumes:
+      - ./server:/app
+    environment:
+      - NODE_ENV=development
+      - PORT=5000 # Set the port for the server as it is hardcoded in the server code to 5010

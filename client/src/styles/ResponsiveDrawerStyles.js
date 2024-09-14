@@ -38,6 +38,7 @@ export const DesktopMenu = styled.div`
     display: flex;
     justify-content: flex-end;
     margin-top: 40px;
+    margin-bottom: 0;
 `;
 
 export const MenuItem = styled(Typography)`

@@ -8,6 +8,7 @@ services:
       - "3009:3000"  # Map local port 3000 to container port 3000 for client
     volumes:
       - ./client:/app
+      - /app/node_modules # This is to prevent the node_modules folder from being overwritten by the volume
     environment:
       - NODE_ENV=development
 
@@ -19,6 +20,8 @@ services:
       - "5009:5000"  # Map local port 5009 to container port 5000 for server
     volumes:
       - ./server:/app
+      - /app/node_modules # This is to prevent the node_modules folder from being overwritten by the volume
     environment:
       - NODE_ENV=development
       - PORT=5000 # Set the port for the server as it is hardcoded in the server code to 5010
+    command: ["nodmon", app.js] # Start the server with nodemon

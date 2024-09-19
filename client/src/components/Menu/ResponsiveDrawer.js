@@ -16,7 +16,8 @@ import {
     StyledDrawer,
     StyledListItemText,
     CloseButton, 
-    DrawerContent
+    DrawerContent,
+    LogoImage,
 } from '../../styles/ResponsiveDrawerStyles';
 
 const menuItems = ['Propiedades', 'Opciones', 'Valora tu Propiedad', 'Partners'];
@@ -27,9 +28,9 @@ const ResponsiveDrawer = () => {
     // useMediaQuery takes a theme object and returns a function that can be called with a breakpoint key to check if the screen is at that breakpoint or smaller (.dow())
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const handleDrawerToggle = (() => {
+    const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
-    });
+    };
 
     const drawer = (
         <DrawerContent data-testid="drawer-content">
@@ -42,7 +43,7 @@ const ResponsiveDrawer = () => {
                 <CloseIcon />
             </CloseButton>
             <List>
-                {menuItems.map((text, index) => (
+                {menuItems.map((text) => (
                     <ListItem button key={text}>
                         <StyledListItemText primary={text}/>
                     </ListItem>
@@ -59,9 +60,9 @@ const ResponsiveDrawer = () => {
             <StyledAppBar position="static" elevation={0}>
                 <StyledToolbar >
                 <Box>
-                    {/* <Link to="/">
-                        <LogoImage src="logo_aula_cowork_blanco-e1647607454934.png" alt="Logo"/>
-                    </Link> */}
+                    <Link to="/">
+                        <LogoImage src="logo300x212.png" alt="Logo"/>
+                    </Link>
                 </Box>
                     {isMobile ? (
                         <StyledIconButton

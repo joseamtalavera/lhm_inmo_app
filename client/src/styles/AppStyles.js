@@ -1,59 +1,72 @@
 import styled from 'styled-components';
 import { Typography, Button} from '@mui/material';
-import { createGlobalStyle } from 'styled-components';
+
 
 export const AppContainer = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    position: relative;
-    /* background: url('/lha.intro.png') no-repeat center center fixed;
-    background-size: cover; */
-    min-height: 100vh;
-    top: 0;
+    min-height: 100vh; /* Ensures it takes up the entire viewort height */
+    
 `;
 
+// Drawer container that handle menu
+export const DrawerContainer = styled.div`
+   position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure the drawer is on top of other container */
+    background-color: white;
+    margin-bottom: 50px;
+`;
+// Wrapper for the main content in the middle of the page
+export const ContentWrapper = styled.div`
+    flex: 1; /* Ensures it grows and fills available space*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin-top: 50px;
+    
+`;
+
+// Styled typography for the main title
 export const StyledSecondaryTypography = styled(Typography)`
-    color: #1976d2 !important;
+    color: #1E90FF;
     position: relative;
     text-align: center;
-    fontWeight: bold;
-    color: white;
+    /*font-weight: bold;*/
     margin: 10px 0;
     line-height: 1.5;
-    margin-botton: 100px;
-    padding: 0 20px;
-    height: 150px;
-`;
-
-export const DrawerContainer = styled.div`
-    position: absolute;
-    top: 0;
+    margin-bottom: 30px;
+    padding: 0 10px;
+    height: 1.8em;
     width: 100%;
-    margin-bottom: 0;
-    
+    box-sizing: border-box;
+
+    @media (max-width: 780px) {
+        font-size: 1.5rem;
+    }
 `;
 
-export const GlobalStyle = createGlobalStyle`
-    body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-}
-`;
-
+// Button with custom styeles
 export const StyledButton = styled(Button)`
     margin-top: 20px;
-    color: white !important;
-    
-    background-color: orange;
-`;
+    margin-bottom: 20px;
+    color: white;
+    background-color: #1E90FF;
 
+    &:hover {
+        background-color: #ff9800;
+    }
+
+    @media (max-width: 780px) {
+        width: 100%;
+    }
+`;
+// Main picture at the top of the page
 export const MainPicture = styled.div`
-    height: 600px;
+    height: 680px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -61,14 +74,34 @@ export const MainPicture = styled.div`
     position: relative;
     overflow: hidden;
     margin-top: 50px;
-    margin-bottom: 0;
     padding: 0;
+
     img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        position: absolute;
-        top: 0;
-        left: 0;
+        position: relative;
+        margin: 0;
+        padding: 0;
+    
+
+        @media (max-width: 2000px) {
+        /* When the viewport is 2000px or smaller, start reducing the image size */
+            width: 100%;
+            height: auto; /* Mantain the aspect ratio */
+        }
+
+        @media (max-width: 1200px) {
+            width: 80%;
+            height: auto; /* Mantain aspect ratio */
+        }
+
+        @media (max-width: 780px) {
+        /* Mobile view: reduce height and make sure it's responsive */
+            width: 100%;
+            height: 200px; /* Fixed height on mobile */
+        }
     }
 `;
+
+

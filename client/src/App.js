@@ -1,45 +1,58 @@
 // App.js
 
 import React from 'react';
+import { GlobalStyle } from './styles/GlobalStyles';
 import ResponsiveDrawer from './components/Menu/ResponsiveDrawer';
+import PropiedadesDestacadas from './components/home/PropiedadesDestacadas';
+import Footer from './components/home/Footer';
 import { 
   AppContainer, 
   StyledSecondaryTypography, 
   DrawerContainer, 
-  GlobalStyle, 
   StyledButton ,
-  MainPicture
+  MainPicture,
+  ContentWrapper
 } from './styles/AppStyles';
+import { Link } from 'react-router-dom'; // for navigation
 
 const App = () => {
-  const handleCtaClick = () => {
-    console.log ('CTA clicked');
-  };
-
   return (
     <>
       <GlobalStyle />
       <AppContainer>
+        {/* Drawer container that handle menu */}
         <DrawerContainer>
           <ResponsiveDrawer />
         </DrawerContainer>
-        <MainPicture>
-          <img src='/lha.intro.png' alt='Lha Inmobiliaria' />
-        </MainPicture>
-        <StyledSecondaryTypography variant='h2'>
-        Oficinas, casas y apartamentos de tus sueños
+
+        {/* Main content area */}
+        <ContentWrapper>
+          <MainPicture>
+            <img src='/lha.intro.png' alt='Lha Inmobiliaria' />
+          </MainPicture>
+
+        <StyledSecondaryTypography variant='h3'>
+          Propiedades Destacadas        
         </StyledSecondaryTypography>
+
+        <PropiedadesDestacadas />
+
         <StyledButton 
           variant='contained' 
           color='primary' 
           size='large' 
-          onClick={handleCtaClick}
+          component={Link}
+          to='/propiedades'
         >
-          ¡Empieza ahora!
+          Ver todas las propiedades
         </StyledButton>
+      </ContentWrapper>
+
+      {/* Footer */}
+       <Footer />
       </AppContainer>
     </>
   );
-}
+};
 
 export default App;

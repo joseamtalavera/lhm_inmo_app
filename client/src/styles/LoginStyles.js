@@ -18,6 +18,7 @@ export const LoginButton = styled(Button)`
   margin-top: 0;
   margin-bottom: 16px;
   background-color: #1E90FF;
+  color: white;
 
   &:hover {
     background-color: blue;
@@ -27,7 +28,6 @@ export const LoginButton = styled(Button)`
 export const TitleTypography = styled(Typography)`
     text-align: center;
     margin-bottom: 20px;
-    color: #1E90FF;
 `;
 
 export const BodyTypography = styled(Typography)`
@@ -42,6 +42,7 @@ export const TermsText = styled(Typography)`
 
 export const RecoveryLink = styled(Link)`
   text-decoration: none;
+  color: #1E90FF;
 `;
 
 export const StyledDialog = styled(Dialog)`

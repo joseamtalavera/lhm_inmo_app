@@ -19,13 +19,13 @@ const EmailInput = ({ email, handleEmailChange }) => {
             }}
             sx={{
                 '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'orange',
+                    borderColor: '#1E90FF',
                 },
                 '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'orange',
+                    borderColor: '#1E90FF',
                 },
                 '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'orange',
+                    borderColor: '#1E90FF',
                 },
                 '& .MuiInputLabel-outlined.Mui-focused': {
                     color: '#808080',

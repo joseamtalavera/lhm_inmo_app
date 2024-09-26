@@ -9,10 +9,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-//const csrf = require('csurf');
-
-//const authRoutes = require('./routers/authRoutes');
-//const userRoutes = require('./routers/userRoutes');
+const jwt = require('jsonwebtoken');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -23,7 +21,7 @@ app.use(cookieParser());
 
 const port = process.env.PORT || 5010;
 
-const allowedOrigins = ['http://localhost:3008', 'http://16.16.183.230:3008', 'https://app.be-working.com'];
+const allowedOrigins = 'http://localhost:3000';
 app.use(cors({
     origin: function(origin, callback){
         if(!origin) return callback(null, true);
@@ -46,28 +44,27 @@ app.use(session({ // use express-session to maintain session data
     saveUninitialized: false 
 }));
 
+app.use('/api', authRoutes);
+
 app.use(passport.initialize()); // Initialize passport and restore authentication state, if any, from the session.
 app.use(passport.session());
 
-// Initialize CSRF protection middleware
-/* const csrfProtection = csrf();
-app.use(csrfProtection);
+// Middleware to verify JWT token
+const verifyToken = (req, res, next) => {
+  const token = req.header('Authorization');
 
-app.use((req, res, next) => {
-    req.session.csrfToken = req.csrfToken();
+  if (!token) {
+    return res.status(401).json({ message: 'No token, authorization denied' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
     next();
-}); */
-
-//app.use('/api', authRoutes);
-//app.use('/api', userRoutes);
-
-/* app.use((err, req, res, next) => {
-    if (err.code === 'EBADCSRFTOKEN'){
-        res.status(403).send({message: 'CSRF token is invalid'});
-    } else {
-       next(); 
-    }
-}); */
+  } catch (err) {
+    res.status(401).json({ message: 'Invalid token' });
+  }
+};
 
 
 passport.serializeUser(function(user, done) {// This function is used to store the user object into the session
@@ -90,4 +87,4 @@ app.listen(port, () => {
     console.log(`Server is running on Port ${port}`);
   });
 
-  
+  module.exports = verifyToken;

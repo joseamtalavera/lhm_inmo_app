@@ -1,12 +1,14 @@
+// PasswordInput.js
 import React from 'react';
-import { TextField, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
+import { StyledPasswordTextField } from '../../styles/PasswordInputStyles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const PasswordInput = ({ password, showPassword, setPassword, handleMouseDownPassword, setShowPassword, autoComplete, label, placeholder, required, handlePasswordChange, ...props }) => {
 const toggleShowPassword = () => setShowPassword(!showPassword);
 
     return (
-        <TextField
+        <StyledPasswordTextField
             variant="outlined"
             fullWidth
             name="password"
@@ -25,21 +27,6 @@ const toggleShowPassword = () => setShowPassword(!showPassword);
                     </IconButton>
                 ),
             }}
-            sx={{
-                '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1E90FF',
-                },
-                '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1E90FF',
-                },
-                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1E90FF',
-                },
-                '& .MuiInputLabel-outlined.Mui-focused': {
-                    color: '#808080',
-                },
-            }}
-            style={{ marginBottom: '20px' }}
             {...props}
         />
     );

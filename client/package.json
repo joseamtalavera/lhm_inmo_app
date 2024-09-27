@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.1.0",
-    "@mui/icons-material": "^6.1.0",
+    "@mui/icons-material": "^6.1.1",
     "@mui/material": "^6.1.0",
     "@mui/styled-engine-sc": "^6.1.0",
     "@testing-library/jest-dom": "^5.17.0",
@@ -18,10 +18,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-  "start": "craco start",
-  "build": "craco build",
-  "test": "craco test"
-},
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",

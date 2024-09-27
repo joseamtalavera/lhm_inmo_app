@@ -1,9 +1,9 @@
 import React from 'react';
-import { TextField } from '@mui/material';
+import { StyledTextField } from '../../styles/EmailInputStyles';
 
 const EmailInput = ({ email, handleEmailChange }) => {
     return (
-        <TextField
+        <StyledTextField
             variant="outlined"
             fullWidth
             id="email"
@@ -14,24 +14,6 @@ const EmailInput = ({ email, handleEmailChange }) => {
             //onChange={(e) => setEmail(e.target.value)}
             onChange={handleEmailChange}
             placeholder='Email address'
-            InputProps={{
-                style: {color: '#808080'},
-            }}
-            sx={{
-                '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1E90FF',
-                },
-                '&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1E90FF',
-                },
-                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#1E90FF',
-                },
-                '& .MuiInputLabel-outlined.Mui-focused': {
-                    color: '#808080',
-                },
-            }}
-            style={{ marginBottom: '20px' }}
         />
     );
 };

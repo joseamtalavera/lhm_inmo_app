@@ -11,7 +11,8 @@ exports.login = async (req, res) => {
 
   try {
     // Check if the user exists
-    const user = await getUserByEmail();
+    const user = await getUserByEmail(email);
+    console.log('user:', user);
 
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
@@ -19,13 +20,9 @@ exports.login = async (req, res) => {
 
     // Validate password
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('isMatch:', isMatch);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });
-    }
-
-    // Check if the email is confirmed
-    if (!user.email_confirmed) {
-      return res.status(400).json({ message: 'Please confirm your email' });
     }
 
     // Generate JWT token

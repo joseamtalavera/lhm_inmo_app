@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 const port = process.env.PORT || 5010;
 
-const allowedOrigins = 'http://localhost:3000';
+const allowedOrigins = [ 'http://localhost:3000', 'http://13.53.38.238:3009'];
 app.use(cors({
     origin: function(origin, callback){
         if(!origin) return callback(null, true);

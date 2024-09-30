@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const password = 'lha1234'; // Replace with your desired password
+const password = 'be1234'; // Replace with your desired password
 
 const hashPassword = async (password) => {
   try {

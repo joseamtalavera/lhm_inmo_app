@@ -1,27 +1,50 @@
-version: '3'
+# docker-compose.yml
+
 services:
-  client:
+  frontend:
     build:
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
-      - "3009:3000"  # Map local port 3000 to container port 3000 for client
+      - '3010:3010'
     volumes:
       - ./client:/app
-      - /app/node_modules # This is to prevent the node_modules folder from being overwritten by the volume
+      - /app/node_modules
     environment:
+      - CHOKIDAR_USEPOLLING=true  # For file change detection on some systems
       - NODE_ENV=development
+      - PORT=3010
+      - REACT_APP_API_URL=http://localhost:5010
+    depends_on:
+      - backend
 
-  server:
+  backend:
     build:
       context: ./server
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
-      - "5009:5000"  # Map local port 5009 to container port 5000 for server
+      - '5010:5010'
     volumes:
       - ./server:/app
-      - /app/node_modules # This is to prevent the node_modules folder from being overwritten by the volume
+      - /app/node_modules
     environment:
       - NODE_ENV=development
-      - PORT=5000 # Set the port for the server as it is hardcoded in the server code to 5010
-    command: ["./node_modules/.bin/nodemon", app.js] # Start the server with nodemon
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/mydatabase
+    depends_on:
+      - db
+    command: ["npm", "run", "dev"]
+
+  db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=mydatabase
+    ports:
+      - '5432:5432'  # Optional, for direct access from host
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
+

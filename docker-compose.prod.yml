@@ -1,0 +1,19 @@
+# docker-compose.prod.yml
+services:
+  frontend:
+    image: ghcr.io/yourusername/frontend:latest
+    ports:
+      - '80:80'
+    environment:
+      - NODE_ENV=production
+
+  backend:
+    image: ghcr.io/yourusername/backend:latest
+    ports:
+      - '5000:5000'
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://your_db_user:your_db_password@your_rds_endpoint:5432/yourdatabase
+    restart: always
+
+# No database service needed in production as you're using RDS

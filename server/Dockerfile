@@ -1,20 +1,23 @@
-# Use an official Node.js runtime as a parent image
-FROM node:14
+# Dockerfile
 
-# Set the working directory
+# Use Node.js base image
+FROM node:14-alpine
+
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Install dependencies (only production dependencies)
 COPY package*.json ./
+RUN npm install --only=production
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application code
+# Copy source code
 COPY . .
 
-# Expose the port the app runs on
+# Expose port 5000
 EXPOSE 5000
 
-# Command to run the app
-CMD ["nodemon", "start"]
+# Set environment variable for production
+ENV NODE_ENV=production
+
+# Start the app
+CMD ["node", "app.js"]

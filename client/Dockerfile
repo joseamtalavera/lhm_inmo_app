@@ -1,23 +1,29 @@
-# Use an official Node.js runtime as a parent image
-FROM node:14
+# Dockerfile
 
-# Set the working directory
+# Build Stage
+FROM node:14-alpine AS build
+
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
 # Install dependencies
+COPY package*.json ./
 RUN npm install
 
-# Copy the rest of the application code
+# Copy source code
 COPY . .
 
-# Build the application
+# Build the React app
 RUN npm run build
 
-# Expose the port the app runs on
-EXPOSE 3000
+# Production Stage
+FROM nginx:stable-alpine
 
-# Command to run the app
-CMD ["npm", "start"]
+# Copy the build output to Nginx's default public directory
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Start Nginx server
+CMD ["nginx", "-g", "daemon off;"]

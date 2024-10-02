@@ -6,12 +6,23 @@ FROM node:14-alpine
 # Set working directory
 WORKDIR /app
 
+# Install build dependencies
+RUN apk add --no-cache python3 make g++
+
+# Install nodemon globally
+RUN npm install -g nodemon
+
 # Install dependencies
 COPY package*.json ./
-RUN npm install
+
+# Install dependencies including dev dependencies
+RUN npm install 
 
 # Copy source code
 COPY . .
+
+# Rebuild native modules to match the current platform
+RUN npm rebuild bcrypt --build-from-source
 
 # Expose port 5010
 EXPOSE 5010

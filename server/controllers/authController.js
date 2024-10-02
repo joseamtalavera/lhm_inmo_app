@@ -8,6 +8,7 @@ const { getUserByEmail } = require('../models/Queries');
 // User login function
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+  console.log('Received req.body:', req.body);
 
   try {
     // Check if the user exists

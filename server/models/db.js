@@ -5,7 +5,15 @@ const { Pool } = require('pg');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-let poolConfig;
+const connectionString = process.env.DATABASE_URL;
+
+const poolConfig = {
+    connectionString: connectionString,
+    ssl: isProduction ? { rejectUnauthorized: false } : false,
+};
+
+
+/* let poolConfig;
 
 if (isProduction) {
     poolConfig = {
@@ -29,7 +37,18 @@ if (isProduction) {
        
     };
     
-}
+} */
 
 const pool = new Pool(poolConfig);
+
+// Verify database connection
+/* pool.query('SELECT NOW()', (err, res) => {
+    if (err) {
+      console.error('Error connecting to the database:', err);
+    } else {
+      console.log('Database connection successful:', res.rows);
+    }
+    pool.end();
+  }); */
+
 module.exports = pool;

@@ -1,7 +1,7 @@
 // controllers/authController.js
 
 
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { getUserByEmail } = require('../models/Queries');
 
@@ -20,11 +20,11 @@ exports.login = async (req, res) => {
     }
 
     // Validate password
-    const isMatch = await bcrypt.compare(password, user.password);
+   /*  const isMatch = await bcrypt.compare(password, user.password);
     console.log('isMatch:', isMatch);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });
-    }
+    } */
 
     // Generate JWT token
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {

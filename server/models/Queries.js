@@ -1,6 +1,7 @@
 const pool = require('./db');
 
 const getUserByEmail = async (email) => {
+  console.log('getUserByEmail:', email);
 
     try {
       const existingUser = await pool.query('SELECT * FROM admins WHERE email = $1', [email]);

@@ -22,8 +22,8 @@ FROM nginx:stable-alpine
 # Copy the build output to Nginx's default public directory
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Expose port 80
-EXPOSE 80
+# Expose port 3010
+EXPOSE 3010
 
 # Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]

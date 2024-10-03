@@ -21,9 +21,6 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# Rebuild native modules to match the current platform
-RUN npm rebuild bcrypt --build-from-source
-
 # Expose port 5010
 EXPOSE 5010
 

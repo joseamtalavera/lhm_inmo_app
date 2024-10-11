@@ -28,6 +28,7 @@ services:
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgres://postgres:postgres@db:5432/mydatabase
+      - JWT_SECRET=giUQrrraiYeIUhVpage0kWjK7PoW/KROGY6oM+jJ5FU=
     depends_on:
       - db
     command: ["npm", "run", "dev"]

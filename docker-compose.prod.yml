@@ -1,19 +1,19 @@
-# docker-compose.prod.yml
 services:
   frontend:
-    image: ghcr.io/yourusername/frontend:latest
+    image: ghcr.io/josemolinatalavera/frontend:latest
     ports:
-      - '80:80'
+      - '3010:80'
     environment:
       - NODE_ENV=production
+      - REACT_APP_API_URL=http://13.53.38.238:5010
 
   backend:
-    image: ghcr.io/yourusername/backend:latest
+    image: ghcr.io/josemolinatalavera/backend:latest
     ports:
-      - '5000:5000'
+      - '5010:5010'
+    env_file:
+      - ./server/.env
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgres://your_db_user:your_db_password@your_rds_endpoint:5432/yourdatabase
+      - DATABASE_URL=postgres://postgres:Rakna6164@database-2.c50syq0iyqal.eu-north-1.rds.amazonaws.com:5432/lha_inmo_app
     restart: always
-
-# No database service needed in production as you're using RDS

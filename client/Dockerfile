@@ -1,29 +1,27 @@
-# Dockerfile
-
-# Build Stage
+# Stage 1: Build the React app
 FROM node:14-alpine AS build
 
-# Set working directory
 WORKDIR /app
 
-# Install dependencies
+# Set build-time environment variables
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
+
 COPY package*.json ./
 RUN npm install
 
-# Copy source code
 COPY . .
-
-# Build the React app
 RUN npm run build
 
-# Production Stage
-FROM nginx:stable-alpine
+# Stage 2: Serve the app with Nginx
+FROM nginx:alpine
 
-# Copy the build output to Nginx's default public directory
+# Copy the build output to the Nginx HTML directory
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Expose port 3010
-EXPOSE 3010
+# Copy the Nginx configuration file
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Start Nginx server
+EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]

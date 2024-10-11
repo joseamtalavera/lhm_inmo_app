@@ -4,6 +4,7 @@
   "main": "app.js",
   "scripts": {
     "start": "NODE_ENV=production node app.js",
+    "build": "react-scripts build",
     "dev": "NODE_ENV=development nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

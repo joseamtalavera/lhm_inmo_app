@@ -16,7 +16,12 @@ const app = express();
 
 app.use(helmet());
 app.use(morgan('combined'));
-app.use(express.static(path.join(__dirname, '../client/build')));
+// app.use(express.static(path.join(__dirname, '../client/build')));
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../client/build/index.html'));
+//   });
+
+
 app.use(cookieParser());
 
 const port = process.env.PORT || 5010;
@@ -74,13 +79,17 @@ passport.deserializeUser(function(user, done) {// This function is used to retri
     done(null, user);
 });
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build/index.html'));
-    });
 
 app.use(function(err, req, res, next) {
     console.error(err.stack);
     res.status(500).send('Something went wrong');
+});
+
+//Serve the static files from the React app
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/build/index.html'));
 });
 
 app.listen(port, () => {

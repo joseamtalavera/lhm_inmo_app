@@ -15,7 +15,6 @@ RUN npm install
 # Copy source code
 COPY . .
 
-#
 
 # Expose port 3010
 EXPOSE 3010

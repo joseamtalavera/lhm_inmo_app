@@ -1,7 +1,7 @@
 //Propiedades.js
 import React, { useState }from 'react';
 import MenuLayout from '../Menu/MenuLayout'; 
-import BasicTable from './BasicTable';
+import BasicTablePropiedades from './BasicTablePropiedades';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -38,7 +38,7 @@ const Propiedades = () => {
           Add
           </Button>
           </Box>
-          <BasicTable/>
+          <BasicTablePropiedades/>
       </Box>
 
 

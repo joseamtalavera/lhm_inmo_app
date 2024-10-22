@@ -11,6 +11,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const authRoutes = require('./routes/authRoutes');
+const propertiesRoutes = require('./routes/propertiesRoutes');
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use(session({ // use express-session to maintain session data
 }));
 
 app.use('/api', authRoutes);
+app.use('/api', propertiesRoutes);
 
 app.use(passport.initialize()); // Initialize passport and restore authentication state, if any, from the session.
 app.use(passport.session());

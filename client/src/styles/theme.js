@@ -4,10 +4,10 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
     palette: {
         primary: {
-            main: "#FFA500" // hex colour for orange
+            main: "#1E90FF" // hex colour for blue
         },
         secondary: {
-            main: "#008000" // hex colour for green
+            main: "#808080" // hex colour for green
         }
     }, 
     breakpoints: {

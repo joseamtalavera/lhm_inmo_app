@@ -3,10 +3,15 @@ import React, { useState }from 'react';
 import MenuLayout from '../Menu/MenuLayout'; 
 import BasicTablePropiedades from './BasicTablePropiedades';
 import { Link } from 'react-router-dom';
-import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import Box from '@mui/material/Box';
 import {useTheme } from '@mui/material/styles';
+import {
+  StyledButton,
+  StyledBox,
+  InnerBox,
+  StyledModal,
+  ModalContent,
+} from '../../styles/PropiedadesStyles';
 
 import Modal from '@mui/material/Modal';
 //import AddUser from './AddUser';
@@ -24,43 +29,20 @@ const Propiedades = () => {
   return (
     <MenuLayout>
 
-      <Box display="flex" flexDirection="column" alignItems="flex-end" width="100%" marginTop="55px">
-        <Box sx={{ maxWidth: 'lg', margin: 'auto', boxShadow: 0, height: 50, width: '90%', display: 'flex', justifyContent: 'flex-end', alignItems: 'center'}}>
-          <Button
+      <StyledBox>
+        <InnerBox>
+          <StyledButton
             variant="outlined"
             startIcon={<AddIcon />}
             onClick={handleOpen}
-            sx={{  
-              marginBottom: '1rem',
-              marginRight: '0rem',
-            }}
           >
           Add
-          </Button>
-          </Box>
+          </StyledButton>
+          </InnerBox>
           <BasicTablePropiedades/>
-      </Box>
+      </StyledBox>
 
-
-   {/*  <Box display="flex" flexDirection="column" alignItems="flex-end" width="100%" marginTop="64px">
-      <Box width="100%" maxWidth="lg" marginRight="1 rem">
-       
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={handleOpen}
-            sx={{ backgroundColor: '#4caf50', color: 'white', marginBottom: '1rem', '&:hover': { backgroundColor: 'darkgreen' } }}
-          >
-            Add
-          </Button>
-       
-      </Box>
-      <Box width="100%" maxWidth="lg" marginRight="1 rem">
-        <BasicTable/>
-      </Box>
-    </Box> */}
-
-    <Modal
+   {/*  <Modal
       open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
@@ -81,9 +63,9 @@ const Propiedades = () => {
         maxHeight: '80%',
         overflowY: 'auto',
       }}>
-       {/*  <AddUser/> */}
+       <AddUser/>
       </Box>
-    </Modal>
+    </Modal> */}
     </MenuLayout>
   );
 };

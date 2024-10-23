@@ -156,7 +156,7 @@ export default function Layout({ children }) {
               px: [1],
             }}
           >
-            <img src="/logo.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '75px', marginTop: '0px', position: 'absolute', left: '15px' }} />             
+            <img src="/logo300x212.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '50px', marginTop: '0px', position: 'absolute', left: '15px' }} />             
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
             </IconButton>

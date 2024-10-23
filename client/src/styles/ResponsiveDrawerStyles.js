@@ -51,9 +51,8 @@ export const MenuItem = styled(Typography)`
     margin-right: 30px !important;
     margin-top: 10px !important;
     cursor: pointer;
-
     &:hover {
-        color: #ff9800;
+        color:darkblue;
     }
 `;
 
@@ -65,7 +64,7 @@ export const LoginButton = styled(Button)`
     border-radius: 20px !important;
 
     &:hover {
-        background-color: #ff9800;
+        background-color: darkblue !important;
     }
 
     &.MuiButton-root {

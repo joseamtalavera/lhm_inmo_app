@@ -16,5 +16,5 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgres://postgres:Rakna6164@database-2.c50syq0iyqal.eu-north-1.rds.amazonaws.com:5432/lhainmobiliaria
-
+      - PGOPTIONS=--search_path=lhainmobiliaria
     restart: always

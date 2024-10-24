@@ -1,12 +1,16 @@
 // controllers/authController.js
 
-
-//const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { getUserByEmail } = require('../models/Queries');
+const { validationResult } = require('express-validator');
 
 // User login function
 exports.login = async (req, res) => {
+  // Validate inputs (check if any validation error exists)
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   const { email, password } = req.body;
   console.log('Received req.body:', req.body);
 

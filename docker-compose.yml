@@ -27,7 +27,7 @@ services:
       - ./server:/app
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/lhainmobiliaria_new
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/lhainmobiliaria
       - JWT_SECRET=giUQrrraiYeIUhVpage0kWjK7PoW/KROGY6oM+jJ5FU=
     depends_on:
       - db

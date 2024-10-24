@@ -2,15 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
 import { useNavigate} from 'react-router-dom';
-import CircularProgress from '@mui/material/CircularProgress';
 import { ThemeProvider } from '@mui/material/styles';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditOutlined  from '@mui/icons-material/EditOutlined';
-import Chip from '@mui/material/Chip';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
 import ResponsiveDialog from '../../utils/ResponsiveDialog';
 import theme from '../../styles/theme';
 import {
@@ -20,6 +13,11 @@ import {
     ImageWrapper,
     Image,
     IconContainer,
+    EditIcon,
+    DeleteIcon,
+    StyledChip,
+    StyledCheckCircleIcon,
+    StyledCancelIcon
 } from '../../styles/BasicTablePropiedadesStyles';
 
 export default function DataTable() {
@@ -36,27 +34,14 @@ export default function DataTable() {
             renderCell: (params) => {
                 const property = params.row;
                 return (
-                    
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
-                    <div style={{ 
-                        width: 50, 
-                        height: 50, 
-                        borderRadius: 5, 
-                        overflow: 'hidden', 
-                        border: '1px solid #ccc', 
-                        marginRight: 10 
-                    }}>
-                        <img 
+                    <ImageContainer>
+                    <ImageWrapper>
+                        <Image
                             src={property.foto} 
                             alt="Foto Principal" 
-                            style={{ 
-                                width: '100%', 
-                                height: '100%', 
-                                objectFit: 'cover' 
-                            }} 
                         />
-                    </div>
-                </div>
+                    </ImageWrapper>
+                </ImageContainer>
                 );
             }
         },
@@ -70,34 +55,13 @@ export default function DataTable() {
             filterable: true,
             renderCell: (params) => {
                 const isActive = params.row.activa;
-                return isActive ? (
-                    <Chip
-                        sx={{
-                            borderColor: 'green',
-                            color: 'black',
-                            height: '24px',
-                            '& .MuiChip-icon': {
-                                color: 'green',
-                            },
-                        }}
-                        variant="outlined"
-                        label="Activa"
-                        icon={<CheckCircleIcon fontSize='small' />}
-                    />
-                ) : (
-                    <Chip
-                        sx={{
-                            borderColor: 'red',
-                            color: 'black',
-                            height: '24px',
-                            '& .MuiChip-icon': {
-                                color: 'red',
-                            },
-                        }}
-                        variant="outlined"
-                        label="Inactiva"
-                        icon={<CancelIcon fontSize='small' />}
-                    />
+                return (
+                    <StyledChip
+                    active={isActive}
+                    variant="outlined"
+                    label={isActive ? "Activa" : "Inactiva"}
+                    icon={isActive ? <StyledCheckCircleIcon/> : <StyledCancelIcon fontSize='small' />}
+                />
                 );
             }
         },
@@ -113,9 +77,9 @@ export default function DataTable() {
                     navigate(`/dashboard/propiedades/${id}`);
                 };
                 return (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                        <EditOutlined style={{ color: '#1E90FF', cursor: 'pointer' }} onClick={onClick} />
-                    </div>
+                    <IconContainer>
+                        <EditIcon onClick={onClick} />
+                    </IconContainer>
                 );
             }
         },
@@ -140,9 +104,9 @@ export default function DataTable() {
                     setProperties(properties.filter(property => property.id !== id));
                 };
                 return (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                        <ResponsiveDialog onDelete={onClick} icon={<DeleteOutlineIcon style={{color: '#1E90FF'}} />} />
-                    </div>
+                    <IconContainer>
+                        <ResponsiveDialog onDelete={onClick} icon={<DeleteIcon />} />
+                    </IconContainer>
                 );
             }
         },
@@ -181,7 +145,7 @@ export default function DataTable() {
         <ThemeProvider theme={theme}>
             <StyledBox>
                 {isLoading ? (
-                    <CircularProgress />
+                    <StyledCircularProgress/>
                 ) : (
                     <DataGrid
                         style={{ height: 550, width: '100%', cursor: 'pointer'}}

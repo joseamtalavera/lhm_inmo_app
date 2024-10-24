@@ -60,9 +60,7 @@ const ResponsiveDrawer = () => {
             <StyledAppBar position="static" elevation={0}>
                 <StyledToolbar >
                 <Box>
-                    <Link to="/">
-                        <LogoImage src="logo300x212.png" alt="Logo"/>
-                    </Link>
+                    <LogoImage src="logo300x212.png" alt="Logo"/>
                 </Box>
                     {isMobile ? (
                         <StyledIconButton

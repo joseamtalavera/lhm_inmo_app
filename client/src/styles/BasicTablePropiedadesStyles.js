@@ -1,7 +1,11 @@
 // BasicTablePropiedadesStyles.js
 
 import styled from 'styled-components';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Chip } from '@mui/material';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EditOutlined  from '@mui/icons-material/EditOutlined';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 export const StyledBox = styled(Box)`
   max-width: lg;
@@ -45,4 +49,29 @@ export const IconContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
+`;
+export const EditIcon = styled(EditOutlined)`
+  color: #1E90FF;
+  cursor: pointer;
+`;
+
+export const DeleteIcon = styled(DeleteOutlineIcon)`
+  color: #1E90FF;
+  cursor: pointer;
+`;
+export const StyledChip = styled(Chip)`
+  border-color: ${(props) => (props.active ? 'green' : 'red')};
+  color: black;
+  height: 24px;
+
+  & .MuiChip-icon {
+    color: ${(props) => (props.active ? 'green' : 'red')};
+  }
+`;
+export const StyledCheckCircleIcon = styled(CheckCircleIcon)`
+  font-size: small;
+`;
+
+export const StyledCancelIcon = styled(CancelIcon)`
+  font-size: small; 
 `;

@@ -7,6 +7,7 @@ import App from './App';
 import LoginPage from './components/login/LoginPage';
 import Dashboard from './components/dashboard/Dashboard';
 import Propiedades from './components/propiedades/Propiedades';
+import Propiedad from './components/propiedades/Propiedad';
 import PrivateRoute from './components/login/PrivateRoute';
 import theme from './styles/theme';
 import { ThemeProvider } from '@mui/material/styles';
@@ -19,6 +20,8 @@ ReactDOM.render(
       <Route path="/login" element={<LoginPage />} />  
       <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
       <Route path='dashboard/propiedades' element={<PrivateRoute><Propiedades /></PrivateRoute>} />
+      <Route path="/dashboard/propiedades/:id" element={<PrivateRoute><Propiedad /></PrivateRoute>} />
+
     </Routes>
   </Router>
   </ThemeProvider>

@@ -87,12 +87,6 @@ app.use(function(err, req, res, next) {
     res.status(500).send('Something went wrong');
 });
 
-//Serve the static files from the React app
-app.use(express.static(path.join(__dirname, 'build')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/build/index.html'));
-});
 
 app.listen(port, () => {
     console.log(`Server is running on Port ${port}`);

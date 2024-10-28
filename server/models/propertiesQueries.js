@@ -22,9 +22,25 @@ const getAllProperties = async () => {
     }
 };
 
+const getPropertyById = async (id) => {
+    try {   
+        const result = await pool.query(
+            `SELECT p.id, p.ref, p.refext, p.title, p.precio, p.direccion, p.localidad, p.provincia, p.pais, p.cp, p.longitud, p.latitud, p.metrosconstruidos, p.metrosutiles, p.metrosparcela, p.idtipopropiedad, p.idhabitaciones, p.idbanos, p.idaseos, p.idestado, p.anoconstruccion, p.idcalificacion, p.idcargas, p.idplanta, p.idorientacionentrada, p.idorientacionventana, p.idcertificadoenergetico, p.valorcertificadoenergetico, p.co2certificadoenergetico, p.kwcertificadoenergetico, p.tributoibi, p.tributovado, p.tributorustico, p.gastosvarios, p.idgerencia, p.comunidadgastos, p.comunidadderrama, p.consumoelecticidad, p.consumoagua, p.idinternet, p.idgas, p.idite, p.idtermoagua, p.idagua, p.active, p.created_at, p.updated_at, p.idusuario, v.url AS foto
+            FROM lhainmobiliaria.vproperties p
+            LEFT JOIN lhainmobiliaria.vimages v ON p.ref = v.ref AND v.principal = 1
+            WHERE p.id = $1`,
+            [id]
+        );
+        console
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in getPropertyById:', error);
+        throw error;
+    }
+};
+
 const addPropertyDb = async (property) => {
     try {
-        console.log('Property:', property);
         const { ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud, metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos, idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana, idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico, tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama, consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario } = property;
 
         const result = await pool.query(
@@ -42,7 +58,6 @@ const addPropertyDb = async (property) => {
 
 const updatePropertyDb = async (property) => {
     try {
-        console.log('Property:', property);
         const { id, ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud, metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos, idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana, idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico, tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama, consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario } = property;
 
         const result = await pool.query(
@@ -73,6 +88,7 @@ const deletePropertyDb = async (id) => {
 
 module.exports = {
     getAllProperties,
+    getPropertyById,
     addPropertyDb,
     updatePropertyDb,
     deletePropertyDb

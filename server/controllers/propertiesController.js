@@ -1,20 +1,36 @@
 
-const { getAllProperties, addPropertyDb, updatePropertyDb, deletePropertyDb } = require('../models/propertiesQueries');
+const { getAllProperties, addPropertyDb, updatePropertyDb, deletePropertyDb, getPropertyById } = require('../models/propertiesQueries');
 
 
 exports.getTableProperties = async (req, res, next) => {
     try { 
-        const users = await getAllProperties();
-        res.json(users);
+        const property = await getAllProperties();
+        res.json(property);
     } catch (error) {
         console.error('Error in getTableProperties:', error);
         next(error);
     }
 };
 
+exports.getPropertyById = async (req, res, next) => {
+    const propertyId = req.params.id;
+    try {
+        const property = await getPropertyById(propertyId);
+
+        if (property) {
+            res.json(property);
+        }else {
+            console`Property with ID: $`
+            res.status(404).json({ message: 'Property not found'});
+        }
+    } catch (error) {
+        console.error('Error in getPropertyById:', error);
+        next(error);
+    }
+}
+
 exports.addProperty = async (req, res, next) => {
     try {
-        console.log('Request body:', req.body);
         const newProperty = await addPropertyDb(req.body);
         res.json({ message: 'Property added successfully', user: newProperty});
     } catch (error) {
@@ -25,9 +41,7 @@ exports.addProperty = async (req, res, next) => {
 
 exports.updateProperty = async (req, res, next) => {
     try {
-        console.log('Request body:', req.body);
         const updatedProperty = await updatePropertyDb(req.body);
-        console.log('Updated Property:', updatedProperty);
         res.json({ message: 'Property updated succesfully', user: updatedProperty});
     } catch (error){
         console.error('Error in updateProperty:', error);
@@ -37,7 +51,6 @@ exports.updateProperty = async (req, res, next) => {
 
 exports.deleteProperty = async (req, res, next) => {
     try {
-        console.log('Deleting property with id:', req.params.id);
         const deletedProperty = await deletePropertyDb(req.params.id);
         res.json({ message: 'Property deleted successfully', user: deletedProperty});
     } catch (error) {

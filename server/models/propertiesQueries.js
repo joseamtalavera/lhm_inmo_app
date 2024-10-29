@@ -6,10 +6,6 @@ const pool = require('./db');
 
 const getAllProperties = async () => {
     try { 
-        /* const result = await pool.query(
-            `SELECT id, ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud, metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos, idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana, idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico, tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama, consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, created_at, updated_at, idusuario 
-            FROM lhainmobiliaria.vproperties`
-        ); */
         const result = await pool.query(
             `SELECT p.id, p.ref, p.refext, p.title, p.precio, p.direccion, p.localidad, p.provincia, p.pais, p.cp, p.longitud, p.latitud, p.metrosconstruidos, p.metrosutiles, p.metrosparcela, p.idtipopropiedad, p.idhabitaciones, p.idbanos, p.idaseos, p.idestado, p.anoconstruccion, p.idcalificacion, p.idcargas, p.idplanta, p.idorientacionentrada, p.idorientacionventana, p.idcertificadoenergetico, p.valorcertificadoenergetico, p.co2certificadoenergetico, p.kwcertificadoenergetico, p.tributoibi, p.tributovado, p.tributorustico, p.gastosvarios, p.idgerencia, p.comunidadgastos, p.comunidadderrama, p.consumoelecticidad, p.consumoagua, p.idinternet, p.idgas, p.idite, p.idtermoagua, p.idagua, p.active, p.created_at, p.updated_at, p.idusuario, v.url AS foto
             FROM lhainmobiliaria.vproperties p
@@ -86,10 +82,49 @@ const deletePropertyDb = async (id) => {
     }
 };
 
+/* const getPropertyAmenities = async (id) => {
+    try{
+        const result = await pool.query(
+            `SELECT a.IdAmenity AS id, a.Amenity AS label, a.Grupo AS category
+     FROM lhainmobiliaria.vamenitiesproperty pa
+     LEFT JOIN lhainmobiliaria.vamenities a ON pa.IdAmenityIncluded = a.IdAmenity
+     WHERE pa.idProperty = $1`,
+    [id]
+        );
+        console.log(`Query results: ${JSON.stringify(result.rows)}`);
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getPropertyAmenities:', error);
+        throw error;
+    }
+} */
+
+    const getPropertyAmenities = async (id) => {
+        try {
+            // Directly query amenities based on IdProperty in vamenitiesproperty
+            const result = await pool.query(
+                `SELECT a.IdAmenity AS id, a.Amenity AS label, a.Grupo AS category
+                 FROM lhainmobiliaria.vamenitiesproperty pa
+                 LEFT JOIN lhainmobiliaria.vamenities a ON pa.IdAmenityIncluded = a.IdAmenity
+                 WHERE pa.IdProperty = $1`,
+                [id]
+            );
+    
+            console.log(`Query results: ${JSON.stringify(result.rows)}`);
+            return result.rows;
+        } catch (error) {
+            console.error('Error in getPropertyAmenities:', error);
+            throw error;
+        }
+    }
+    
+    
+
 module.exports = {
     getAllProperties,
     getPropertyById,
     addPropertyDb,
     updatePropertyDb,
-    deletePropertyDb
+    deletePropertyDb,
+    getPropertyAmenities
 };

@@ -1,5 +1,5 @@
 
-const { getAllProperties, addPropertyDb, updatePropertyDb, deletePropertyDb, getPropertyById } = require('../models/propertiesQueries');
+const { getAllProperties, addPropertyDb, updatePropertyDb, deletePropertyDb, getPropertyById, getPropertyAmenities } = require('../models/propertiesQueries');
 
 
 exports.getTableProperties = async (req, res, next) => {
@@ -55,6 +55,16 @@ exports.deleteProperty = async (req, res, next) => {
         res.json({ message: 'Property deleted successfully', user: deletedProperty});
     } catch (error) {
         console.error('Error in deleteProperty:', error);
+        next(error);
+    }
+}
+
+exports.getPropertyAmenities = async (req, res, next) => {
+    try {
+        const amenities = await getPropertyAmenities(req.params.id);
+        res.json(amenities);    
+    } catch (error) {
+        console.error('Error in getPropertyAmenities:', error);
         next(error);
     }
 }

@@ -1,6 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, CircularProgress, Box, Card, Typography, Divider, Stack, Grid, FormControl, FormLabel, OutlinedInput, Select, MenuItem, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Tabs, Tab, FormControlLabel, Checkbox } from '@mui/material';
+import { 
+    Button, 
+    CircularProgress, 
+    Box, 
+    Card, 
+    Typography, 
+    Divider, 
+    Stack, 
+    Grid, 
+    FormControl, 
+    FormLabel, 
+    OutlinedInput, 
+    Select, 
+    MenuItem, 
+    Dialog, 
+    DialogTitle, 
+    DialogContent, 
+    DialogContentText, 
+    DialogActions, 
+    Tabs, 
+    Tab, 
+    FormControlLabel, 
+    Checkbox,
+    CardMedia,
+    CardContent,
+    CardActions,
+    IconButton,
+    TextField
+} from '@mui/material';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { ThemeProvider } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -164,6 +194,7 @@ export default function Propiedad() {
     const [activeTab, setActiveTab] = useState(0);
     const [open, setOpen] = useState(false);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+    const [images, setImages] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -174,7 +205,7 @@ export default function Propiedad() {
                 const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`);
                 if (!response.ok) throw new Error('Failed to fetch property');
                 const data = await response.json();
-
+    
                 const transformedData = {
                     Ref: data.ref,
                     RefExt: data.refext,
@@ -227,12 +258,27 @@ export default function Propiedad() {
                 };
                 console.log(`Property fetched: ${JSON.stringify(data)}`);
                 setProperty(transformedData);
-
-                const amenitiesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}/amenities`);
+    
+                // Fetch property amenities
+                const amenitiesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/amenities`);
                 if (!amenitiesResponse.ok) throw new Error('Failed to fetch property amenities');
                 const amenitiesData = await amenitiesResponse.json();
                 console.log(`Amenities fetched: ${JSON.stringify(amenitiesData)}`);
-                setAmenities(amenitiesData);
+    
+                // Update state with fetched amenities
+                const updatedProperty = { ...transformedData };
+                amenitiesData.forEach(amenity => {
+                    updatedProperty[amenity.label] = true;
+                });
+                setProperty(updatedProperty);
+
+                const imagesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/images`);
+                if (!imagesResponse.ok) throw new Error('Failed to fetch property images');
+                const imagesData = await imagesResponse.json();
+                console.log(`Images fetched: ${JSON.stringify(imagesData)}`);
+                //setImages(imagesData);
+                setImages(Array.isArray(imagesData) ? imagesData : []);
+
             } catch (error) {
                 console.error('Error fetching property data:', error);
             } finally {
@@ -298,6 +344,27 @@ export default function Propiedad() {
         }
     };
 
+    const handleDragEnd = (result) => {
+        if (!result.destination) return;
+
+        const reorderedImages = Array.from(images);
+        const [movedImage] = reorderedImages.splice(result.source.index, 1);
+        reorderedImages.splice(result.destination.index, 0, movedImage);
+        setImages(reorderedImages);
+    };
+
+    const handleDeleteImage = (index) => {
+        const updatedImages = images.filter((_, i) => i !== index);
+        setImages(updatedImages);
+    };
+
+    const handleTitleChange = (index, newTitle) => {
+        const updatedImages = images.map((image, i) => 
+           i === index ? { ...image, fotoTitle: newTitle } : image
+        );
+        setImages(updatedImages);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -357,10 +424,11 @@ export default function Propiedad() {
                         )}
                         {activeTab === 2 && (
                             <Images
-                                property={property}
-                                setProperty={setProperty}
-                                handleChange={handleChange}
+                                images={images}
                                 isEditing={isEditingImages}
+                                handleDragEnd={handleDragEnd}
+                                handleDeleteImage={handleDeleteImage}
+                                handleTitleChange={handleTitleChange}
                             />
                         )}
                         {activeTab === 3 && (
@@ -373,7 +441,7 @@ export default function Propiedad() {
                         )}
                     </Box>
                     
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '0px solid', borderColor: 'divider', mb: 2, mr: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '0px solid', borderColor: 'divider', mb: 2, mr: 2 }}>
                         <Box sx={{ alignSelf: 'flex-end', pt: 2 }}>
                             {activeTab === 0 && !isEditingGeneralInfo && (
                                 <Button
@@ -555,33 +623,33 @@ export default function Propiedad() {
 const GeneralInfo = ({ property, handleChange, isEditing }) => (
     <Box>
         <Stack spacing={2} sx={{ my: 1 }}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: { xs: 'column', md: 'row' },
-                                gap: 2,
-                                mb: 0, mt: 1, p: 2,
-                                flexWrap: 'wrap'
-                            }}
-                        >
-                            <Grid container spacing={2} alignItems="center">
-                                <Grid item xs={12} md={3}>
-                                    <Box sx={{ width:'100%', mb: 2 }}>
-                                        <img src={property.Foto} alt="Property" style={{ width: '100%', height: 'auto', borderRadius: '4px' }} />
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <Box sx={{mb: 2}}>
-                                        <Typography variant="h6" sx={{ mb:1 }}>
-                                            Referencia: {property.Ref}
-                                        </Typography>
-                                        <Typography variant='body1'>
-                                            Localidad: {property.Localidad}
-                                        </Typography>
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={12} md={3}>
-                                <FormControl variant="outlined" sx={{ width: '100%' }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    gap: 2,
+                    mb: 0, mt: 1, p: 2,
+                    flexWrap: 'wrap'
+                }}
+            >
+                <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={12} md={3}>
+                        <Box sx={{ width:'100%', mb: 2 }}>
+                            <img src={property.Foto} alt="Property" style={{ width: '100%', height: 'auto', borderRadius: '4px' }} />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Box sx={{mb: 2}}>
+                            <Typography variant="h6" sx={{ mb:1 }}>
+                                Referencia: {property.Ref}
+                            </Typography>
+                            <Typography variant='body1'>
+                                Localidad: {property.Localidad}
+                            </Typography>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <FormControl variant="outlined" sx={{ width: '100%' }}>
                             <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
                                 <Typography variant="body2" sx={{ color: 'black' }}>
                                     Activa<span style={{ color: '#1E90FF', fontSize: '1.5em' }}>*</span>
@@ -599,54 +667,53 @@ const GeneralInfo = ({ property, handleChange, isEditing }) => (
                                 <MenuItem value="No">No</MenuItem>
                             </Select>
                         </FormControl>
-                                </Grid>
-                            </Grid>
+                    </Grid>
+                </Grid>
 
-                            <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-                                <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF'  }}>
-                                    Informacion General
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    {primaryFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
-                                    <Grid item xs={12} md={12}>
-                                        <FormControl variant="outlined" sx={{ width: '100%' }}>
-                                            <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                                                <Typography variant="body2" sx={{ color: 'black' }}>
-                                                    Descripción<span style={{ color: '#1E90FF', fontSize: '1.5em' }}>*</span>
-                                                </Typography>
-                                            </FormLabel>
-                                            <OutlinedInput
-                                                size="small"
-                                                name="Descripción"
-                                                value={property.Descripción || ''}
-                                                onChange={handleChange}
-                                                disabled={!isEditing}
-                                                multiline
-                                                minRows={4}
-                                            />
-                                        </FormControl>
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                            <Box sx={{  width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-                                <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
-                                    Características
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    {secondaryFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
-                                </Grid>
-                            </Box>
-                            <Box sx={{  width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px'}}>
-                                <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
-                                    Extras
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    {extraFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
-                                </Grid>
-                            </Box>
-                        </Box>
-                    </Stack>
-    
+                <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
+                    <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF'  }}>
+                        Informacion General
+                    </Typography>
+                    <Grid container spacing={2}>
+                        {primaryFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
+                        <Grid item xs={12} md={12}>
+                            <FormControl variant="outlined" sx={{ width: '100%' }}>
+                                <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
+                                    <Typography variant="body2" sx={{ color: 'black' }}>
+                                        Descripción<span style={{ color: '#1E90FF', fontSize: '1.5em' }}>*</span>
+                                    </Typography>
+                                </FormLabel>
+                                <OutlinedInput
+                                    size="small"
+                                    name="Descripción"
+                                    value={property.Descripción || ''}
+                                    onChange={handleChange}
+                                    disabled={!isEditing}
+                                    multiline
+                                    minRows={4}
+                                />
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+                </Box>
+                <Box sx={{  width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
+                    <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
+                        Características
+                    </Typography>
+                    <Grid container spacing={2}>
+                        {secondaryFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
+                    </Grid>
+                </Box>
+                <Box sx={{  width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px'}}>
+                    <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
+                        Extras
+                    </Typography>
+                    <Grid container spacing={2}>
+                        {extraFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
+                    </Grid>
+                </Box>
+            </Box>
+        </Stack>
     </Box>
 );
 
@@ -786,10 +853,46 @@ const Amenities = ({ property, handleChange }) => (
     </Box>
 );
 
-const Images = () => (
+const Images = ({ images, handleDragEnd, handleTitleChange, handleDeleteImage }) => (
     <Box>
-        <Typography variant="h6">Images</Typography>
-        {/* Add image upload and display functionality here */}
+        <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="images" direction="horizontal">
+                {(provided) => (
+                    <Grid container spacing={2} ref={provided.innerRef} {...provided.droppableProps}>
+                        {images.map((image, index) => (
+                            <Draggable key={image.id} draggableId={image.id.toString()} index={index}>
+                                {(provided) => (
+                                    <Grid item xs={12} sm={6} md={4} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                        <Card>
+                                            <CardMedia
+                                                component="img"
+                                                height="200"
+                                                image={image.url}
+                                                alt={image.fototitle || 'Imagen de la Propiedad'}
+                                            />
+                                            <CardContent sx={{ display: 'flex', alignItems: 'center'}}>
+                                                <TextField
+                                                    label="Titulo"
+                                                    value={image.fototitle || ''}
+                                                    onChange={(e) => handleTitleChange(index, e.target.value)}
+                                                    fullWidth
+                                                />
+                                                <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', height: '56px',  border: '1px solid #ddd', padding: '8px', borderRadius: '4px' }}>
+                                                    <IconButton color="primary" onClick={() => handleDeleteImage(index)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </Box>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                )}
+                            </Draggable>
+                        ))}
+                        {provided.placeholder}
+                    </Grid>
+                )}
+            </Droppable>
+        </DragDropContext>
     </Box>
 );
 

@@ -82,41 +82,37 @@ const deletePropertyDb = async (id) => {
     }
 };
 
-/* const getPropertyAmenities = async (id) => {
-    try{
-        const result = await pool.query(
-            `SELECT a.IdAmenity AS id, a.Amenity AS label, a.Grupo AS category
-     FROM lhainmobiliaria.vamenitiesproperty pa
-     LEFT JOIN lhainmobiliaria.vamenities a ON pa.IdAmenityIncluded = a.IdAmenity
-     WHERE pa.idProperty = $1`,
-    [id]
-        );
-        console.log(`Query results: ${JSON.stringify(result.rows)}`);
-        return result.rows;
-    } catch (error) {
-        console.error('Error in getPropertyAmenities:', error);
-        throw error;
-    }
-} */
-
-    const getPropertyAmenities = async (id) => {
+    const getPropertyAmenities = async (ref) => {
         try {
-            // Directly query amenities based on IdProperty in vamenitiesproperty
             const result = await pool.query(
                 `SELECT a.IdAmenity AS id, a.Amenity AS label, a.Grupo AS category
                  FROM lhainmobiliaria.vamenitiesproperty pa
                  LEFT JOIN lhainmobiliaria.vamenities a ON pa.IdAmenityIncluded = a.IdAmenity
                  WHERE pa.IdProperty = $1`,
-                [id]
+                [ref]
             );
-    
-            console.log(`Query results: ${JSON.stringify(result.rows)}`);
             return result.rows;
         } catch (error) {
             console.error('Error in getPropertyAmenities:', error);
             throw error;
         }
     }
+
+    const getPropertyImages = async (ref) => {
+        try { 
+            const result = await pool.query(
+                `SELECT id, Ref, Url, FotoTitle, Principal, Cabecera
+                 FROM lhainmobiliaria.vimages
+                 WHERE Ref = $1`,
+                [ref]
+            );
+            return result.rows;
+        }
+        catch (error) {
+            console.error('Error in getPropertyImages:', error);
+            throw error;
+        }
+    };
     
     
 
@@ -126,5 +122,6 @@ module.exports = {
     addPropertyDb,
     updatePropertyDb,
     deletePropertyDb,
-    getPropertyAmenities
+    getPropertyAmenities,
+    getPropertyImages
 };

@@ -1,5 +1,13 @@
 
-const { getAllProperties, addPropertyDb, updatePropertyDb, deletePropertyDb, getPropertyById, getPropertyAmenities } = require('../models/propertiesQueries');
+const { 
+    getAllProperties, 
+    addPropertyDb, 
+    updatePropertyDb, 
+    deletePropertyDb, 
+    getPropertyById, 
+    getPropertyAmenities,
+    getPropertyImages
+    } = require('../models/propertiesQueries');
 
 
 exports.getTableProperties = async (req, res, next) => {
@@ -61,10 +69,22 @@ exports.deleteProperty = async (req, res, next) => {
 
 exports.getPropertyAmenities = async (req, res, next) => {
     try {
-        const amenities = await getPropertyAmenities(req.params.id);
+        const ref = req.params.ref;
+        const amenities = await getPropertyAmenities(ref);
         res.json(amenities);    
     } catch (error) {
         console.error('Error in getPropertyAmenities:', error);
+        next(error);
+    }
+}
+
+exports.getPropertyImages = async (req, res, next) => {
+    try {
+        const ref = req.params.ref;
+        const images = await getPropertyImages(ref);
+        res.json(images);
+    } catch (error) {
+        console.error('Error in getPropertyImages:', error);
         next(error);
     }
 }

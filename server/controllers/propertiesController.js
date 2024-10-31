@@ -6,7 +6,8 @@ const {
     deletePropertyDb, 
     getPropertyById, 
     getPropertyAmenities,
-    getPropertyImages
+    getPropertyImages,
+    getPropertyDocuments
     } = require('../models/propertiesQueries');
 
 
@@ -85,6 +86,17 @@ exports.getPropertyImages = async (req, res, next) => {
         res.json(images);
     } catch (error) {
         console.error('Error in getPropertyImages:', error);
+        next(error);
+    }
+}
+
+exports.getPropertyDocuments = async (req, res, next) => {
+    try {
+        const ref = req.params.ref;
+        const documents = await getPropertyDocuments(ref);
+        res.json(documents);
+    } catch (error) {
+        console.error('Error in getPropertyDocuments:', error);
         next(error);
     }
 }

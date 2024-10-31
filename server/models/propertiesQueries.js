@@ -113,6 +113,21 @@ const deletePropertyDb = async (id) => {
             throw error;
         }
     };
+
+    const getPropertyDocuments = async (ref) => {
+        try {
+            const result = await pool.query(
+                `SELECT Id, Ref, Url, Descripcion, Tipo, FechaHora
+                FROM lhainmobiliaria.varchivos
+                WHERE Ref = $1`,
+               [ref]
+            );
+           return result.rows;
+        } catch (error) {
+            console.error('Error in getPropertyDocuments:', error);
+            throw error;
+        }   
+    };
     
     
 
@@ -123,5 +138,6 @@ module.exports = {
     updatePropertyDb,
     deletePropertyDb,
     getPropertyAmenities,
-    getPropertyImages
+    getPropertyImages,
+    getPropertyDocuments
 };

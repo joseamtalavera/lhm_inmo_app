@@ -1,191 +1,24 @@
+// Propiedad.js
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-    Button, 
-    CircularProgress, 
-    Box, 
-    Card, 
-    Typography, 
-    Divider, 
-    Stack, 
-    Grid, 
-    FormControl, 
-    FormLabel, 
-    OutlinedInput, 
-    Select, 
-    MenuItem, 
-    Dialog, 
-    DialogTitle, 
-    DialogContent, 
-    DialogContentText, 
-    DialogActions, 
-    Tabs, 
-    Tab, 
-    FormControlLabel, 
-    Checkbox,
-    CardMedia,
-    CardContent,
-    CardActions,
-    IconButton,
-    TextField
-} from '@mui/material';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Button, CircularProgress, Box, Card, Typography, Divider, Tabs, Tab, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import theme from '../../styles/theme';
 import MenuLayout from '../Menu/MenuLayout';
+import GeneralInfo from './GeneralInfo';
+import Amenities from './Amenities';
+import Images from './Images';
+import Documentation from './Documentation';
 
-const primaryFields = [
-    "Ref", "RefExt", "Precio", "Destacada", "Título", "Dirección", "Localidad", "Provincia", "Pais", "CP",
-    "Longitud", "Latitud"
-];
-
-const secondaryFields = [
-    "M.Constr", "M.Utiles", "M.Parcela", "Tipo", "Habitaciones", "Baños", "Aseos", "Estado"
-];
-
-const extraFields = [
-    "Año Cont", "Calific", "Cargas", "Planta", "Ori.Entrada", "Ori.Ventana", "Cert.Ener", "Valor C.E", "CO2/m2 Año", 
-    "Kw/Año", "T. IBI", "T. VADO", "T. Rústico", "Gerencia", "Gastos", "Comunidad", "Derrama", "Cons. Elect", 
-    "Cons. Agua", "Internet", "Gas", "ITE", "Termo Agua", "Sum. Agua"
-];
-
-const accessAmenities = [
-    { id: 2, label: "Sí" },
-    { id: 3, label: "No" }
-];
-
-const buildingEquipmentAmenities = [
-    { id: 4, label: "Con Ascensor" },
-    { id: 5, label: "Sin Ascensor" },
-    { id: 6, label: "Con Zonas Comunes" },
-    { id: 7, label: "Sin Zonas Comunes" }
-];
-
-const viewsAmenities = [
-    { id: 8, label: "Vistas al mar" },
-    { id: 9, label: "Vistas a la montaña" },
-    { id: 10, label: "Vistas calle principal o calle colindante" },
-    { id: 11, label: "Vistas panoramicas" }
-];
-
-const exteriorConditioningAmenities = [
-    { id: 12, label: "Piscina comunitaria" },
-    { id: 13, label: "Piscina privada" },
-    { id: 14, label: "Piscina climatizada comunitaria" },
-    { id: 15, label: "Piscina climatizada privada" },
-    { id: 16, label: "Piscina compartida" },
-    { id: 17, label: "Sala de GYM Comunitaria" },
-    { id: 18, label: "Sala de Eventos en Zona Comunes" },
-    { id: 19, label: "Parque infantil en Zona Comunes" },
-    { id: 20, label: "Pista de Padel" },
-    { id: 21, label: "Pista de Tenis" },
-    { id: 22, label: "Pista multideporte" },
-    { id: 23, label: "Zona ajardinadas comunitarias" },
-    { id: 24, label: "Jardin privado" },
-    { id: 25, label: "Zona de paso (Derecho de uso)" },
-    { id: 26, label: "Alberca" },
-    { id: 27, label: "Pozo de manantial" },
-    { id: 28, label: "Pozo propio" },
-    { id: 29, label: "Fosa septicca" },
-    { id: 30, label: "Alcantarillado" },
-    { id: 31, label: "Sin fosa ni alcantarillado" },
-    { id: 37, label: "Agua de Ayuntamiento" },
-    { id: 38, label: "Agua de Manatial" },
-    { id: 39, label: "Sin agua" },
-    { id: 40, label: "Electricidad instalada y habilitada" },
-    { id: 41, label: "Electricidad instalación pendiente" },
-    { id: 42, label: "Electricidad a realizar Boletín" },
-    { id: 43, label: "Sin electricidad" },
-    { id: 76, label: "Acceso a la propiedad Comunitario" },
-    { id: 77, label: "Acceso a la propiedad Independiente" },
-    { id: 78, label: "Zona Barbacoa" },
-    { id: 79, label: "Placas Solares Electricidad" },
-    { id: 80, label: "Placas Solares Agua" }
-];
-
-const additionalEquipmentAmenities = [
-    { id: 32, label: "Con Parking Comunitario" },
-    { id: 33, label: "Con trastero NO INCLUIDO EN PRECIO" },
-    { id: 34, label: "Con trastero SI INCLUIDO EN PRECIO" },
-    { id: 35, label: "Con plaza de aparcamiento Interior NO INCLUIDO EN PRECIO" },
-    { id: 36, label: "Con plaza de aparcamiento Interior SI INCLUIDO EN PRECIO" }
-];
-
-const interiorConditioningAmenities = [
-    { id: 44, label: "Con aire acondicionado" },
-    { id: 45, label: "Sin aire acondicionado" },
-    { id: 46, label: "Aire acondicionado centralizado" },
-    { id: 47, label: "Amueblado" },
-    { id: 48, label: "Sin amueblar" },
-    { id: 49, label: "Con Armarios empotrados" },
-    { id: 50, label: "Sin armarios empotrados" },
-    { id: 51, label: "Puerta entrada de madera" },
-    { id: 52, label: "Puerta entrada blindada" },
-    { id: 53, label: "Puerta simple de seguridad baja" },
-    { id: 54, label: "Terraza" },
-    { id: 55, label: "Patio" },
-    { id: 56, label: "Azotea" },
-    { id: 57, label: "Cocina equipada con electrodomésticos" },
-    { id: 58, label: "Cocina equipada sin electrodomésticos" },
-    { id: 59, label: "Cuartos de baños reformados" },
-    { id: 60, label: "Cuartos de baños a reformar" },
-    { id: 61, label: "Cuarto de baño en buen estado" },
-    { id: 62, label: "Aseos reformados" },
-    { id: 63, label: "Aseos a reformar" },
-    { id: 64, label: "Aseos en buen estado" },
-    { id: 65, label: "Suelo Tipo Gres" },
-    { id: 66, label: "Suelo tipo cerámica" },
-    { id: 67, label: "Suelo tipo Parquet" },
-    { id: 68, label: "Suelo tipo Rústico" },
-    { id: 69, label: "Suelo tipo Madera" },
-    { id: 70, label: "Calefacción Centralizada" },
-    { id: 71, label: "Chimeneas" },
-    { id: 72, label: "Estufas/calefactores/emisores termicos" },
-    { id: 73, label: "Ventanas a reformar" },
-    { id: 74, label: "Ventanas reformadas" },
-    { id: 75, label: "Ventana en buen estado" },
-    { id: 81, label: "Balcón" },
-    { id: 82, label: "Electricidad Reformada/Nueva" },
-    { id: 83, label: "Electricidad con Domótica" },
-    { id: 84, label: "Electricidad Antigua + 10 años" },
-    { id: 85, label: "Fontanería Reformada/ nueva" },
-    { id: 86, label: "Fontanería Antigua +10 años" },
-    { id: 87, label: "Ventanas Madera" },
-    { id: 88, label: "Ventanas Aluminio" },
-    { id: 89, label: "Ventana doble Acristalamiento/corredera/Climalit" },
-    { id: 90, label: "Cierre balcón Aluminio" },
-    { id: 91, label: "Cierre balcón obra" },
-    { id: 92, label: "Cierre Acristalado/Cortinas vidrio" },
-    { id: 93, label: "Sin cierre" },
-    { id: 94, label: "Suelo estado inicial ANTIGUO" }
-];
-
-const generateGridItem = (field, property, handleChange, isEditing) => (
-    <Grid item xs={12} md={4} key={field}>
-        <FormControl variant="outlined" sx={{ width: '100%' }}>
-            <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                <Typography variant="body2" sx={{ color: 'black' }}>
-                    {field}
-                </Typography>
-            </FormLabel>
-            <OutlinedInput
-                size="small"
-                name={field.replace(/\s/g, '')}
-                value={property[field.replace(/\s/g, '')] || ''}
-                onChange={handleChange}
-                disabled={!isEditing}
-            />
-        </FormControl>
-    </Grid>
-);
-
-export default function Propiedad() {
+const Propiedad = () => {
     const { id } = useParams();
     const [property, setProperty] = useState({});
     const [amenities, setAmenities] = useState([]);
+    const [images, setImages] = useState([]);
+    const [documents, setDocuments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isEditingGeneralInfo, setIsEditingGeneralInfo] = useState(false);
     const [isEditingAmenities, setIsEditingAmenities] = useState(false);
@@ -194,7 +27,6 @@ export default function Propiedad() {
     const [activeTab, setActiveTab] = useState(0);
     const [open, setOpen] = useState(false);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
-    const [images, setImages] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -205,7 +37,7 @@ export default function Propiedad() {
                 const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`);
                 if (!response.ok) throw new Error('Failed to fetch property');
                 const data = await response.json();
-    
+
                 const transformedData = {
                     Ref: data.ref,
                     RefExt: data.refext,
@@ -218,7 +50,6 @@ export default function Propiedad() {
                     CP: data.cp,
                     Longitud: data.longitud,
                     Latitud: data.latitud,
-                    // Add mappings for secondary and extra fields as well
                     "M.Constr": data.metrosconstruidos,
                     "M.Utiles": data.metrosutiles,
                     "M.Parcela": data.metrosparcela,
@@ -258,13 +89,13 @@ export default function Propiedad() {
                 };
                 console.log(`Property fetched: ${JSON.stringify(data)}`);
                 setProperty(transformedData);
-    
+
                 // Fetch property amenities
                 const amenitiesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/amenities`);
                 if (!amenitiesResponse.ok) throw new Error('Failed to fetch property amenities');
                 const amenitiesData = await amenitiesResponse.json();
                 console.log(`Amenities fetched: ${JSON.stringify(amenitiesData)}`);
-    
+
                 // Update state with fetched amenities
                 const updatedProperty = { ...transformedData };
                 amenitiesData.forEach(amenity => {
@@ -272,12 +103,19 @@ export default function Propiedad() {
                 });
                 setProperty(updatedProperty);
 
+                // Fetch property images
                 const imagesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/images`);
                 if (!imagesResponse.ok) throw new Error('Failed to fetch property images');
                 const imagesData = await imagesResponse.json();
                 console.log(`Images fetched: ${JSON.stringify(imagesData)}`);
-                //setImages(imagesData);
-                setImages(Array.isArray(imagesData) ? imagesData : []);
+                setImages(imagesData);
+
+                // Fetch property documents
+                const documentsResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/documents`);
+                if (!documentsResponse.ok) throw new Error('Failed to fetch property documents');
+                const documentsData = await documentsResponse.json();
+                console.log(`Documents fetched: ${JSON.stringify(documentsData)}`);
+                setDocuments(documentsData);
 
             } catch (error) {
                 console.error('Error fetching property data:', error);
@@ -300,8 +138,7 @@ export default function Propiedad() {
         if (newValue === 4) {
             // Navigate to preview page
             navigate(`/dashboard/propiedades/${id}/preview`);
-        } else
-        {
+        } else {
             setActiveTab(newValue);
         }
     };
@@ -328,41 +165,20 @@ export default function Propiedad() {
     const handleCancelClick = (tab) => {
         switch (tab) {
             case 0:
-                setIsEditingGeneralInfo(true);
+                setIsEditingGeneralInfo(false);
                 break;
             case 1:
-                setIsEditingAmenities(true);
+                setIsEditingAmenities(false);
                 break;
             case 2:
-                setIsEditingImages(true);
+                setIsEditingImages(false);
                 break;
             case 3:
-                setIsEditingDocumentation(true);
+                setIsEditingDocumentation(false);
                 break;
             default:
                 break;
         }
-    };
-
-    const handleDragEnd = (result) => {
-        if (!result.destination) return;
-
-        const reorderedImages = Array.from(images);
-        const [movedImage] = reorderedImages.splice(result.source.index, 1);
-        reorderedImages.splice(result.destination.index, 0, movedImage);
-        setImages(reorderedImages);
-    };
-
-    const handleDeleteImage = (index) => {
-        const updatedImages = images.filter((_, i) => i !== index);
-        setImages(updatedImages);
-    };
-
-    const handleTitleChange = (index, newTitle) => {
-        const updatedImages = images.map((image, i) => 
-           i === index ? { ...image, fotoTitle: newTitle } : image
-        );
-        setImages(updatedImages);
     };
 
     const handleSubmit = async (e) => {
@@ -399,7 +215,7 @@ export default function Propiedad() {
                     <Tabs value={activeTab} onChange={handleTabChange} centered>
                         <Tab label="Informacion General" />
                         <Tab label="Amenities" />
-                        <Tab label="Imagenes" /> {/* Fixed typo here */}
+                        <Tab label="Imagenes" />
                         <Tab label="Documentos" />
                         <Tab label="Preview" />
                     </Tabs>
@@ -409,7 +225,6 @@ export default function Propiedad() {
                         {activeTab === 0 && (
                             <GeneralInfo    
                                 property={property}
-                                setProperty={setProperty}
                                 handleChange={handleChange}
                                 isEditing={isEditingGeneralInfo}   
                             />
@@ -417,7 +232,6 @@ export default function Propiedad() {
                         {activeTab === 1 && (
                             <Amenities
                                 property={property}
-                                amenities={amenities}
                                 handleChange={handleChange}
                                 isEditing={isEditingAmenities}
                             />
@@ -425,17 +239,14 @@ export default function Propiedad() {
                         {activeTab === 2 && (
                             <Images
                                 images={images}
+                                setImages={setImages}
                                 isEditing={isEditingImages}
-                                handleDragEnd={handleDragEnd}
-                                handleDeleteImage={handleDeleteImage}
-                                handleTitleChange={handleTitleChange}
                             />
                         )}
                         {activeTab === 3 && (
                             <Documentation
-                                property={property}
-                                setProperty={setProperty}
-                                handleChange={handleChange}
+                                documents={documents}
+                                setDocuments={setDocuments}
                                 isEditing={isEditingDocumentation}
                             />
                         )}
@@ -618,287 +429,6 @@ export default function Propiedad() {
             </ThemeProvider>
         </MenuLayout>
     );
-}
+};
 
-const GeneralInfo = ({ property, handleChange, isEditing }) => (
-    <Box>
-        <Stack spacing={2} sx={{ my: 1 }}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: { xs: 'column', md: 'row' },
-                    gap: 2,
-                    mb: 0, mt: 1, p: 2,
-                    flexWrap: 'wrap'
-                }}
-            >
-                <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} md={3}>
-                        <Box sx={{ width:'100%', mb: 2 }}>
-                            <img src={property.Foto} alt="Property" style={{ width: '100%', height: 'auto', borderRadius: '4px' }} />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Box sx={{mb: 2}}>
-                            <Typography variant="h6" sx={{ mb:1 }}>
-                                Referencia: {property.Ref}
-                            </Typography>
-                            <Typography variant='body1'>
-                                Localidad: {property.Localidad}
-                            </Typography>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormControl variant="outlined" sx={{ width: '100%' }}>
-                            <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                                <Typography variant="body2" sx={{ color: 'black' }}>
-                                    Activa<span style={{ color: '#1E90FF', fontSize: '1.5em' }}>*</span>
-                                </Typography>
-                            </FormLabel>
-                            <Select
-                                size="small"
-                                name="Activa"
-                                value={property.Activa || ''}
-                                onChange={handleChange}
-                                disabled={!isEditing}
-                            >
-                                <MenuItem value=""><em>None</em></MenuItem>
-                                <MenuItem value="Yes">Yes</MenuItem>
-                                <MenuItem value="No">No</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                </Grid>
-
-                <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-                    <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF'  }}>
-                        Informacion General
-                    </Typography>
-                    <Grid container spacing={2}>
-                        {primaryFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
-                        <Grid item xs={12} md={12}>
-                            <FormControl variant="outlined" sx={{ width: '100%' }}>
-                                <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                                    <Typography variant="body2" sx={{ color: 'black' }}>
-                                        Descripción<span style={{ color: '#1E90FF', fontSize: '1.5em' }}>*</span>
-                                    </Typography>
-                                </FormLabel>
-                                <OutlinedInput
-                                    size="small"
-                                    name="Descripción"
-                                    value={property.Descripción || ''}
-                                    onChange={handleChange}
-                                    disabled={!isEditing}
-                                    multiline
-                                    minRows={4}
-                                />
-                            </FormControl>
-                        </Grid>
-                    </Grid>
-                </Box>
-                <Box sx={{  width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-                    <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
-                        Características
-                    </Typography>
-                    <Grid container spacing={2}>
-                        {secondaryFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
-                    </Grid>
-                </Box>
-                <Box sx={{  width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px'}}>
-                    <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
-                        Extras
-                    </Typography>
-                    <Grid container spacing={2}>
-                        {extraFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
-                    </Grid>
-                </Box>
-            </Box>
-        </Stack>
-    </Box>
-);
-
-const Amenities = ({ property, handleChange }) => (
-    <Box> 
-        <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-            <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF'}}>
-                Acceso adaptado a personas con movilidad reducida
-            </Typography>
-            <Grid container spacing={2}>
-                {accessAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={property[amenity.label] || false}
-                                    onChange={handleChange}
-                                    name={amenity.label}
-                                />
-                            }
-                            label={amenity.label}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
-
-        <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-            <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF'}}>
-                Equipamiento edificio
-            </Typography>
-            <Grid container spacing={2}>
-                {buildingEquipmentAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={property[amenity.label] || false}
-                                    onChange={handleChange}
-                                    name={amenity.label}
-                                />
-                            }
-                            label={amenity.label}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
-
-        <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-            <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
-                Vistas
-            </Typography>
-            <Grid container spacing={2}>
-                {viewsAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={property[amenity.label] || false}
-                                    onChange={handleChange}
-                                    name={amenity.label}
-                                />
-                            }
-                            label={amenity.label}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
-
-        <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-            <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
-                Características de acondicionamiento exterior
-            </Typography>
-            <Grid container spacing={2}>
-                {exteriorConditioningAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={property[amenity.label] || false}
-                                    onChange={handleChange}
-                                    name={amenity.label}
-                                />
-                            }
-                            label={amenity.label}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
-
-        <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-            <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
-                Equipamiento adicional
-            </Typography>
-            <Grid container spacing={2}>
-                {additionalEquipmentAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={property[amenity.label] || false}
-                                    onChange={handleChange}
-                                    name={amenity.label}
-                                />
-                            }
-                            label={amenity.label}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
-
-        <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-            <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
-                Características de acondicionamiento interior
-            </Typography>
-            <Grid container spacing={2}>
-                {interiorConditioningAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={property[amenity.label] || false}
-                                    onChange={handleChange}
-                                    name={amenity.label}
-                                />
-                            }
-                            label={amenity.label}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
-    </Box>
-);
-
-const Images = ({ images, handleDragEnd, handleTitleChange, handleDeleteImage }) => (
-    <Box>
-        <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="images" direction="horizontal">
-                {(provided) => (
-                    <Grid container spacing={2} ref={provided.innerRef} {...provided.droppableProps}>
-                        {images.map((image, index) => (
-                            <Draggable key={image.id} draggableId={image.id.toString()} index={index}>
-                                {(provided) => (
-                                    <Grid item xs={12} sm={6} md={4} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                        <Card>
-                                            <CardMedia
-                                                component="img"
-                                                height="200"
-                                                image={image.url}
-                                                alt={image.fototitle || 'Imagen de la Propiedad'}
-                                            />
-                                            <CardContent sx={{ display: 'flex', alignItems: 'center'}}>
-                                                <TextField
-                                                    label="Titulo"
-                                                    value={image.fototitle || ''}
-                                                    onChange={(e) => handleTitleChange(index, e.target.value)}
-                                                    fullWidth
-                                                />
-                                                <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', height: '56px',  border: '1px solid #ddd', padding: '8px', borderRadius: '4px' }}>
-                                                    <IconButton color="primary" onClick={() => handleDeleteImage(index)}>
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                </Box>
-                                            </CardContent>
-                                        </Card>
-                                    </Grid>
-                                )}
-                            </Draggable>
-                        ))}
-                        {provided.placeholder}
-                    </Grid>
-                )}
-            </Droppable>
-        </DragDropContext>
-    </Box>
-);
-
-const Documentation = () => (
-    <Box>
-        <Typography variant="h6">Documentation</Typography>
-        {/* Add documentation upload fields here */}
-    </Box>
-);
+export default Propiedad;

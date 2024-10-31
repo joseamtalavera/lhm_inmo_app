@@ -10,5 +10,6 @@ router.put('/properties/:id', propertiesController.updateProperty);
 router.delete('/properties/:id', propertiesController.deleteProperty);
 router.get('/properties/:ref/amenities', propertiesController.getPropertyAmenities); 
 router.get('/properties/:ref/images', propertiesController.getPropertyImages);
+router.get('/properties/:ref/documents', propertiesController.getPropertyDocuments);
 
 module.exports = router;

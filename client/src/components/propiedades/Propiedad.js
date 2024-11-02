@@ -84,6 +84,7 @@ const Propiedad = () => {
                     "Sum. Agua": data.idagua,
                     Activa: data.active,
                     Foto: data.foto,
+                    Destacada: data.destacada,
                     CreatedAt: data.created_at,
                     UpdatedAt: data.updated_at,
                 };

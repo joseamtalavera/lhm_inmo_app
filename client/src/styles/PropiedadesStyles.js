@@ -11,7 +11,7 @@ export const StyledButton = styled(Button)`
 export const StyledBox = styled(Box)`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   width: 100%;
   margin-top: 55px;
 `;
@@ -25,6 +25,7 @@ export const InnerBox = styled(Box)`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  margin-right: 2rem;
 `;
 
 export const StyledModal = styled(Modal)`

@@ -7,9 +7,22 @@ const pool = require('./db');
 const getAllProperties = async () => {
     try { 
         const result = await pool.query(
-            `SELECT p.id, p.ref, p.refext, p.title, p.precio, p.direccion, p.localidad, p.provincia, p.pais, p.cp, p.longitud, p.latitud, p.metrosconstruidos, p.metrosutiles, p.metrosparcela, p.idtipopropiedad, p.idhabitaciones, p.idbanos, p.idaseos, p.idestado, p.anoconstruccion, p.idcalificacion, p.idcargas, p.idplanta, p.idorientacionentrada, p.idorientacionventana, p.idcertificadoenergetico, p.valorcertificadoenergetico, p.co2certificadoenergetico, p.kwcertificadoenergetico, p.tributoibi, p.tributovado, p.tributorustico, p.gastosvarios, p.idgerencia, p.comunidadgastos, p.comunidadderrama, p.consumoelecticidad, p.consumoagua, p.idinternet, p.idgas, p.idite, p.idtermoagua, p.idagua, p.active, p.created_at, p.updated_at, p.idusuario, v.url AS foto
+            `SELECT 
+                p.id, p.ref, p.refext, p.title, p.precio, p.direccion, p.localidad, 
+                p.provincia, p.pais, p.cp, p.longitud, p.latitud, p.metrosconstruidos, 
+                p.metrosutiles, p.metrosparcela, p.idtipopropiedad, p.idhabitaciones, 
+                p.idbanos, p.idaseos, p.idestado, p.anoconstruccion, p.idcalificacion, 
+                p.idcargas, p.idplanta, p.idorientacionentrada, p.idorientacionventana, 
+                p.idcertificadoenergetico, p.valorcertificadoenergetico, p.co2certificadoenergetico, 
+                p.kwcertificadoenergetico, p.tributoibi, p.tributovado, p.tributorustico, 
+                p.gastosvarios, p.idgerencia, p.comunidadgastos, p.comunidadderrama, 
+                p.consumoelecticidad, p.consumoagua, p.idinternet, p.idgas, p.idite, 
+                p.idtermoagua, p.idagua, p.active, p.created_at, p.updated_at, p.idusuario, 
+                v.url AS foto, 
+                destacada
             FROM lhainmobiliaria.vproperties p
-            LEFT JOIN lhainmobiliaria.vimages v ON p.ref = v.ref AND v.principal = 1`
+            LEFT JOIN lhainmobiliaria.vimages v ON p.ref = v.ref AND v.principal = 1
+            LEFT JOIN lhainmobiliaria.destacadas d ON p.ref = d.ref;`
         );
         return result.rows;
     } catch (error) {
@@ -21,13 +34,28 @@ const getAllProperties = async () => {
 const getPropertyById = async (id) => {
     try {   
         const result = await pool.query(
-            `SELECT p.id, p.ref, p.refext, p.title, p.precio, p.direccion, p.localidad, p.provincia, p.pais, p.cp, p.longitud, p.latitud, p.metrosconstruidos, p.metrosutiles, p.metrosparcela, p.idtipopropiedad, p.idhabitaciones, p.idbanos, p.idaseos, p.idestado, p.anoconstruccion, p.idcalificacion, p.idcargas, p.idplanta, p.idorientacionentrada, p.idorientacionventana, p.idcertificadoenergetico, p.valorcertificadoenergetico, p.co2certificadoenergetico, p.kwcertificadoenergetico, p.tributoibi, p.tributovado, p.tributorustico, p.gastosvarios, p.idgerencia, p.comunidadgastos, p.comunidadderrama, p.consumoelecticidad, p.consumoagua, p.idinternet, p.idgas, p.idite, p.idtermoagua, p.idagua, p.active, p.created_at, p.updated_at, p.idusuario, v.url AS foto
+            `SELECT 
+                p.id, p.ref, p.refext, p.title, p.precio, p.direccion, p.localidad, 
+                p.provincia, p.pais, p.cp, p.longitud, p.latitud, p.metrosconstruidos, 
+                p.metrosutiles, p.metrosparcela, p.idtipopropiedad, p.idhabitaciones, 
+                p.idbanos, p.idaseos, p.idestado, p.anoconstruccion, p.idcalificacion, 
+                p.idcargas, p.idplanta, p.idorientacionentrada, p.idorientacionventana, 
+                p.idcertificadoenergetico, p.valorcertificadoenergetico, p.co2certificadoenergetico, 
+                p.kwcertificadoenergetico, p.tributoibi, p.tributovado, p.tributorustico, 
+                p.gastosvarios, p.idgerencia, p.comunidadgastos, p.comunidadderrama, 
+                p.consumoelecticidad, p.consumoagua, p.idinternet, p.idgas, p.idite, 
+                p.idtermoagua, p.idagua, p.active, p.created_at, p.updated_at, p.idusuario, 
+                v.url AS foto, 
+                CASE 
+                    WHEN d.destacada = 1 THEN 'Yes'
+                    ELSE 'No'
+                END AS destacada
             FROM lhainmobiliaria.vproperties p
             LEFT JOIN lhainmobiliaria.vimages v ON p.ref = v.ref AND v.principal = 1
+            LEFT JOIN lhainmobiliaria.destacadas d ON p.ref = d.ref
             WHERE p.id = $1`,
             [id]
         );
-        console
         return result.rows[0];
     } catch (error) {
         console.error('Error in getPropertyById:', error);

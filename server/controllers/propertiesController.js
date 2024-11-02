@@ -13,8 +13,8 @@ const {
 
 exports.getTableProperties = async (req, res, next) => {
     try { 
-        const property = await getAllProperties();
-        res.json(property);
+        const properties = await getAllProperties();
+        res.json(properties);
     } catch (error) {
         console.error('Error in getTableProperties:', error);
         next(error);
@@ -27,9 +27,12 @@ exports.getPropertyById = async (req, res, next) => {
         const property = await getPropertyById(propertyId);
 
         if (property) {
+            if (propertyId === '65') {
+                console.log(`Property fetched with ID ${propertyId}:`, property); // Log the fetched property with ID 65
+            }
             res.json(property);
         }else {
-            console`Property with ID: $`
+            console.log(`Property with ID ${propertyId} not found`);
             res.status(404).json({ message: 'Property not found'});
         }
     } catch (error) {

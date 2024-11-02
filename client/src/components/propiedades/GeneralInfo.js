@@ -50,7 +50,7 @@ const GeneralInfo = ({ property, handleChange, isEditing }) => (
                 <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} md={3}>
                         <Box sx={{ width:'100%', mb: 2 }}>
-                            <img src={property.Foto} alt="Property" style={{ width: '100%', height: 'auto', borderRadius: '4px' }} />
+                            <img src={property.Foto} alt="Img" style={{ width: '100%', height: 'auto', borderRadius: '4px' }} />
                         </Box>
                     </Grid>
                     <Grid item xs={12} md={6}>

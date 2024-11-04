@@ -11,5 +11,6 @@ router.delete('/properties/:id', propertiesController.deleteProperty);
 router.get('/properties/:ref/amenities', propertiesController.getPropertyAmenities); 
 router.get('/properties/:ref/images', propertiesController.getPropertyImages);
 router.get('/properties/:ref/documents', propertiesController.getPropertyDocuments);
+router.get('/properties/:ref/descriptions', propertiesController.getPropertyDescriptions);
 
 module.exports = router;

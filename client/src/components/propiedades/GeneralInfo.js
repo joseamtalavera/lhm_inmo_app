@@ -11,7 +11,7 @@ const secondaryFields = [
 ];
 
 const extraFields = [
-    "Año Cont", "Calific", "Cargas", "Planta", "Ori.Entrada", "Ori.Ventana", "Cert.Ener", "Valor C.E", "CO2/m2 Año", 
+    "Año.Const", "Calific", "Cargas", "Planta", "Ori.Entrada", "Ori.Ventana", "Cert.Ener", "Valor C.E", "CO2/m2 Año", 
     "Kw/Año", "T. IBI", "T. VADO", "T. Rústico", "Gerencia", "Gastos", "Comunidad", "Derrama", "Cons. Elect", 
     "Cons. Agua", "Internet", "Gas", "ITE", "Termo Agua", "Sum. Agua"
 ];
@@ -30,6 +30,12 @@ const generateGridItem = (field, property, handleChange, isEditing) => (
                 value={property[field.replace(/\s/g, '')] || ''}
                 onChange={handleChange}
                 disabled={!isEditing}
+                sx={{ color: 'red' }} // Ensures the input field itself is targeted
+                InputProps={{
+                    style: {
+                        color: 'red' // Directly sets the text color inside the input
+                    }
+                }}
             />
         </FormControl>
     </Grid>
@@ -76,6 +82,11 @@ const GeneralInfo = ({ property, handleChange, isEditing }) => (
                                 value={property.Activa || ''}
                                 onChange={handleChange}
                                 disabled={!isEditing}
+                                sx={{
+                                    '& .MuiSelect-select': {
+                                        color: '#404040', // Darker gray color for the text in Select component
+                                    },
+                                }}
                             >
                                 <MenuItem value=""><em>None</em></MenuItem>
                                 <MenuItem value="Yes">Yes</MenuItem>

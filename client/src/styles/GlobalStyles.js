@@ -84,4 +84,19 @@ export const GlobalStyle = createGlobalStyle`
       background-color: #1C86EE !important;
     }
   }
+
+  /* Add this to your GlobalStyles file */
+input, textarea {
+  color: red; /* This sets the text color inside the input fields */
+  border: 2px solid #1E90FF; /* Dodger Blue as the border color */
+  padding: 10px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #1C86EE; /* Slightly darker border on focus */
+  }
+}
+
 `;

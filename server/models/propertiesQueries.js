@@ -1,8 +1,4 @@
-// propertiesQueries.js
-
 const pool = require('./db');
-//const bcrypt = require('bcrypt');
-//const saltRounds = 10;
 
 const getAllProperties = async () => {
     try { 
@@ -37,8 +33,8 @@ const getPropertyById = async (id) => {
             `SELECT 
                 p.id, p.ref, p.refext, p.title, p.precio, p.direccion, p.localidad, 
                 p.provincia, p.pais, p.cp, p.longitud, p.latitud, p.metrosconstruidos, 
-                p.metrosutiles, p.metrosparcela, p.idtipopropiedad, p.idhabitaciones, 
-                p.idbanos, p.idaseos, p.idestado, p.anoconstruccion, p.idcalificacion, 
+                p.metrosutiles, p.metrosparcela, tp.tipopropiedad AS tipo_propiedad, ne.nestancias AS habitaciones, 
+                nb.nbanos AS banos, ns.naseos AS aseos, te.estado AS estado, p.anoconstruccion, p.idcalificacion, 
                 p.idcargas, p.idplanta, p.idorientacionentrada, p.idorientacionventana, 
                 p.idcertificadoenergetico, p.valorcertificadoenergetico, p.co2certificadoenergetico, 
                 p.kwcertificadoenergetico, p.tributoibi, p.tributovado, p.tributorustico, 
@@ -49,18 +45,30 @@ const getPropertyById = async (id) => {
                 CASE 
                     WHEN d.destacada = 1 THEN 'Yes'
                     ELSE 'No'
-                END AS destacada
+                END AS destacada,
+                vd.Description AS description
             FROM lhainmobiliaria.vproperties p
             LEFT JOIN lhainmobiliaria.vimages v ON p.ref = v.ref AND v.principal = 1
             LEFT JOIN lhainmobiliaria.destacadas d ON p.ref = d.ref
+            LEFT JOIN lhainmobiliaria.vdescriptions vd ON p.ref = vd.Ref AND vd.IdLenguaje = 3
+            LEFT JOIN lhainmobiliaria.tipopropiedad tp ON p.idtipopropiedad = tp.idtipopropiedad
+            LEFT JOIN lhainmobiliaria.nbanos nb ON p.idbanos = nb.idnbanos
+            LEFT JOIN lhainmobiliaria.nestancias ne ON p.idhabitaciones = ne.idnestancias
+            LEFT JOIN lhainmobiliaria.naseos ns ON p.idaseos = ns.idnaseos
+            LEFT JOIN lhainmobiliaria.tipoestado te ON p.idestado = te.idestado
             WHERE p.id = $1`,
             [id]
         );
+        console.log('Property data:', result.rows[0]);
         return result.rows[0];
     } catch (error) {
         console.error('Error in getPropertyById:', error);
         throw error;
     }
+};
+
+module.exports = {
+    getPropertyById,
 };
 
 const addPropertyDb = async (property) => {
@@ -110,54 +118,67 @@ const deletePropertyDb = async (id) => {
     }
 };
 
-    const getPropertyAmenities = async (ref) => {
-        try {
-            const result = await pool.query(
-                `SELECT a.IdAmenity AS id, a.Amenity AS label, a.Grupo AS category
-                 FROM lhainmobiliaria.vamenitiesproperty pa
-                 LEFT JOIN lhainmobiliaria.vamenities a ON pa.IdAmenityIncluded = a.IdAmenity
-                 WHERE pa.IdProperty = $1`,
-                [ref]
-            );
-            return result.rows;
-        } catch (error) {
-            console.error('Error in getPropertyAmenities:', error);
-            throw error;
-        }
+const getPropertyAmenities = async (ref) => {
+    try {
+        const result = await pool.query(
+            `SELECT a.IdAmenity AS id, a.Amenity AS label, a.Grupo AS category
+             FROM lhainmobiliaria.vamenitiesproperty pa
+             LEFT JOIN lhainmobiliaria.vamenities a ON pa.IdAmenityIncluded = a.IdAmenity
+             WHERE pa.IdProperty = $1`,
+            [ref]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getPropertyAmenities:', error);
+        throw error;
     }
+}
 
-    const getPropertyImages = async (ref) => {
-        try { 
-            const result = await pool.query(
-                `SELECT id, Ref, Url, FotoTitle, Principal, Cabecera
-                 FROM lhainmobiliaria.vimages
-                 WHERE Ref = $1`,
-                [ref]
-            );
-            return result.rows;
-        }
-        catch (error) {
-            console.error('Error in getPropertyImages:', error);
-            throw error;
-        }
-    };
+const getPropertyImages = async (ref) => {
+    try { 
+        const result = await pool.query(
+            `SELECT id, Ref, Url, FotoTitle, Principal, Cabecera
+             FROM lhainmobiliaria.vimages
+             WHERE Ref = $1`,
+            [ref]
+        );
+        return result.rows;
+    }
+    catch (error) {
+        console.error('Error in getPropertyImages:', error);
+        throw error;
+    }
+};
 
-    const getPropertyDocuments = async (ref) => {
-        try {
-            const result = await pool.query(
-                `SELECT Id, Ref, Url, Descripcion, Tipo, FechaHora
-                FROM lhainmobiliaria.varchivos
-                WHERE Ref = $1`,
-               [ref]
-            );
-           return result.rows;
-        } catch (error) {
-            console.error('Error in getPropertyDocuments:', error);
-            throw error;
-        }   
-    };
-    
-    
+const getPropertyDocuments = async (ref) => {
+    try {
+        const result = await pool.query(
+            `SELECT Id, Ref, Url, Descripcion, Tipo, FechaHora
+            FROM lhainmobiliaria.varchivos
+            WHERE Ref = $1`,
+           [ref]
+        );
+       return result.rows;
+    } catch (error) {
+        console.error('Error in getPropertyDocuments:', error);
+        throw error;
+    }   
+};
+
+const getPropertyDescriptions = async (ref) => {
+    try {
+        const result = await pool.query(
+            `SELECT Id, Ref, Descripcion, Tipo, FechaHora
+             FROM lhainmobiliaria.vdescriptions
+             WHERE Ref = $1`,
+            [ref]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getPropertyDescriptions:', error);
+        throw error;
+    }
+};
 
 module.exports = {
     getAllProperties,
@@ -167,5 +188,6 @@ module.exports = {
     deletePropertyDb,
     getPropertyAmenities,
     getPropertyImages,
-    getPropertyDocuments
+    getPropertyDocuments,
+    getPropertyDescriptions
 };

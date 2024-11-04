@@ -53,12 +53,12 @@ const Propiedad = () => {
                     "M.Constr": data.metrosconstruidos,
                     "M.Utiles": data.metrosutiles,
                     "M.Parcela": data.metrosparcela,
-                    Tipo: data.idtipopropiedad,
-                    Habitaciones: data.idhabitaciones,
-                    Baños: data.idbanos,
-                    Aseos: data.idaseos,
-                    Estado: data.idestado,
-                    "Año Cont": data.anoconstruccion,
+                    Tipo: data.tipo_propiedad,
+                    Habitaciones: data.habitaciones,
+                    Baños: data.banos,
+                    Aseos: data.aseos,
+                    Estado: data.estado,
+                    "Año.Const": data.anoconstruccion,
                     Calific: data.idcalificacion,
                     Cargas: data.idcargas,
                     Planta: data.idplanta,
@@ -87,6 +87,7 @@ const Propiedad = () => {
                     Destacada: data.destacada,
                     CreatedAt: data.created_at,
                     UpdatedAt: data.updated_at,
+                   "Descripción": data.description
                 };
                 console.log(`Property fetched: ${JSON.stringify(data)}`);
                 setProperty(transformedData);

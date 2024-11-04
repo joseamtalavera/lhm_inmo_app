@@ -1,4 +1,3 @@
-
 const { 
     getAllProperties, 
     addPropertyDb, 
@@ -9,7 +8,6 @@ const {
     getPropertyImages,
     getPropertyDocuments
     } = require('../models/propertiesQueries');
-
 
 exports.getTableProperties = async (req, res, next) => {
     try { 
@@ -25,16 +23,7 @@ exports.getPropertyById = async (req, res, next) => {
     const propertyId = req.params.id;
     try {
         const property = await getPropertyById(propertyId);
-
-        if (property) {
-            if (propertyId === '65') {
-                console.log(`Property fetched with ID ${propertyId}:`, property); // Log the fetched property with ID 65
-            }
-            res.json(property);
-        }else {
-            console.log(`Property with ID ${propertyId} not found`);
-            res.status(404).json({ message: 'Property not found'});
-        }
+        res.json(property); 
     } catch (error) {
         console.error('Error in getPropertyById:', error);
         next(error);
@@ -103,3 +92,14 @@ exports.getPropertyDocuments = async (req, res, next) => {
         next(error);
     }
 }
+
+exports.getPropertyDescriptions = async (req, res, next) => {
+    try {
+        const ref = req.params.ref;
+        const descriptions = await getPropertyDescriptions(ref);
+        res.json(descriptions);
+    } catch (error) {
+        console.error('Error in getPropertyDescriptions:', error);
+        next(error);
+    }
+};

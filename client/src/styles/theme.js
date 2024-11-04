@@ -7,7 +7,7 @@ const theme = createTheme({
             main: "#1E90FF" // hex colour for blue
         },
         secondary: {
-            main: "#808080" // hex colour for green
+            main: "#505050" // hex colour for grey
         }
     }, 
     breakpoints: {
@@ -32,5 +32,7 @@ const theme = createTheme({
         },
     },
 });
+
+
 
 export default theme;

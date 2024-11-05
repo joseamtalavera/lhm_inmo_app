@@ -15,10 +15,12 @@ const getAllProperties = async () => {
                 p.consumoelecticidad, p.consumoagua, p.idinternet, p.idgas, p.idite, 
                 p.idtermoagua, p.idagua, p.active, p.created_at, p.updated_at, p.idusuario, 
                 v.url AS foto, 
-                destacada
+                destacada,
+                tc.calificacion AS calificacion
             FROM lhainmobiliaria.vproperties p
             LEFT JOIN lhainmobiliaria.vimages v ON p.ref = v.ref AND v.principal = 1
-            LEFT JOIN lhainmobiliaria.destacadas d ON p.ref = d.ref;`
+            LEFT JOIN lhainmobiliaria.destacadas d ON p.ref = d.ref
+            LEFT JOIN lhainmobiliaria.tipocalificacion tc ON p.idcalificacion = tc.idcalificacion;`
         );
         return result.rows;
     } catch (error) {
@@ -34,13 +36,13 @@ const getPropertyById = async (id) => {
                 p.id, p.ref, p.refext, p.title, p.precio, p.direccion, p.localidad, 
                 p.provincia, p.pais, p.cp, p.longitud, p.latitud, p.metrosconstruidos, 
                 p.metrosutiles, p.metrosparcela, tp.tipopropiedad AS tipo_propiedad, ne.nestancias AS habitaciones, 
-                nb.nbanos AS banos, ns.naseos AS aseos, te.estado AS estado, p.anoconstruccion, p.idcalificacion, 
-                p.idcargas, p.idplanta, p.idorientacionentrada, p.idorientacionventana, 
-                p.idcertificadoenergetico, p.valorcertificadoenergetico, p.co2certificadoenergetico, 
-                p.kwcertificadoenergetico, p.tributoibi, p.tributovado, p.tributorustico, 
-                p.gastosvarios, p.idgerencia, p.comunidadgastos, p.comunidadderrama, 
-                p.consumoelecticidad, p.consumoagua, p.idinternet, p.idgas, p.idite, 
-                p.idtermoagua, p.idagua, p.active, p.created_at, p.updated_at, p.idusuario, 
+                nb.nbanos AS banos, ns.naseos AS aseos, te.estado AS estado, p.anoconstruccion, 
+                tc.calificacion AS calificacion, tca.cargas AS cargas, tpl.planta AS planta, oe.orientacionentrada AS orientacionentrada, 
+                OV.orientacionventana AS orientacionventana, tce.certificadoenergetico AS certificadoenergetico, p.valorcertificadoenergetico, 
+                p.co2certificadoenergetico, p.kwcertificadoenergetico, p.tributoibi, p.tributovado, 
+                p.tributorustico, p.gastosvarios, tg.tipogerencia AS gerencia, p.comunidadgastos, p.comunidadderrama, 
+               p.consumoelecticidad, p.consumoagua, ti.tipointernet AS internet, tgs.tipogas AS gas, tte.tipoite AS ite, 
+                tta.tipotermoagua AS termoagua, tag.tipoagua, p.active, p.created_at, p.updated_at, p.idusuario, 
                 v.url AS foto, 
                 CASE 
                     WHEN d.destacada = 1 THEN 'Yes'
@@ -56,6 +58,18 @@ const getPropertyById = async (id) => {
             LEFT JOIN lhainmobiliaria.nestancias ne ON p.idhabitaciones = ne.idnestancias
             LEFT JOIN lhainmobiliaria.naseos ns ON p.idaseos = ns.idnaseos
             LEFT JOIN lhainmobiliaria.tipoestado te ON p.idestado = te.idestado
+            LEFT JOIN lhainmobiliaria.tipocalificacion tc ON p.idcalificacion = tc.idcalificacion
+            LEFT JOIN lhainmobiliaria.tipocargas tca ON p.idcargas = tca.idcargas
+            LEFT JOIN lhainmobiliaria.tipoplanta tpl ON p.idplanta = tpl.idplanta
+            LEFT JOIN lhainmobiliaria.tipoorientacionentrada oe ON p.idorientacionentrada = oe.idorientacionentrada
+            LEFT JOIN lhainmobiliaria.tipoorientacionventana ov ON p.idorientacionventana = ov.idorientacionventana
+            LEFT JOIN lhainmobiliaria.tipocertificadoenergetico tce ON p.idcertificadoenergetico = tce.idcertificadoenergetico
+            LEFT JOIN lhainmobiliaria.tipogerencia tg ON p.idgerencia = tg.id
+            LEFT JOIN lhainmobiliaria.tipointernet ti ON p.idinternet = ti.id 
+            LEFT JOIN lhainmobiliaria.tipogas tgs ON p.idgas = tgs.id
+            LEFT JOIN lhainmobiliaria.tipoite tte ON p.idite = tte.id
+            LEFT JOIN lhainmobiliaria.tipotermoagua tta ON p.idtermoagua = tta.id 
+            LEFT JOIN lhainmobiliaria.tipoagua tag ON p.idagua = tag.id
             WHERE p.id = $1`,
             [id]
         );

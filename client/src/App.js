@@ -9,7 +9,7 @@ import {
   AppContainer, 
   StyledSecondaryTypography, 
   DrawerContainer, 
-  StyledButton ,
+  StyledButton,
   MainPicture,
   ContentWrapper
 } from './styles/AppStyles';
@@ -20,7 +20,7 @@ const App = () => {
     <>
       <GlobalStyle />
       <AppContainer>
-        {/* Drawer container that handle menu */}
+        {/* Drawer container that handles menu */}
         <DrawerContainer>
           <ResponsiveDrawer />
         </DrawerContainer>
@@ -31,25 +31,25 @@ const App = () => {
             <img src='/lha.intro.png' alt='Lha Inmobiliaria' />
           </MainPicture>
 
-        <StyledSecondaryTypography variant='h3'>
-          Propiedades Destacadas        
-        </StyledSecondaryTypography>
+          <StyledSecondaryTypography variant='h3'>
+            Propiedades Destacadas        
+          </StyledSecondaryTypography>
 
-        <PropiedadesDestacadas />
+          <PropiedadesDestacadas />
 
-        <StyledButton 
-          variant='contained' 
-          color='primary' 
-          size='large' 
-          component={Link}
-          to='/propiedades'
-        >
-          Ver todas las propiedades
-        </StyledButton>
-      </ContentWrapper>
+          <StyledButton 
+            variant='contained' 
+            color='primary' 
+            size='large' 
+            component={Link}
+            to='/propiedades'
+          >
+            Ver todas las propiedades
+          </StyledButton>
+        </ContentWrapper>
 
-      {/* Footer */}
-       <Footer />
+        {/* Footer */}
+        <Footer />
       </AppContainer>
     </>
   );

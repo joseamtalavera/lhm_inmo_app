@@ -11,9 +11,9 @@ const secondaryFields = [
 ];
 
 const extraFields = [
-    "Año.Const", "Calific", "Cargas", "Planta", "Ori.Entrada", "Ori.Ventana", "Cert.Ener", "Valor C.E", "CO2/m2 Año", 
-    "Kw/Año", "T. IBI", "T. VADO", "T. Rústico", "Gerencia", "Gastos", "Comunidad", "Derrama", "Cons. Elect", 
-    "Cons. Agua", "Internet", "Gas", "ITE", "Termo Agua", "Sum. Agua"
+    "Año.Const", "Calific", "Cargas", "Planta", "Ori.Entrada", "Ori.Ventana", "Cert.Ener", "Valor.C.E", "CO2/m2/Año", 
+    "Kw/Año", "T.IBI", "T.VADO", "T.Rústico", "Gerencia", "Gastos", "Comunidad", "Derrama", "Cons.Elect", 
+    "Cons.Agua", "Internet", "Gas", "ITE", "Termo.Agua", "Sum.Agua"
 ];
 
 const generateGridItem = (field, property, handleChange, isEditing) => (
@@ -79,7 +79,7 @@ const GeneralInfo = ({ property, handleChange, isEditing }) => (
                             <Select
                                 size="small"
                                 name="Activa"
-                                value={property.Activa || ''}
+                                value={property.Activa !== undefined ? String(property.Activa) : ''}
                                 onChange={handleChange}
                                 disabled={!isEditing}
                                 sx={{
@@ -89,8 +89,8 @@ const GeneralInfo = ({ property, handleChange, isEditing }) => (
                                 }}
                             >
                                 <MenuItem value=""><em>None</em></MenuItem>
-                                <MenuItem value="Yes">Yes</MenuItem>
-                                <MenuItem value="No">No</MenuItem>
+                                <MenuItem value="1" sx={{ color: '#008000'}}>Si</MenuItem>
+                                <MenuItem value="0" sx={{ color: '#FF0000'}}>No</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>

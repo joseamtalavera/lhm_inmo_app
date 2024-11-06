@@ -1,5 +1,7 @@
 import React from 'react';
-import { Box, Stack, Grid, Typography, FormControl, FormLabel, OutlinedInput, Select, MenuItem } from '@mui/material';
+import { Box, Stack, Grid, Typography, FormControl, FormLabel, OutlinedInput, Select, MenuItem, Chip } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const primaryFields = [
     "Ref", "RefExt", "Precio", "Destacada", "Título", "Dirección", "Localidad", "Provincia", "Pais", "CP",
@@ -67,6 +69,13 @@ const GeneralInfo = ({ property, handleChange, isEditing }) => (
                             <Typography variant='body1'>
                                 Localidad: {property.Localidad}
                             </Typography>
+                            <Chip
+                                label={property.Activa ? "Activa" : "Inactiva"}
+                                icon={property.Activa ? <CheckCircleIcon /> : <CancelIcon />}
+                                color={property.Activa ? "success" : "error"}
+                                variant="outlined"
+                                sx={{ mt: 2 }} // Add margin-top to create space
+                            />
                         </Box>
                     </Grid>
                     <Grid item xs={12} md={3}>

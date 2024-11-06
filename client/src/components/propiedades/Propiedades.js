@@ -1,17 +1,16 @@
 //Propiedades.js
-import React, { useState }from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MenuLayout from '../Menu/MenuLayout'; 
 import BasicTablePropiedades from './BasicTablePropiedades';
 import AddIcon from '@mui/icons-material/Add';
-import {useTheme } from '@mui/material/styles';
-import {Box} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { Box } from '@mui/material';
 import {
   StyledButton,
   StyledBox,
   InnerBox,
 } from '../../styles/PropiedadesStyles';
-
 
 const Propiedades = () => {
   const navigate = useNavigate();
@@ -23,23 +22,21 @@ const Propiedades = () => {
 
   return (
     <MenuLayout>
-
-      <StyledBox >
-        <InnerBox >
+      <StyledBox>
+       {/*  <InnerBox>
           <StyledButton
             variant="outlined"
             startIcon={<AddIcon />}
             onClick={handleOpen}
           >
-          Add
+            Add
           </StyledButton>
-          </InnerBox>
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+        </InnerBox> */}
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
           <Box sx={{ maxWidth: '1200px', width: '100%', padding: '1rem' }}>
-    <BasicTablePropiedades />
-  </Box>
-</Box>
-
+            <BasicTablePropiedades />
+          </Box>
+        </Box>
       </StyledBox>
     </MenuLayout>
   );

@@ -7,7 +7,7 @@ const theme = createTheme({
             main: "#1E90FF" // hex colour for blue
         },
         secondary: {
-            main: "#505050" // hex colour for grey
+            main: "#B0BEC5" // hex colour for grey
         }
     }, 
     breakpoints: {

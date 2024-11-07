@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Stack, Grid, Typography, FormControl, FormLabel, OutlinedInput, Select, MenuItem, Chip } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -18,32 +18,215 @@ const extraFields = [
     "Cons.Agua", "Internet", "Gas", "ITE", "Termo.Agua", "Sum.Agua"
 ];
 
-const generateGridItem = (field, property, handleChange, isEditing) => (
-    <Grid item xs={12} md={4} key={field}>
-        <FormControl variant="outlined" sx={{ width: '100%' }}>
-            <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                <Typography variant="body2" sx={{ color: 'black' }}>
-                    {field}
-                </Typography>
-            </FormLabel>
-            <OutlinedInput
-                size="small"
-                name={field.replace(/\s/g, '')}
-                value={property[field.replace(/\s/g, '')] || ''}
-                onChange={handleChange}
-                disabled={!isEditing}
-                sx={{ color: 'red' }} // Ensures the input field itself is targeted
-                InputProps={{
-                    style: {
-                        color: 'red' // Directly sets the text color inside the input
-                    }
-                }}
-            />
-        </FormControl>
-    </Grid>
-);
+const selectOptions = {
+    Destacada: ["Si", "No"],
+    Tipo: ["Casa rustica o de campo",
+        "Chalet/casa independiente",
+        "Chalet/casa pareada",
+        "Chalet/casa adosada",
+        "Inmueble",
+        "Piso",
+        "Atico/Duplex",
+        "Obra Nueva",
+        "Oficina",
+        "Local",
+        "Garaje/parking",
+        "Trastero",
+        "Terrenos/parcela",
+        "Edificio"
+    ],
+    Habitaciones:["0", "1", "2", "3", "4", "5 o más"],
+    Baños:["0", "1", "2", "3", "4 o más"],
+    Aseos:["0", "1", "2", "3", "4 o más"],
+    Estado:[ "Buen estado",
+        "Para entrar a vivir",
+        "Reforma de mantenimiento (pintar, cambiar enchufes, etc.)",
+        "Reforma completa",
+        "Abandonado",
+        "Estado inicial de en fecha de su adquisición"],
+    Calific:["Obra nueva",
+        "Segunda mano",
+        "En construcción",
+        "A reformar",
+        "Reformado",
+        "En ruinas"
+    ],
+    Cargas: [
+        "Sin Cargas",
+        "Carga Hipotecaria se liquida en la venta",
+        "Carga administrativa",
+        "Carga Judicial",
+        "Carga por embargo",
+        "Proindivisa",
+        "Se puede segregar"
+    ],
+    Planta: [
+        "Sótano",
+        "Bajo",
+        "Primera planta",
+        "Segunda planta",
+        "Tercera planta",
+        "Cuarta planta",
+        "Quinta planta",
+        "Sexta planta",
+        "Séptima planta o más",
+        "Ático",
+        "Ultima Planta"
+    ],
+    "Ori.Entrada": [
+        "Norte",
+        "Sur",
+        "Este",
+        "Oeste",
+        "Sureste",
+        "Suroeste",
+        "Noroeste",
+        "Noreste"
+    ],
+    "Ori.Ventana": [
+        "Norte",
+        "Sur",
+        "Este",
+        "Oeste",
+        "Sureste",
+        "Suroeste",
+        "Noroeste",
+        "Noreste"
+    ],
+    "Cert.Ener": [
+        "En tramite",
+        "Calificación",
+        "Exento",
+        "No necesita"
+    ],
+    "Valor.C.E": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G"
+    ],
+    Gerencia: [
+        "Presidencia",
+        "Con administrador de fincas COLEGIADO",
+        "Con administrador de fincas NO COLEGIADO"
+    ],
+    Internet: [
+        "Fibra",
+        "Normal",
+        "Satélite",
+        "Antena",
+        "Telecable"
+    ],
+    Gas: [
+        "Ciudad",
+        "Bombona propano",
+        "Bombona"
+    ],
+    ITE: [
+        "No es necesaria aún",
+        "Aprobada",
+        "En curso",
+        "Pendiente",
+        "Exento"
+    ],
+    "Termo.Agua": [
+        "Calentador eléctrico",
+        "Termo gas butano",
+        "Termo gas ciudad",
+        "Calentador comunitario",
+        "Calentador placa solar"
+    ],
+    "Sum.Agua": [
+        "Comunitaria",
+        "Independiente"
+    ],
 
-const GeneralInfo = ({ property, handleChange, isEditing }) => (
+
+}
+
+const generateGridItem = (field, property, handleChange, isEditing) => {
+    if (selectOptions[field]) {
+        return (
+            <Grid item xs={12} md={4} key={field}>
+                <FormControl variant="outlined" sx={{ width: '100%' }}>
+                    <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
+                        <Typography variant="body2" sx={{ color: 'black' }}>
+                            {field}
+                        </Typography>
+                    </FormLabel>
+                    <Select
+                        size="small"
+                        name={field.replace(/\s/g, '')}
+                        value={property[field.replace(/\s/g, '')] || ''}
+                        onChange={handleChange}
+                        disabled={!isEditing}
+                        sx={{
+                            '& .MuiSelect-select': {
+                                color: '#404040', // Darker gray color for the text in Select component
+                            },
+                        }}
+                    >
+                        <MenuItem value=""><em>None</em></MenuItem>
+                        {selectOptions[field].map(option => (
+                            <MenuItem key={option} value={option}>
+                                {option}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </Grid>
+        );
+    }
+
+    return (
+        <Grid item xs={12} md={4} key={field}>
+            <FormControl variant="outlined" sx={{ width: '100%' }}>
+                <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
+                    <Typography variant="body2" sx={{ color: 'black' }}>
+                        {field}
+                    </Typography>
+                </FormLabel>
+                <OutlinedInput
+                    size="small"
+                    name={field.replace(/\s/g, '')}
+                    value={property[field.replace(/\s/g, '')] || ''}
+                    onChange={handleChange}
+                    disabled={!isEditing}
+                    sx={{ color: '#404040' }} // Ensures the input field itself is targeted
+                    inputProps={{
+                        style: {
+                            color: '#404040' // Directly sets the text color inside the input
+                        }
+                    }}
+                />
+            </FormControl>
+        </Grid>
+    );
+};
+
+const GeneralInfo = ({ property, handleChange, isEditing, setProperty }) => {
+    const [lastRefNumber, setLastRefNumber] = useState(40);
+    useEffect(() => {
+        const generateRef = () => {
+            const prefix = 'LHA';
+            const nextRefNumber = lastRefNumber + 1;
+            setLastRefNumber(nextRefNumber); // Update the last reference number
+            return `${prefix}${String(nextRefNumber).padStart(4, '0')}`; // Pad the number with leading zeros
+        };
+
+        // Check if the Ref is not already set, then generate and set it
+        if (!property.Ref) {
+            setProperty((prevProperty) => ({
+                ...prevProperty,
+                Ref: generateRef(),
+            }));
+        }  
+    }, [property, setProperty, lastRefNumber]);
+
+    return (
     <Box>
         <Stack spacing={2} sx={{ my: 1 }}>
             <Box
@@ -98,8 +281,8 @@ const GeneralInfo = ({ property, handleChange, isEditing }) => (
                                 }}
                             >
                                 <MenuItem value=""><em>None</em></MenuItem>
-                                <MenuItem value="1" sx={{ color: '#008000'}}>Si</MenuItem>
-                                <MenuItem value="0" sx={{ color: '#FF0000'}}>No</MenuItem>
+                                <MenuItem value="1" >Si</MenuItem>
+                                <MenuItem value="0" >No</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -150,6 +333,6 @@ const GeneralInfo = ({ property, handleChange, isEditing }) => (
             </Box>
         </Stack>
     </Box>
-);
+)};
 
 export default GeneralInfo;

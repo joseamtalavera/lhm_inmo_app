@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Button,
@@ -32,6 +32,8 @@ const AddPropiedad = () => {
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
+
+   
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -87,6 +89,7 @@ const AddPropiedad = () => {
                                 property={property}
                                 handleChange={handleChange}
                                 isEditing={true} // Always editable for new properties
+                                setProperty={setProperty}
                             />
                         )}
                         {activeTab === 1 && (

@@ -81,20 +81,57 @@ const getPropertyById = async (id) => {
     }
 };
 
-module.exports = {
-    getPropertyById,
-};
-
-const addPropertyDb = async (property) => {
+// Helper function to fetch ID from a table by matching column value
+const getIdFromTable = async (tableName, idColumnName, columnName, value) => {
     try {
-        const { ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud, metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos, idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana, idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico, tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama, consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario } = property;
-
         const result = await pool.query(
-            `INSERT INTO lhainmobiliaria.vproperties (ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud, metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos, idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana, idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico, tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama, consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45) RETURNING *`,
-            [ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud, metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos, idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana, idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico, tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama, consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario]
+            `SELECT ${idColumnName} FROM ${tableName} WHERE ${columnName} = $1`,
+            [value]
         );
 
+        // Check if the query returned a result
+        if (result.rows.length === 0) {
+            throw new Error(`No match found in ${tableName} for ${columnName} = ${value}`);
+        }
+
+        return result.rows[0][idColumnName];
+    } catch (error) {
+        console.error(`Error in getIdFromTable for ${tableName}:`, error);
+        throw error;
+    }
+};
+
+// Function to add a property to the database
+const addPropertyDb = async (property) => {
+    try {
+        const {
+            ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
+            metrosconstruidos, metrosutiles, metrosparcela, tipopropiedad, active, idusuario
+        } = property;
+
+        // Lookup foreign key ID for TipoPropiedad based on `tipopropiedad` name
+        const idtipopropiedad = await getIdFromTable(
+            'lhainmobiliaria.tipopropiedad', // Table name
+            'IdTipoPropiedad',               // ID column in tipopropiedad table
+            'TipoPropiedad',                 // Column to match (e.g., "Chalet/casa independiente")
+            tipopropiedad                    // The provided value to look up
+        );
+
+        // Insert property data, including the retrieved foreign key ID
+        const result = await pool.query(
+            `INSERT INTO lhainmobiliaria.vproperties (
+                ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
+                metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, active, idusuario
+            ) VALUES (
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17
+            ) RETURNING *`,
+            [
+                ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
+                metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, active, idusuario
+            ]
+        );
+
+        console.log('Property added:', result.rows[0]);
         return result.rows[0];
     } catch (error) {
         console.error('Error in addPropertyDb:', error);

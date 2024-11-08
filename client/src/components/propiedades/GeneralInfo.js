@@ -1,7 +1,10 @@
+//GeneralInfo.js
+
 import React, { useEffect, useState } from 'react';
 import { Box, Stack, Grid, Typography, FormControl, FormLabel, OutlinedInput, Select, MenuItem, Chip } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import AddIcon from '@mui/icons-material/Add'; // Import AddIcon
 
 const primaryFields = [
     "Ref", "RefExt", "Precio", "Destacada", "Título", "Dirección", "Localidad", "Provincia", "Pais", "CP",
@@ -143,8 +146,6 @@ const selectOptions = {
         "Comunitaria",
         "Independiente"
     ],
-
-
 }
 
 const generateGridItem = (field, property, handleChange, isEditing) => {
@@ -207,8 +208,9 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
     );
 };
 
-const GeneralInfo = ({ property, handleChange, isEditing, setProperty }) => {
+const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActiveTab }) => {
     const [lastRefNumber, setLastRefNumber] = useState(40);
+
     useEffect(() => {
         const generateRef = () => {
             const prefix = 'LHA';
@@ -226,113 +228,140 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty }) => {
         }  
     }, [property, setProperty, lastRefNumber]);
 
-    return (
-    <Box>
-        <Stack spacing={2} sx={{ my: 1 }}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: { xs: 'column', md: 'row' },
-                    gap: 2,
-                    mb: 0, mt: 1, p: 2,
-                    flexWrap: 'wrap'
-                }}
-            >
-                <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} md={3}>
-                        <Box sx={{ width:'100%', mb: 2 }}>
-                            <img src={property.Foto} alt="Img" style={{ width: '100%', height: 'auto', borderRadius: '4px' }} />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Box sx={{mb: 2}}>
-                            <Typography variant="h6" sx={{ mb:1 }}>
-                                Referencia: {property.Ref}
-                            </Typography>
-                            <Typography variant='body1'>
-                                Localidad: {property.Localidad}
-                            </Typography>
-                            <Chip
-                                label={property.Activa ? "Activa" : "Inactiva"}
-                                icon={property.Activa ? <CheckCircleIcon /> : <CancelIcon />}
-                                color={property.Activa ? "success" : "error"}
-                                variant="outlined"
-                                sx={{ mt: 2 }} // Add margin-top to create space
-                            />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormControl variant="outlined" sx={{ width: '100%' }}>
-                            <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
-                                <Typography variant="body2" sx={{ color: 'black' }}>
-                                    Activa<span style={{ color: '#1E90FF', fontSize: '1.5em' }}>*</span>
-                                </Typography>
-                            </FormLabel>
-                            <Select
-                                size="small"
-                                name="Activa"
-                                value={property.Activa !== undefined ? String(property.Activa) : ''}
-                                onChange={handleChange}
-                                disabled={!isEditing}
-                                sx={{
-                                    '& .MuiSelect-select': {
-                                        color: '#404040', // Darker gray color for the text in Select component
-                                    },
-                                }}
-                            >
-                                <MenuItem value=""><em>None</em></MenuItem>
-                                <MenuItem value="1" >Si</MenuItem>
-                                <MenuItem value="0" >No</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                </Grid>
+    const handleImageClick = () => {
+        if (typeof setActiveTab === 'function') {
+            setActiveTab(2); 
+        } else {
+            console.error('setActiveTab is not a function');
+        }
+    };
 
-                <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-                    <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF'  }}>
-                        Informacion General
-                    </Typography>
-                    <Grid container spacing={2}>
-                        {primaryFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
-                        <Grid item xs={12} md={12}>
+    return (
+        <Box>
+            <Stack spacing={2} sx={{ my: 1 }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column', md: 'row' },
+                        gap: 2,
+                        mb: 0, mt: 1, p: 2,
+                        flexWrap: 'wrap'
+                    }}
+                >
+                    <Grid container spacing={2} alignItems="center">
+                        <Grid item xs={12} md={3}>
+                            <Box sx={{ width:'100%', mb: 2 }}>
+                                {property.Foto ? (
+                                    <img src={property.Foto} alt="Img" style={{ width: '100%', height: 'auto', borderRadius: '4px' }} />
+                                ) : (
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: '200px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            border: '2px dashed #ddd',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                        onClick={handleImageClick}
+                                    >
+                                        <AddIcon sx={{ fontSize: 40, color: '#ddd' }} />
+                                    </Box>
+                                )}
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Box sx={{mb: 2}}>
+                                <Typography variant="h6" sx={{ mb:1 }}>
+                                    Referencia: {property.Ref}
+                                </Typography>
+                                <Typography variant='body1'>
+                                    Localidad: {property.Localidad}
+                                </Typography>
+                                <Chip
+                                    label={property.Activa ? "Activa" : "Inactiva"}
+                                    icon={property.Activa ? <CheckCircleIcon /> : <CancelIcon />}
+                                    color={property.Activa ? "success" : "error"}
+                                    variant="outlined"
+                                    sx={{ mt: 2 }} // Add margin-top to create space
+                                />
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} md={3}>
                             <FormControl variant="outlined" sx={{ width: '100%' }}>
                                 <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
                                     <Typography variant="body2" sx={{ color: 'black' }}>
-                                        Descripción<span style={{ color: '#1E90FF', fontSize: '1.5em' }}>*</span>
+                                        Activa<span style={{ color: '#1E90FF', fontSize: '1.5em' }}>*</span>
                                     </Typography>
                                 </FormLabel>
-                                <OutlinedInput
+                                <Select
                                     size="small"
-                                    name="Descripción"
-                                    value={property.Descripción || ''}
+                                    name="Activa"
+                                    value={property.Activa !== undefined ? String(property.Activa) : ''}
                                     onChange={handleChange}
                                     disabled={!isEditing}
-                                    multiline
-                                    minRows={4}
-                                />
+                                    sx={{
+                                        '& .MuiSelect-select': {
+                                            color: '#404040', // Darker gray color for the text in Select component
+                                        },
+                                    }}
+                                >
+                                    <MenuItem value=""><em>None</em></MenuItem>
+                                    <MenuItem value="1" >Si</MenuItem>
+                                    <MenuItem value="0" >No</MenuItem>
+                                </Select>
                             </FormControl>
                         </Grid>
                     </Grid>
+
+                    <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
+                        <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF'  }}>
+                            Informacion General
+                        </Typography>
+                        <Grid container spacing={2}>
+                            {primaryFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
+                            <Grid item xs={12} md={12}>
+                                <FormControl variant="outlined" sx={{ width: '100%' }}>
+                                    <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
+                                        <Typography variant="body2" sx={{ color: 'black' }}>
+                                            Descripción<span style={{ color: '#1E90FF', fontSize: '1.5em' }}>*</span>
+                                        </Typography>
+                                    </FormLabel>
+                                    <OutlinedInput
+                                        size="small"
+                                        name="Descripción"
+                                        value={property.Descripción || ''}
+                                        onChange={handleChange}
+                                        disabled={!isEditing}
+                                        multiline
+                                        minRows={4}
+                                    />
+                                </FormControl>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <Box sx={{  width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
+                        <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
+                            Características
+                        </Typography>
+                        <Grid container spacing={2}>
+                            {secondaryFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
+                        </Grid>
+                    </Box>
+                    <Box sx={{  width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px'}}>
+                        <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
+                            Extras
+                        </Typography>
+                        <Grid container spacing={2}>
+                            {extraFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
+                        </Grid>
+                    </Box>
                 </Box>
-                <Box sx={{  width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-                    <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
-                        Características
-                    </Typography>
-                    <Grid container spacing={2}>
-                        {secondaryFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
-                    </Grid>
-                </Box>
-                <Box sx={{  width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px'}}>
-                    <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
-                        Extras
-                    </Typography>
-                    <Grid container spacing={2}>
-                        {extraFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
-                    </Grid>
-                </Box>
-            </Box>
-        </Stack>
-    </Box>
-)};
+            </Stack>
+        </Box>
+    );
+};
 
 export default GeneralInfo;

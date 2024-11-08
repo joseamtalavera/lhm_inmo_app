@@ -38,7 +38,7 @@ const getPropertyById = async (id) => {
                 p.metrosutiles, p.metrosparcela, tp.tipopropiedad AS tipo_propiedad, ne.nestancias AS habitaciones, 
                 nb.nbanos AS banos, ns.naseos AS aseos, te.estado AS estado, p.anoconstruccion, 
                 tc.calificacion AS calificacion, tca.cargas AS cargas, tpl.planta AS planta, oe.orientacionentrada AS orientacionentrada, 
-                OV.orientacionventana AS orientacionventana, tce.certificadoenergetico AS certificadoenergetico, p.valorcertificadoenergetico, 
+                ov.orientacionventana AS orientacionventana, tce.certificadoenergetico AS certificadoenergetico, p.valorcertificadoenergetico, 
                 p.co2certificadoenergetico, p.kwcertificadoenergetico, p.tributoibi, p.tributovado, 
                 p.tributorustico, p.gastosvarios, tg.tipogerencia AS gerencia, p.comunidadgastos, p.comunidadderrama, 
                p.consumoelecticidad, p.consumoagua, ti.tipointernet AS internet, tgs.tipogas AS gas, tte.tipoite AS ite, 
@@ -101,33 +101,203 @@ const getIdFromTable = async (tableName, idColumnName, columnName, value) => {
     }
 };
 
+// Helper function to normalize keys and convert empty strings to null for numeric fields
+const normalizeKeys = (obj) => {
+    const keyMap = {
+        'Ref': 'ref',
+        'RefExt': 'refext',
+        'Título': 'title',
+        'Precio': 'precio',
+        'Dirección': 'direccion',
+        'Localidad': 'localidad',
+        'Provincia': 'provincia',
+        'Pais': 'pais',
+        'CP': 'cp',
+        'Longitud': 'longitud',
+        'Latitud': 'latitud',
+        'M.Constr': 'metrosconstruidos',
+        'M.Utiles': 'metrosutiles',
+        'M.Parcela': 'metrosparcela',
+        'Tipo': 'tipopropiedad',
+        'Habitaciones': 'nestancias', 
+        'Baños': 'nbanos',
+        'Aseos': 'naseos',
+        'Estado': 'estado',
+        'Año.Const': 'anoconstruccion',
+        'Calific': 'calificacion',
+        'Cargas': 'cargas',
+        'Planta': 'planta', 
+        'Ori.Entrada': 'orientacionentrada',
+        'Ori.Ventana': 'orientacionventana',
+        'Cert.Ener': 'certificadoenergetico',
+        'Valor.C.E': 'valorcertificadoenergetico',
+        'CO2/m2/Año': 'co2certificadoenergetico',
+        'Kw/Año': 'kwcertificadoenergetico',
+        'T.IBI': 'tributoibi',
+        'T.VADO': 'tributovado',
+        'T.Rústico': 'tributorustico',
+        'Gastos': 'gastosvarios',
+        'Gerencia': 'gerencia',
+        'Comunidad': 'comunidadgastos',
+        'Derrama': 'comunidadderrama',
+        'Cons.Elect': 'consumoelecticidad',
+        'Cons.Agua': 'consumoagua',
+        'Internet': 'tipointernet',
+        'Gas': 'tipogas',
+        'ITE': 'tipoite',
+        'Termo.Agua': 'tipotermoagua',
+        'Sum.Agua': 'tipoagua',
+        'Activa': 'active',
+        'Foto': 'foto',
+        'Destacada': 'destacada',
+        'CreatedAt': 'created_at',
+        'UpdatedAt': 'updated_at',
+        'Descripción': 'description'
+    };
+
+    const numericFields = [
+        'precio', 'longitud', 'latitud', 'metrosconstruidos', 'metrosutiles', 'metrosparcela',
+        'idhabitaciones', 'idbanos', 'idaseos', 'idestado', 'anoconstruccion', 'idcalificacion',
+        'idcargas', 'idorientacionentrada', 'idorientacionventana', 'idcertificadoenergetico',
+        'valorcertificadoenergetico', 'co2certificadoenergetico', 'kwcertificadoenergetico', 'tributoibi',
+        'tributovado', 'tributorustico', 'gastosvarios', 'idgerencia', 'comunidadgastos', 'comunidadderrama',
+        'consumoelecticidad', 'consumoagua', 'idinternet', 'idgas', 'idite', 'idtermoagua', 'idagua'
+    ];
+
+    return Object.keys(obj).reduce((acc, key) => {
+        const normalizedKey = keyMap[key] || key;
+        let value = obj[key];
+
+        // Convert empty strings to null for numeric fields
+        if (numericFields.includes(normalizedKey) && value === '') {
+            value = null;
+        }
+
+        acc[normalizedKey] = value;
+        return acc;
+    }, {});
+};
+
 // Function to add a property to the database
 const addPropertyDb = async (property) => {
     try {
+        property = normalizeKeys(property);
         const {
             ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
-            metrosconstruidos, metrosutiles, metrosparcela, tipopropiedad, active, idusuario
+            metrosconstruidos, metrosutiles, metrosparcela, tipopropiedad, nestancias, nbanos, naseos,
+            estado, anoconstruccion, calificacion, cargas, planta, orientacionentrada, orientacionventana,
+            certificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
+            tributoibi, tributovado, tributorustico, gastosvarios, tipogerencia, comunidadgastos, comunidadderrama,
+            consumoelecticidad, consumoagua, tipointernet, tipogas, tipoite, tipotermoagua, tipoagua, active, idusuario
         } = property;
 
-        // Lookup foreign key ID for TipoPropiedad based on `tipopropiedad` name
-        const idtipopropiedad = await getIdFromTable(
-            'lhainmobiliaria.tipopropiedad', // Table name
-            'IdTipoPropiedad',               // ID column in tipopropiedad table
-            'TipoPropiedad',                 // Column to match (e.g., "Chalet/casa independiente")
-            tipopropiedad                    // The provided value to look up
-        );
+        console.log('Property data:', property);
 
-        // Insert property data, including the retrieved foreign key ID
+        let idtipopropiedad = null;
+        if (tipopropiedad) {
+            idtipopropiedad = await getIdFromTable('lhainmobiliaria.tipopropiedad', 'idtipopropiedad', 'tipopropiedad', tipopropiedad);
+        }
+
+        let idhabitaciones = null;
+        if (nestancias) {
+            idhabitaciones = await getIdFromTable('lhainmobiliaria.nestancias', 'idnestancias', 'nestancias', nestancias);
+        }
+
+        let idbanos = null;
+        if (nbanos) {
+            idbanos = await getIdFromTable('lhainmobiliaria.nbanos', 'idnbanos', 'nbanos', nbanos);
+        }
+
+        let idaseos = null;
+        if (naseos) {
+            idaseos = await getIdFromTable('lhainmobiliaria.naseos', 'idnaseos', 'naseos', naseos);
+        }
+
+        let idestado = null;
+        if (estado) {
+            idestado = await getIdFromTable('lhainmobiliaria.tipoestado', 'idestado', 'estado', estado);
+        }
+
+        let idcalificacion = null;
+        if (calificacion) {
+            idcalificacion = await getIdFromTable('lhainmobiliaria.tipocalificacion', 'idcalificacion', 'calificacion', calificacion);
+        }
+
+        let idcargas = null;
+        if (cargas) {
+            idcargas = await getIdFromTable('lhainmobiliaria.tipocargas', 'idcargas', 'cargas', cargas);
+        }
+
+        let idplanta = null;
+        if (planta) {
+            idplanta = await getIdFromTable('lhainmobiliaria.tipoplanta', 'idplanta', 'planta', planta);
+        }
+
+        let idorientacionentrada = null;
+        if (orientacionentrada) {
+            idorientacionentrada = await getIdFromTable('lhainmobiliaria.tipoorientacionentrada', 'idorientacionentrada', 'orientacionentrada', orientacionentrada);
+        }
+
+        let idorientacionventana = null;
+        if (orientacionventana) {
+            idorientacionventana = await getIdFromTable('lhainmobiliaria.tipoorientacionventana', 'idorientacionventana', 'orientacionventana', orientacionventana);
+        }
+
+        let idcertificadoenergetico = null;
+        if (certificadoenergetico) {
+            idcertificadoenergetico = await getIdFromTable('lhainmobiliaria.tipocertificadoenergetico', 'idcertificadoenergetico', 'certificadoenergetico', certificadoenergetico);
+        }
+
+        let idgerencia = null;
+        if (tipogerencia) {
+            idgerencia = await getIdFromTable('lhainmobiliaria.tipogerencia', 'id', 'tipogerencia', tipogerencia);
+        }
+
+        let idinternet = null;
+        if (tipointernet) {
+            idinternet = await getIdFromTable('lhainmobiliaria.tipointernet', 'id', 'tipointernet', internet);
+        }
+
+        let idgas = null;
+        if (tipogas) {
+            idgas = await getIdFromTable('lhainmobiliaria.tipogas', 'id', 'tipogas', gas);
+        }
+
+        let idite = null;
+        if (tipoite) {
+            idite = await getIdFromTable('lhainmobiliaria.tipoite', 'id', 'tipoite', ite);
+        }
+
+        let idtermoagua = null;
+        if (tipotermoagua) {
+            idtermoagua = await getIdFromTable('lhainmobiliaria.tipotermoagua', 'id', 'tipotermoagua', termoagua);
+        }
+
+        let idagua = null;
+        if (tipoagua) {
+            idagua = await getIdFromTable('lhainmobiliaria.tipoagua', 'id', 'tipoagua', agua);
+        }
+
+        // Insert property data, including the retrieved foreign key IDs
         const result = await pool.query(
             `INSERT INTO lhainmobiliaria.vproperties (
                 ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
-                metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, active, idusuario
+                metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos,
+                idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana,
+                idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
+                tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama,
+                consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23,
+                $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45
             ) RETURNING *`,
             [
                 ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
-                metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, active, idusuario
+                metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos,
+                idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana,
+                idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
+                tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama,
+                consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario
             ]
         );
 
@@ -141,20 +311,42 @@ const addPropertyDb = async (property) => {
 
 const updatePropertyDb = async (property) => {
     try {
-        const { id, ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud, metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos, idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana, idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico, tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama, consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario } = property;
+        property = normalizeKeys(property);
+        const {
+            id, ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
+            metrosconstruidos, metrosutiles, metrosparcela, tipopropiedad, idhabitaciones, idbanos, idaseos, idestado,
+            anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana,
+            idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
+            tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama,
+            consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario
+        } = property;
+
+        // Lookup foreign key ID for TipoPropiedad based on `tipopropiedad` name
+        const idtipopropiedad = await getIdFromTable(
+            'lhainmobiliaria.tipopropiedad', // Table name
+            'idtipopropiedad',               // ID column in tipopropiedad table
+            'tipopropiedad',                 // Column to match (e.g., "Chalet/casa independiente")
+            tipopropiedad                    // The provided value to look up
+        );
 
         const result = await pool.query(
             `UPDATE lhainmobiliaria.vproperties SET ref = $1, refext = $2, title = $3, precio = $4, direccion = $5, localidad = $6, provincia = $7, pais = $8, cp = $9, longitud = $10, latitud = $11, metrosconstruidos = $12, metrosutiles = $13, metrosparcela = $14, idtipopropiedad = $15, idhabitaciones = $16, idbanos = $17, idaseos = $18, idestado = $19, anoconstruccion = $20, idcalificacion = $21, idcargas = $22, idplanta = $23, idorientacionentrada = $24, idorientacionventana = $25, idcertificadoenergetico = $26, valorcertificadoenergetico = $27, co2certificadoenergetico = $28, kwcertificadoenergetico = $29, tributoibi = $30, tributovado = $31, tributorustico = $32, gastosvarios = $33, idgerencia = $34, comunidadgastos = $35, comunidadderrama = $36, consumoelecticidad = $37, consumoagua = $38, idinternet = $39, idgas = $40, idite = $41, idtermoagua = $42, idagua = $43, active = $44, idusuario = $45 WHERE id = $46 RETURNING *`,
-            [ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud, metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos, idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana, idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico, tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama, consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario, id]
+            [
+                ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
+                metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos,
+                idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana,
+                idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
+                tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama,
+                consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario, id
+            ]
         );
 
         return result.rows[0];
-    }
-    catch (error) {
+    } catch (error) {
         console.error('Error in updatePropertyDb:', error);
         throw error;
     }
-}
+};
 
 const deletePropertyDb = async (id) => {
     try {

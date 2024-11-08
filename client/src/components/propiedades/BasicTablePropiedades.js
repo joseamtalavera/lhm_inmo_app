@@ -246,10 +246,10 @@ export default function DataTable({ filter: initialFilter }) {
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            <IconButton color="primary" onClick={() => navigate(`/dashboard/propiedades/${property.id}`)}>
+                                            <IconButton color="primary" onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/propiedades/${property.id}`); }}>
                                                 <EditIcon />
                                             </IconButton>
-                                            <IconButton color="secondary" onClick={() => handleDelete(property.id)}>
+                                            <IconButton color="red" onClick={(e) => { e.stopPropagation(); handleDelete(property.id); }}>
                                                 <DeleteIcon />
                                             </IconButton>
                                         </TableCell>

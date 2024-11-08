@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, CircularProgress, Box, Card, Typography, Divider, Tabs, Tab, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Button, CircularProgress, Box, Card, Divider, Tabs, Tab, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -16,7 +16,6 @@ import Documentation from './Documentation';
 const Propiedad = () => {
     const { id } = useParams();
     const [property, setProperty] = useState({});
-    const [amenities, setAmenities] = useState([]);
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -61,7 +60,7 @@ const Propiedad = () => {
                     "Año.Const": data.anoconstruccion,
                     Calific: data.calificacion,
                     Cargas: data.cargas,
-                    Planta: data.planta,
+                    Planta: data.planta, // Ensure correct handling as string
                     "Ori.Entrada": data.orientacionentrada,
                     "Ori.Ventana": data.orientacionventana,
                     "Cert.Ener": data.certificadoenergetico,
@@ -212,179 +211,180 @@ const Propiedad = () => {
     return (
         <MenuLayout>
             <ThemeProvider theme={theme}>
-                    <Card sx={{ maxWidth: '90%', margin: 'auto', mt: 5, mb: 2 }}>
-                    
-                        <Tabs value={activeTab} onChange={handleTabChange} centered>
-                            <Tab label="Informacion General" />
-                            <Tab label="Amenities" />
-                            <Tab label="Imagenes" />
-                            <Tab label="Documentos" />
-                            <Tab label="Preview" />
-                        </Tabs>
-                        <Divider />
-                        <Box sx={{ p: 2 }}>
-                            {activeTab === 0 && (
-                                <GeneralInfo    
-                                    property={property}
-                                    handleChange={handleChange}
-                                    isEditing={isEditingGeneralInfo}   
-                                />
+                <Card sx={{ maxWidth: '90%', margin: 'auto', mt: 5, mb: 2 }}>
+                    <Tabs value={activeTab} onChange={handleTabChange} centered>
+                        <Tab label="Informacion General" />
+                        <Tab label="Amenities" />
+                        <Tab label="Imagenes" />
+                        <Tab label="Documentos" />
+                        <Tab label="Preview" />
+                    </Tabs>
+                    <Divider />
+                    <Box sx={{ p: 2 }}>
+                        {activeTab === 0 && (
+                            <GeneralInfo
+                                property={property}
+                                handleChange={handleChange}
+                                isEditing={isEditingGeneralInfo}
+                                setProperty={setProperty}
+                                setActiveTab={setActiveTab} // Pass setActiveTab as a prop
+                            />                            
+                        )}
+                        {activeTab === 1 && (
+                            <Amenities
+                                property={property}
+                                handleChange={handleChange}
+                                isEditing={isEditingAmenities}
+                            />
+                        )}
+                        {activeTab === 2 && (
+                            <Images
+                                images={images}
+                                setImages={setImages}
+                                isEditing={isEditingImages}
+                            />
+                        )}
+                        {activeTab === 3 && (
+                            <Documentation
+                                documents={documents}
+                                setDocuments={setDocuments}
+                                isEditing={isEditingDocumentation}
+                            />
+                        )}
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '0px solid', borderColor: 'divider', mb: 2, mr: 2 }}>
+                        <Box sx={{ alignSelf: 'flex-end', pt: 2 }}>
+                            {activeTab === 0 && !isEditingGeneralInfo && (
+                                <Button
+                                    startIcon={<EditIcon />}
+                                    size="medium"
+                                    variant="outlined"
+                                    onClick={() => handleEditClick(0)}
+                                    sx={{ mr: 2, mb: 2 }}
+                                >
+                                    Edit
+                                </Button>
                             )}
-                            {activeTab === 1 && (
-                                <Amenities
-                                    property={property}
-                                    handleChange={handleChange}
-                                    isEditing={isEditingAmenities}
-                                />
+                            {activeTab === 0 && isEditingGeneralInfo && (
+                                <>
+                                    <Button
+                                        size="medium"
+                                        variant="outlined"
+                                        onClick={() => handleCancelClick(0)}
+                                        sx={{ mr: 2, mb: 2 }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        size="medium"
+                                        color="success"
+                                        variant="outlined"
+                                        onClick={handleSubmit}
+                                        sx={{ mr: 2, mb: 2 }}
+                                    >
+                                        Save
+                                    </Button>
+                                </>
                             )}
-                            {activeTab === 2 && (
-                                <Images
-                                    images={images}
-                                    setImages={setImages}
-                                    isEditing={isEditingImages}
-                                />
+                            {activeTab === 1 && !isEditingAmenities && (
+                                <Button
+                                    startIcon={<EditIcon />}
+                                    size="medium"
+                                    variant="outlined"
+                                    onClick={() => handleEditClick(1)}
+                                    sx={{ mr: 2, mb: 2 }}
+                                >
+                                    Edit
+                                </Button>
                             )}
-                            {activeTab === 3 && (
-                                <Documentation
-                                    documents={documents}
-                                    setDocuments={setDocuments}
-                                    isEditing={isEditingDocumentation}
-                                />
+                            {activeTab === 1 && isEditingAmenities && (
+                                <>
+                                    <Button
+                                        size="medium"
+                                        variant="outlined"
+                                        onClick={() => handleCancelClick(1)}
+                                        sx={{ mr: 2, mb: 2 }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        size="medium"
+                                        color="success"
+                                        variant="outlined"
+                                        onClick={handleSubmit}
+                                        sx={{ mr: 2, mb: 2 }}
+                                    >
+                                        Save
+                                    </Button>
+                                </>
+                            )}
+                            {activeTab === 2 && !isEditingImages && (
+                                <Button
+                                    startIcon={<EditIcon />}
+                                    size="medium"
+                                    variant="outlined"
+                                    onClick={() => handleEditClick(2)}
+                                    sx={{ mr: 2, mb: 2 }}
+                                >
+                                    Edit
+                                </Button>
+                            )}
+                            {activeTab === 2 && isEditingImages && (
+                                <>
+                                    <Button
+                                        size="medium"
+                                        variant="outlined"
+                                        onClick={() => handleCancelClick(2)}
+                                        sx={{ mr: 2, mb: 2 }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        size="medium"
+                                        color="success"
+                                        variant="outlined"
+                                        onClick={handleSubmit}
+                                        sx={{ mr: 2, mb: 2 }}
+                                    >
+                                        Save
+                                    </Button>
+                                </>
+                            )}
+                            {activeTab === 3 && !isEditingDocumentation && (
+                                <Button
+                                    startIcon={<EditIcon />}
+                                    size="medium"
+                                    variant="outlined"
+                                    onClick={() => handleEditClick(3)}
+                                    sx={{ mr: 2, mb: 2 }}
+                                >
+                                    Edit
+                                </Button>
+                            )}
+                            {activeTab === 3 && isEditingDocumentation && (
+                                <>
+                                    <Button
+                                        size="medium"
+                                        variant="outlined"
+                                        onClick={() => handleCancelClick(3)}
+                                        sx={{ mr: 2, mb: 2 }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        size="medium"
+                                        color="success"
+                                        variant="outlined"
+                                        onClick={handleSubmit}
+                                        sx={{ mr: 2, mb: 2 }}
+                                    >
+                                        Save
+                                    </Button>
+                                </>
                             )}
                         </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '0px solid', borderColor: 'divider', mb: 2, mr: 2 }}>
-                            <Box sx={{ alignSelf: 'flex-end', pt: 2 }}>
-                                {activeTab === 0 && !isEditingGeneralInfo && (
-                                    <Button
-                                        startIcon={<EditIcon />}
-                                        size="medium"
-                                        variant="outlined"
-                                        onClick={() => handleEditClick(0)}
-                                        sx={{ mr: 2, mb: 2 }}
-                                    >
-                                        Edit
-                                    </Button>
-                                )}
-                                {activeTab === 0 && isEditingGeneralInfo && (
-                                    <>
-                                        <Button
-                                            size="medium"
-                                            variant="outlined"
-                                            onClick={() => handleCancelClick(0)}
-                                            sx={{ mr: 2, mb: 2 }}
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button
-                                            size="medium"
-                                            color="success"
-                                            variant="outlined"
-                                            onClick={handleSubmit}
-                                            sx={{ mr: 2, mb: 2 }}
-                                        >
-                                            Save
-                                        </Button>
-                                    </>
-                                )}
-                                {activeTab === 1 && !isEditingAmenities && (
-                                    <Button
-                                        startIcon={<EditIcon />}
-                                        size="medium"
-                                        variant="outlined"
-                                        onClick={() => handleEditClick(1)}
-                                        sx={{ mr: 2, mb: 2 }}
-                                    >
-                                        Edit
-                                    </Button>
-                                )}
-                                {activeTab === 1 && isEditingAmenities && (
-                                    <>
-                                        <Button
-                                            size="medium"
-                                            variant="outlined"
-                                            onClick={() => handleCancelClick(1)}
-                                            sx={{ mr: 2, mb: 2 }}
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button
-                                            size="medium"
-                                            color="success"
-                                            variant="outlined"
-                                            onClick={handleSubmit}
-                                            sx={{ mr: 2, mb: 2 }}
-                                        >
-                                            Save
-                                        </Button>
-                                    </>
-                                )}
-                                {activeTab === 2 && !isEditingImages && (
-                                    <Button
-                                        startIcon={<EditIcon />}
-                                        size="medium"
-                                        variant="outlined"
-                                        onClick={() => handleEditClick(2)}
-                                        sx={{ mr: 2, mb: 2 }}
-                                    >
-                                        Edit
-                                    </Button>
-                                )}
-                                {activeTab === 2 && isEditingImages && (
-                                    <>
-                                        <Button
-                                            size="medium"
-                                            variant="outlined"
-                                            onClick={() => handleCancelClick(2)}
-                                            sx={{ mr: 2, mb: 2 }}
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button
-                                            size="medium"
-                                            color="success"
-                                            variant="outlined"
-                                            onClick={handleSubmit}
-                                            sx={{ mr: 2, mb: 2 }}
-                                        >
-                                            Save
-                                        </Button>
-                                    </>
-                                )}
-                                {activeTab === 3 && !isEditingDocumentation && (
-                                    <Button
-                                        startIcon={<EditIcon />}
-                                        size="medium"
-                                        variant="outlined"
-                                        onClick={() => handleEditClick(3)}
-                                        sx={{ mr: 2, mb: 2 }}
-                                    >
-                                        Edit
-                                    </Button>
-                                )}
-                                {activeTab === 3 && isEditingDocumentation && (
-                                    <>
-                                        <Button
-                                            size="medium"
-                                            variant="outlined"
-                                            onClick={() => handleCancelClick(3)}
-                                            sx={{ mr: 2, mb: 2 }}
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button
-                                            size="medium"
-                                            color="success"
-                                            variant="outlined"
-                                            onClick={handleSubmit}
-                                            sx={{ mr: 2, mb: 2 }}
-                                        >
-                                            Save
-                                        </Button>
-                                    </>
-                                )}
-                            </Box>
-                        </Box>
-                    </Card>
+                    </Box>
+                </Card>
                 
                 <Dialog
                     open={open}

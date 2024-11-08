@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Button,
     Box,
     Card,
-    Typography,
     Divider,
     Tabs,
     Tab,
@@ -25,15 +24,12 @@ import Documentation from './Documentation';
 
 const AddPropiedad = () => {
     const [property, setProperty] = useState({});
-    const [amenities, setAmenities] = useState([]);
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [activeTab, setActiveTab] = useState(0);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
-
-   
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -73,7 +69,6 @@ const AddPropiedad = () => {
         <MenuLayout>
             <ThemeProvider theme={theme}>
                 <Card sx={{ maxWidth: '90%', margin: 'auto', mt: 5, mb: 2 }}>
-
                     <Tabs value={activeTab} onChange={handleTabChange} centered>
                         <Tab label="Informacion General" />
                         <Tab label="Amenities" />
@@ -82,7 +77,6 @@ const AddPropiedad = () => {
                         <Tab label="Preview" />
                     </Tabs>
                     <Divider />
-
                     <Box sx={{ p: 2 }}>
                         {activeTab === 0 && (
                             <GeneralInfo
@@ -90,6 +84,7 @@ const AddPropiedad = () => {
                                 handleChange={handleChange}
                                 isEditing={true} // Always editable for new properties
                                 setProperty={setProperty}
+                                setActiveTab={setActiveTab}
                             />
                         )}
                         {activeTab === 1 && (
@@ -114,7 +109,6 @@ const AddPropiedad = () => {
                             />
                         )}
                     </Box>
-
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '0px solid', borderColor: 'divider', mb: 2, mr: 2 }}>
                         <Button
                             size="medium"
@@ -127,7 +121,6 @@ const AddPropiedad = () => {
                         </Button>
                     </Box>
                 </Card>
-
                 <Dialog
                     open={open}
                     onClose={() => setOpen(false)}
@@ -151,7 +144,6 @@ const AddPropiedad = () => {
                         </Button>
                     </DialogActions>
                 </Dialog>
-
                 <Dialog
                     open={isSaveDialogOpen}
                     onClose={() => setIsSaveDialogOpen(false)}

@@ -6,7 +6,8 @@ const {
     getPropertyById, 
     getPropertyAmenities,
     getPropertyImages,
-    getPropertyDocuments
+    getPropertyDocuments,
+    addPropertyAmenities
     } = require('../models/propertiesQueries');
 
 exports.getTableProperties = async (req, res, next) => {
@@ -100,6 +101,18 @@ exports.getPropertyDescriptions = async (req, res, next) => {
         res.json(descriptions);
     } catch (error) {
         console.error('Error in getPropertyDescriptions:', error);
+        next(error);
+    }
+};
+
+exports.addPropertyAmenities = async (req, res, next) => {
+    try {
+        const ref = req.params.ref;
+        const amenities = req.body.amenities;
+        const result = await addPropertyAmenities(ref, amenities);
+        res.json(result);
+    } catch (error) {
+        console.error('Error in addPropertyAmenities:', error);
         next(error);
     }
 };

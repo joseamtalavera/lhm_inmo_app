@@ -209,24 +209,43 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
 };
 
 const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActiveTab }) => {
-    const [lastRefNumber, setLastRefNumber] = useState(40);
-
+    
     useEffect(() => {
-        const generateRef = () => {
+        const fetchExistingReferences = async () => {
+            const storedReferences = JSON.parse(localStorage.getItem('references')) || [];
+            return storedReferences;
+        };
+
+        const generateRef = async () => {
             const prefix = 'LHA';
-            const nextRefNumber = lastRefNumber + 1;
-            setLastRefNumber(nextRefNumber); // Update the last reference number
-            return `${prefix}${String(nextRefNumber).padStart(4, '0')}`; // Pad the number with leading zeros
+            const existingReferences = await fetchExistingReferences();
+            const referenceNumbers = existingReferences.map(ref => parseInt(ref.replace(prefix, ''), 10));
+
+            // Find the first unused reference starting from 1000
+            let nextRefNumber = 1040;
+            while (referenceNumbers.includes(nextRefNumber)) {
+                nextRefNumber++;
+            }
+
+            // Create the new reference string
+            const newRef = `${prefix}${nextRefNumber}`;
+
+            // Save the new reference to local storage
+            localStorage.setItem('references', JSON.stringify([...existingReferences, newRef]));
+
+            return newRef;
         };
 
         // Check if the Ref is not already set, then generate and set it
         if (!property.Ref) {
-            setProperty((prevProperty) => ({
-                ...prevProperty,
-                Ref: generateRef(),
-            }));
-        }  
-    }, [property, setProperty, lastRefNumber]);
+            generateRef().then(newRef => {
+                setProperty((prevProperty) => ({
+                    ...prevProperty,
+                    Ref: newRef,
+                }));
+            });
+        }
+    }, [property, setProperty]);
 
     const handleImageClick = () => {
         if (typeof setActiveTab === 'function') {

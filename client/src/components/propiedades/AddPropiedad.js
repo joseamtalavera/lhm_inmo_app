@@ -23,7 +23,9 @@ import Images from './Images';
 import Documentation from './Documentation';
 
 const AddPropiedad = () => {
-    const [property, setProperty] = useState({});
+    const [property, setProperty] = useState({
+        amenities: []
+    });
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [activeTab, setActiveTab] = useState(0);
@@ -31,12 +33,28 @@ const AddPropiedad = () => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
+    const handleChange = (e, amenityId) => {
         const { name, value, type, checked } = e.target;
-        setProperty({
-            ...property,
-            [name]: type === 'checkbox' ? checked : value,
-        });
+        if (type === 'checkbox' && amenityId) {
+            setProperty(prevState => {
+                const amenities = prevState.amenities || [];
+                if (checked) {
+                    return { ...prevState, amenities: [...amenities, amenityId] };
+                } else {
+                    return { ...prevState, amenities: amenities.filter(id => id !== amenityId) };
+                }
+            });
+        } else if (type === 'checkbox') {
+            setProperty({
+                ...property,
+                [name]: checked,
+            });
+        } else {
+            setProperty({
+                ...property,
+                [name]: value,
+            });
+        }
     };
 
     const handleTabChange = (event, newValue) => {

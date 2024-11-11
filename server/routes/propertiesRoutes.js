@@ -12,5 +12,6 @@ router.get('/properties/:ref/amenities', propertiesController.getPropertyAmeniti
 router.get('/properties/:ref/images', propertiesController.getPropertyImages);
 router.get('/properties/:ref/documents', propertiesController.getPropertyDocuments);
 router.get('/properties/:ref/descriptions', propertiesController.getPropertyDescriptions);
+router.post('/properties/:ref/amenities', propertiesController.addPropertyAmenities);
 
 module.exports = router;

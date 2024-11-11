@@ -301,7 +301,6 @@ const addPropertyDb = async (property) => {
             ]
         );
 
-        console.log('Property added:', result.rows[0]);
         return result.rows[0];
     } catch (error) {
         console.error('Error in addPropertyDb:', error);
@@ -370,6 +369,7 @@ const getPropertyAmenities = async (ref) => {
              WHERE pa.IdProperty = $1`,
             [ref]
         );
+        console.log('Amenities:', result.rows);
         return result.rows;
     } catch (error) {
         console.error('Error in getPropertyAmenities:', error);
@@ -423,6 +423,34 @@ const getPropertyDescriptions = async (ref) => {
     }
 };
 
+const addPropertyAmenities = async (propertyId, amenities) => {
+    try {
+        const queries = amenities.map(async (amenity) => {
+            const amenityId = await getIdFromTable(
+                'lhainmobiliaria.vamenities', // Table name
+                'idamenity',                  // ID column in vamenities table
+                'amenity',                    // Column to match (e.g., "Swimming Pool")
+                amenity                       // The provided value to look up
+            );
+
+            const insertResult = await pool.query(
+                `INSERT INTO lhainmobiliaria.vamenitiesproperty (idproperty, idamenityincluded) VALUES ($1, $2) RETURNING *`,
+                [propertyId, amenityId]
+            );
+
+            console.log('Amenity added:', insertResult.rows[0]);
+            return insertResult.rows[0];
+        });
+
+        await Promise.all(queries);
+        return { message: 'Amenities added successfully' };
+    } catch (error) {
+        console.error('Error in addPropertyAmenities:', error);
+        throw error;
+    }
+};
+
+
 module.exports = {
     getAllProperties,
     getPropertyById,
@@ -432,5 +460,6 @@ module.exports = {
     getPropertyAmenities,
     getPropertyImages,
     getPropertyDocuments,
-    getPropertyDescriptions
+    getPropertyDescriptions,
+    addPropertyAmenities
 };

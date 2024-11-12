@@ -15,7 +15,8 @@ import Documentation from './Documentation';
 
 const Propiedad = () => {
     const { id } = useParams();
-    const [property, setProperty] = useState({});
+    const [property, setProperty] = useState();
+    const [amenities, setAmenities ] = useState([]);
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -103,6 +104,7 @@ const Propiedad = () => {
                     updatedProperty[amenity.label] = true;
                 });
                 setProperty(updatedProperty);
+                setAmenities(amenitiesData.map(amenity => String(amenity.id))); // Update amenities state
 
                 // Fetch property images
                 const imagesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/images`);
@@ -127,12 +129,12 @@ const Propiedad = () => {
         fetchProperty();
     }, [id]);
 
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setProperty({
-            ...property,
-            [name]: type === 'checkbox' ? checked : value,  
-        });
+    const handleChange = (e, amenityId) => {
+        setAmenities((prevAmenities) =>
+            e.target.checked
+                ? [...prevAmenities, amenityId] // Add the amenity ID if checked
+                : prevAmenities.filter((id) => id !== amenityId) // Remove the amenity ID if unchecked
+        );
     };
 
     const handleTabChange = (event, newValue) => {
@@ -213,7 +215,7 @@ const Propiedad = () => {
             <ThemeProvider theme={theme}>
                 <Card sx={{ maxWidth: '90%', margin: 'auto', mt: 5, mb: 2 }}>
                     <Tabs value={activeTab} onChange={handleTabChange} centered>
-                        <Tab label="Informacion General" />
+                        <Tab label="Informacion" />
                         <Tab label="Amenities" />
                         <Tab label="Imagenes" />
                         <Tab label="Documentos" />
@@ -232,7 +234,7 @@ const Propiedad = () => {
                         )}
                         {activeTab === 1 && (
                             <Amenities
-                                property={property}
+                                amenities={amenities}
                                 handleChange={handleChange}
                                 isEditing={isEditingAmenities}
                             />

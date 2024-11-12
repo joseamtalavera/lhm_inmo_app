@@ -112,7 +112,7 @@ const interiorConditioningAmenities = [
     { id: 94, label: "Suelo estado inicial ANTIGUO" }
 ];
 
-const Amenities = ({ property, handleChange, isEditing }) => (
+const Amenities = ({ amenities = [], handleChange, isEditing }) => (
     <Box> 
         <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
             <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF'}}>
@@ -125,10 +125,16 @@ const Amenities = ({ property, handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={property.amenities?.includes(amenity.id) || false}
+                                    checked={amenities.includes(String(amenity.id)) || false}
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
+                                    sx={{
+                                        color: isEditing ? 'primary.main' : 'text.secondary',
+                                        '&.Mui-checked': {
+                                            color: 'primary.main',
+                                        },
+                                    }}
                                 />
                             }
                             label={amenity.label}
@@ -149,10 +155,16 @@ const Amenities = ({ property, handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={property.amenities?.includes(amenity.id) || false}
+                                    checked={amenities.includes(String(amenity.id)) || false}
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
+                                    sx={{
+                                        color: isEditing ? 'primary.main' : 'text.secondary',
+                                        '&.Mui-checked': {
+                                            color: 'primary.main',
+                                        },
+                                    }}
                                 />
                             }
                             label={amenity.label}
@@ -173,10 +185,16 @@ const Amenities = ({ property, handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={property.amenities?.includes(amenity.id) || false}
+                                    checked={amenities.includes(String(amenity.id)) || false}
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
+                                    sx={{
+                                        color: isEditing ? 'primary.main' : 'text.secondary',
+                                        '&.Mui-checked': {
+                                            color: 'primary.main',
+                                        },
+                                    }}
                                 />
                             }
                             label={amenity.label}
@@ -197,10 +215,16 @@ const Amenities = ({ property, handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={property.amenities?.includes(amenity.id) || false}
+                                    checked={amenities.includes(String(amenity.id)) || false}
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
+                                    sx={{
+                                        color: isEditing ? 'primary.main' : 'text.secondary',
+                                        '&.Mui-checked': {
+                                            color: 'primary.main',
+                                        },
+                                    }}
                                 />
                             }
                             label={amenity.label}
@@ -221,10 +245,16 @@ const Amenities = ({ property, handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={property.amenities?.includes(amenity.id) || false}
+                                    checked={amenities.includes(String(amenity.id)) || false}
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
+                                    sx={{
+                                        color: isEditing ? 'primary.main' : 'text.secondary',
+                                        '&.Mui-checked': {
+                                            color: 'primary.main',
+                                        },
+                                    }}
                                 />
                             }
                             label={amenity.label}
@@ -245,10 +275,16 @@ const Amenities = ({ property, handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={property.amenities?.includes(amenity.id) || false}
+                                    checked={amenities.includes(String(amenity.id)) || false}
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
+                                    sx={{
+                                        color: isEditing ? 'primary.main' : 'text.secondary',
+                                        '&.Mui-checked': {
+                                            color: 'primary.main',
+                                        },
+                                    }}
                                 />
                             }
                             label={amenity.label}

@@ -23,9 +23,8 @@ import Images from './Images';
 import Documentation from './Documentation';
 
 const AddPropiedad = () => {
-    const [property, setProperty] = useState({
-        amenities: []
-    });
+    const [property, setProperty] = useState({});
+    const [amenities, setAmenities] = useState([]); // Ensure amenities is initialized as an empty array
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [activeTab, setActiveTab] = useState(0);
@@ -34,27 +33,11 @@ const AddPropiedad = () => {
     const navigate = useNavigate();
 
     const handleChange = (e, amenityId) => {
-        const { name, value, type, checked } = e.target;
-        if (type === 'checkbox' && amenityId) {
-            setProperty(prevState => {
-                const amenities = prevState.amenities || [];
-                if (checked) {
-                    return { ...prevState, amenities: [...amenities, amenityId] };
-                } else {
-                    return { ...prevState, amenities: amenities.filter(id => id !== amenityId) };
-                }
-            });
-        } else if (type === 'checkbox') {
-            setProperty({
-                ...property,
-                [name]: checked,
-            });
-        } else {
-            setProperty({
-                ...property,
-                [name]: value,
-            });
-        }
+        setAmenities((prevAmenities) =>
+            e.target.checked
+                ? [...prevAmenities, amenityId] // Add the amenity ID if checked
+                : prevAmenities.filter((id) => id !== amenityId) // Remove the amenity ID if unchecked
+        );
     };
 
     const handleTabChange = (event, newValue) => {
@@ -63,13 +46,20 @@ const AddPropiedad = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const dataToPost = {
+            ...property,
+            amenities, 
+            images,
+            documents
+        };
+        console.log('Submitting:', dataToPost); 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(property),
+                body: JSON.stringify(dataToPost), // Use dataToPost to include amenities
             });
             if (!response.ok) throw new Error('Failed to add property');
             setIsSaveDialogOpen(true);
@@ -88,7 +78,7 @@ const AddPropiedad = () => {
             <ThemeProvider theme={theme}>
                 <Card sx={{ maxWidth: '90%', margin: 'auto', mt: 5, mb: 2 }}>
                     <Tabs value={activeTab} onChange={handleTabChange} centered>
-                        <Tab label="Informacion General" />
+                        <Tab label="Informacion" />
                         <Tab label="Amenities" />
                         <Tab label="Imagenes" />
                         <Tab label="Documentos" />
@@ -107,7 +97,7 @@ const AddPropiedad = () => {
                         )}
                         {activeTab === 1 && (
                             <Amenities
-                                property={property}
+                                amenities={amenities}
                                 handleChange={handleChange}
                                 isEditing={true}
                             />

@@ -1,5 +1,8 @@
+// propertiesQueries.js
+
 const pool = require('./db');
 
+// get Queries
 const getAllProperties = async () => {
     try { 
         const result = await pool.query(
@@ -73,12 +76,73 @@ const getPropertyById = async (id) => {
             WHERE p.id = $1`,
             [id]
         );
-        console.log('Property data:', result.rows[0]);
         return result.rows[0];
     } catch (error) {
         console.error('Error in getPropertyById:', error);
         throw error;
     }
+};
+
+const getPropertyDescriptions = async (ref) => {
+    try {
+        const result = await pool.query(
+            `SELECT Id, Ref, Descripcion, Tipo, FechaHora
+             FROM lhainmobiliaria.vdescriptions
+             WHERE Ref = $1`,
+            [ref]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getPropertyDescriptions:', error);
+        throw error;
+    }
+};
+
+const getPropertyAmenities = async (ref) => {
+    try {
+        const result = await pool.query(
+            `SELECT a.IdAmenity AS id, a.Amenity AS label, a.Grupo AS category
+             FROM lhainmobiliaria.vamenitiesproperty pa
+             LEFT JOIN lhainmobiliaria.vamenities a ON pa.IdAmenityIncluded = a.IdAmenity
+             WHERE pa.IdProperty = $1`,
+            [ref]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getPropertyAmenities:', error);
+        throw error;
+    }
+}
+
+const getPropertyImages = async (ref) => {
+    try { 
+        const result = await pool.query(
+            `SELECT id, Ref, Url, FotoTitle, Principal, Cabecera
+             FROM lhainmobiliaria.vimages
+             WHERE Ref = $1`,
+            [ref]
+        );
+        return result.rows;
+    }
+    catch (error) {
+        console.error('Error in getPropertyImages:', error);
+        throw error;
+    }
+};
+
+const getPropertyDocuments = async (ref) => {
+    try {
+        const result = await pool.query(
+            `SELECT Id, Ref, Url, Descripcion, Tipo, FechaHora
+            FROM lhainmobiliaria.varchivos
+            WHERE Ref = $1`,
+           [ref]
+        );
+       return result.rows;
+    } catch (error) {
+        console.error('Error in getPropertyDocuments:', error);
+        throw error;
+    }   
 };
 
 // Helper function to fetch ID from a table by matching column value
@@ -93,7 +157,6 @@ const getIdFromTable = async (tableName, idColumnName, columnName, value) => {
         if (result.rows.length === 0) {
             throw new Error(`No match found in ${tableName} for ${columnName} = ${value}`);
         }
-
         return result.rows[0][idColumnName];
     } catch (error) {
         console.error(`Error in getIdFromTable for ${tableName}:`, error);
@@ -178,7 +241,136 @@ const normalizeKeys = (obj) => {
     }, {});
 };
 
-// Function to add a property to the database
+
+
+// put Queries
+
+const updatePropertyDb = async (property, id) => {
+    try {
+        property = normalizeKeys(property);
+        const {
+            ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
+            metrosconstruidos, metrosutiles, metrosparcela, tipopropiedad, nestancias, nbanos, naseos,
+            estado, anoconstruccion, calificacion, cargas, planta, orientacionentrada, orientacionventana,
+            certificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
+            tributoibi, tributovado, tributorustico, gastosvarios, tipogerencia, comunidadgastos, comunidadderrama,
+            consumoelecticidad, consumoagua, tipointernet, tipogas, tipoite, tipotermoagua, tipoagua, active, idusuario
+        } = property;
+
+        console.log('Updating property with data:', property);
+
+        // Lookup foreign key IDs based on provided names
+        let idtipopropiedad = null;
+        if (tipopropiedad) {
+            idtipopropiedad = await getIdFromTable('lhainmobiliaria.tipopropiedad', 'idtipopropiedad', 'tipopropiedad', tipopropiedad);
+        }
+
+        let idhabitaciones = null;
+        if (nestancias) {
+            idhabitaciones = await getIdFromTable('lhainmobiliaria.nestancias', 'idnestancias', 'nestancias', nestancias);
+        }
+
+        let idbanos = null;
+        if (nbanos) {
+            idbanos = await getIdFromTable('lhainmobiliaria.nbanos', 'idnbanos', 'nbanos', nbanos);
+        }
+
+        let idaseos = null;
+        if (naseos) {
+            idaseos = await getIdFromTable('lhainmobiliaria.naseos', 'idnaseos', 'naseos', naseos);
+        }
+
+        let idestado = null;
+        if (estado) {
+            idestado = await getIdFromTable('lhainmobiliaria.tipoestado', 'idestado', 'estado', estado);
+        }
+
+        let idcalificacion = null;
+        if (calificacion) {
+            idcalificacion = await getIdFromTable('lhainmobiliaria.tipocalificacion', 'idcalificacion', 'calificacion', calificacion);
+        }
+
+        let idcargas = null;
+        if (cargas) {
+            idcargas = await getIdFromTable('lhainmobiliaria.tipocargas', 'idcargas', 'cargas', cargas);
+        }
+
+        let idplanta = null;
+        if (planta) {
+            idplanta = await getIdFromTable('lhainmobiliaria.tipoplanta', 'idplanta', 'planta', planta);
+        }
+
+        let idorientacionentrada = null;
+        if (orientacionentrada) {
+            idorientacionentrada = await getIdFromTable('lhainmobiliaria.tipoorientacionentrada', 'idorientacionentrada', 'orientacionentrada', orientacionentrada);
+        }
+
+        let idorientacionventana = null;
+        if (orientacionventana) {
+            idorientacionventana = await getIdFromTable('lhainmobiliaria.tipoorientacionventana', 'idorientacionventana', 'orientacionventana', orientacionventana);
+        }
+
+        let idcertificadoenergetico = null;
+        if (certificadoenergetico) {
+            idcertificadoenergetico = await getIdFromTable('lhainmobiliaria.tipocertificadoenergetico', 'idcertificadoenergetico', 'certificadoenergetico', certificadoenergetico);
+        }
+
+        let idgerencia = null;
+        if (tipogerencia) {
+            idgerencia = await getIdFromTable('lhainmobiliaria.tipogerencia', 'id', 'tipogerencia', tipogerencia);
+        }
+
+        let idinternet = null;
+        if (tipointernet) {
+            idinternet = await getIdFromTable('lhainmobiliaria.tipointernet', 'id', 'tipointernet', tipointernet);
+        }
+
+        let idgas = null;
+        if (tipogas) {
+            idgas = await getIdFromTable('lhainmobiliaria.tipogas', 'id', 'tipogas', tipogas);
+        }
+
+        let idite = null;
+        if (tipoite) {
+            idite = await getIdFromTable('lhainmobiliaria.tipoite', 'id', 'tipoite', tipoite);
+        }
+
+        let idtermoagua = null;
+        if (tipotermoagua) {
+            idtermoagua = await getIdFromTable('lhainmobiliaria.tipotermoagua', 'id', 'tipotermoagua', tipotermoagua);
+        }
+
+        let idagua = null;
+        if (tipoagua) {
+            idagua = await getIdFromTable('lhainmobiliaria.tipoagua', 'id', 'tipoagua', tipoagua);
+        }
+
+        const result = await pool.query(
+            `UPDATE lhainmobiliaria.vproperties SET ref = $1, refext = $2, title = $3, precio = $4, direccion = $5, localidad = $6, provincia = $7, pais = $8, cp = $9, longitud = $10, latitud = $11, metrosconstruidos = $12, metrosutiles = $13, metrosparcela = $14, idtipopropiedad = $15, idhabitaciones = $16, idbanos = $17, idaseos = $18, idestado = $19, anoconstruccion = $20, idcalificacion = $21, idcargas = $22, idplanta = $23, idorientacionentrada = $24, idorientacionventana = $25, idcertificadoenergetico = $26, valorcertificadoenergetico = $27, co2certificadoenergetico = $28, kwcertificadoenergetico = $29, tributoibi = $30, tributovado = $31, tributorustico = $32, gastosvarios = $33, idgerencia = $34, comunidadgastos = $35, comunidadderrama = $36, consumoelecticidad = $37, consumoagua = $38, idinternet = $39, idgas = $40, idite = $41, idtermoagua = $42, idagua = $43, active = $44, idusuario = $45 WHERE id = $46 RETURNING *`,
+            [
+                ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
+                metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos,
+                idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana,
+                idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
+                tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama,
+                consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario, id // Ensure 'id' is included as the last parameter
+            ]
+        );
+
+        console.log('Database update result:', result.rows[0]); // Log the database update result
+
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in updatePropertyDb:', error);
+        throw error;
+    }
+};
+
+const updatePropertyAmenitiesDb = async (propertyId, amenities) => {}
+
+
+
+// post Queries
 const addPropertyDb = async (property) => {
     try {
         property = normalizeKeys(property);
@@ -255,27 +447,27 @@ const addPropertyDb = async (property) => {
 
         let idinternet = null;
         if (tipointernet) {
-            idinternet = await getIdFromTable('lhainmobiliaria.tipointernet', 'id', 'tipointernet', internet);
+            idinternet = await getIdFromTable('lhainmobiliaria.tipointernet', 'id', 'tipointernet', tipointernet);
         }
 
         let idgas = null;
         if (tipogas) {
-            idgas = await getIdFromTable('lhainmobiliaria.tipogas', 'id', 'tipogas', gas);
+            idgas = await getIdFromTable('lhainmobiliaria.tipogas', 'id', 'tipogas', tipogas);
         }
 
         let idite = null;
         if (tipoite) {
-            idite = await getIdFromTable('lhainmobiliaria.tipoite', 'id', 'tipoite', ite);
+            idite = await getIdFromTable('lhainmobiliaria.tipoite', 'id', 'tipoite', tipoite);
         }
 
         let idtermoagua = null;
         if (tipotermoagua) {
-            idtermoagua = await getIdFromTable('lhainmobiliaria.tipotermoagua', 'id', 'tipotermoagua', termoagua);
+            idtermoagua = await getIdFromTable('lhainmobiliaria.tipotermoagua', 'id', 'tipotermoagua', tipotermoagua);
         }
 
         let idagua = null;
         if (tipoagua) {
-            idagua = await getIdFromTable('lhainmobiliaria.tipoagua', 'id', 'tipoagua', agua);
+            idagua = await getIdFromTable('lhainmobiliaria.tipoagua', 'id', 'tipoagua', tipoagua);
         }
 
         // Insert property data, including the retrieved foreign key IDs
@@ -308,45 +500,27 @@ const addPropertyDb = async (property) => {
     }
 };
 
-const updatePropertyDb = async (property) => {
+const addPropertyAmenities = async (ref, amenities) => {
     try {
-        property = normalizeKeys(property);
-        const {
-            id, ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
-            metrosconstruidos, metrosutiles, metrosparcela, tipopropiedad, idhabitaciones, idbanos, idaseos, idestado,
-            anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana,
-            idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
-            tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama,
-            consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario
-        } = property;
+        const queries = amenities.map(async (amenityId) => {
+            const insertResult = await pool.query(
+                `INSERT INTO lhainmobiliaria.vamenitiesproperty (idProperty, idamenityincluded) VALUES ($1, $2) RETURNING *`,
+                [ref, amenityId]
+            );
+            return insertResult.rows[0];
+        });
 
-        // Lookup foreign key ID for TipoPropiedad based on `tipopropiedad` name
-        const idtipopropiedad = await getIdFromTable(
-            'lhainmobiliaria.tipopropiedad', // Table name
-            'idtipopropiedad',               // ID column in tipopropiedad table
-            'tipopropiedad',                 // Column to match (e.g., "Chalet/casa independiente")
-            tipopropiedad                    // The provided value to look up
-        );
-
-        const result = await pool.query(
-            `UPDATE lhainmobiliaria.vproperties SET ref = $1, refext = $2, title = $3, precio = $4, direccion = $5, localidad = $6, provincia = $7, pais = $8, cp = $9, longitud = $10, latitud = $11, metrosconstruidos = $12, metrosutiles = $13, metrosparcela = $14, idtipopropiedad = $15, idhabitaciones = $16, idbanos = $17, idaseos = $18, idestado = $19, anoconstruccion = $20, idcalificacion = $21, idcargas = $22, idplanta = $23, idorientacionentrada = $24, idorientacionventana = $25, idcertificadoenergetico = $26, valorcertificadoenergetico = $27, co2certificadoenergetico = $28, kwcertificadoenergetico = $29, tributoibi = $30, tributovado = $31, tributorustico = $32, gastosvarios = $33, idgerencia = $34, comunidadgastos = $35, comunidadderrama = $36, consumoelecticidad = $37, consumoagua = $38, idinternet = $39, idgas = $40, idite = $41, idtermoagua = $42, idagua = $43, active = $44, idusuario = $45 WHERE id = $46 RETURNING *`,
-            [
-                ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
-                metrosconstruidos, metrosutiles, metrosparcela, idtipopropiedad, idhabitaciones, idbanos, idaseos,
-                idestado, anoconstruccion, idcalificacion, idcargas, idplanta, idorientacionentrada, idorientacionventana,
-                idcertificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
-                tributoibi, tributovado, tributorustico, gastosvarios, idgerencia, comunidadgastos, comunidadderrama,
-                consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario, id
-            ]
-        );
-
-        return result.rows[0];
+        await Promise.all(queries);
+        return { message: 'Amenities added successfully' };
     } catch (error) {
-        console.error('Error in updatePropertyDb:', error);
+        console.error('Error in addPropertyAmenities:', error);
         throw error;
     }
 };
 
+
+
+// delete Queries
 const deletePropertyDb = async (id) => {
     try {
         const result = await pool.query(
@@ -360,96 +534,30 @@ const deletePropertyDb = async (id) => {
     }
 };
 
-const getPropertyAmenities = async (ref) => {
-    try {
-        const result = await pool.query(
-            `SELECT a.IdAmenity AS id, a.Amenity AS label, a.Grupo AS category
-             FROM lhainmobiliaria.vamenitiesproperty pa
-             LEFT JOIN lhainmobiliaria.vamenities a ON pa.IdAmenityIncluded = a.IdAmenity
-             WHERE pa.IdProperty = $1`,
-            [ref]
-        );
-        console.log('Amenities:', result.rows);
-        return result.rows;
-    } catch (error) {
-        console.error('Error in getPropertyAmenities:', error);
-        throw error;
-    }
-}
 
-const getPropertyImages = async (ref) => {
-    try { 
+// Uploading property images
+const uploadPropertyImageDb = async (ref, image) => {
+    try {
+        const { originalname, buffer } = image;
+        const url = `/uploads/${originalname}`; // Assuming you save the file in the /uploads directory
+
+        // Save the image file to the server (you need to implement this part)
+        // For example, using fs module:
+        // const fs = require('fs');
+        // fs.writeFileSync(`./uploads/${originalname}`, buffer);
+
         const result = await pool.query(
-            `SELECT id, Ref, Url, FotoTitle, Principal, Cabecera
-             FROM lhainmobiliaria.vimages
-             WHERE Ref = $1`,
-            [ref]
+            `INSERT INTO lhainmobiliaria.vimages (ref, url, fototitle, principal, cabecera)
+             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+            [ref, url, originalname, false, false]
         );
-        return result.rows;
-    }
-    catch (error) {
-        console.error('Error in getPropertyImages:', error);
+
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in uploadPropertyImageDb:', error);
         throw error;
     }
 };
-
-const getPropertyDocuments = async (ref) => {
-    try {
-        const result = await pool.query(
-            `SELECT Id, Ref, Url, Descripcion, Tipo, FechaHora
-            FROM lhainmobiliaria.varchivos
-            WHERE Ref = $1`,
-           [ref]
-        );
-       return result.rows;
-    } catch (error) {
-        console.error('Error in getPropertyDocuments:', error);
-        throw error;
-    }   
-};
-
-const getPropertyDescriptions = async (ref) => {
-    try {
-        const result = await pool.query(
-            `SELECT Id, Ref, Descripcion, Tipo, FechaHora
-             FROM lhainmobiliaria.vdescriptions
-             WHERE Ref = $1`,
-            [ref]
-        );
-        return result.rows;
-    } catch (error) {
-        console.error('Error in getPropertyDescriptions:', error);
-        throw error;
-    }
-};
-
-const addPropertyAmenities = async (propertyId, amenities) => {
-    try {
-        const queries = amenities.map(async (amenity) => {
-            const amenityId = await getIdFromTable(
-                'lhainmobiliaria.vamenities', // Table name
-                'idamenity',                  // ID column in vamenities table
-                'amenity',                    // Column to match (e.g., "Swimming Pool")
-                amenity                       // The provided value to look up
-            );
-
-            const insertResult = await pool.query(
-                `INSERT INTO lhainmobiliaria.vamenitiesproperty (idproperty, idamenityincluded) VALUES ($1, $2) RETURNING *`,
-                [propertyId, amenityId]
-            );
-
-            console.log('Amenity added:', insertResult.rows[0]);
-            return insertResult.rows[0];
-        });
-
-        await Promise.all(queries);
-        return { message: 'Amenities added successfully' };
-    } catch (error) {
-        console.error('Error in addPropertyAmenities:', error);
-        throw error;
-    }
-};
-
 
 module.exports = {
     getAllProperties,
@@ -461,5 +569,6 @@ module.exports = {
     getPropertyImages,
     getPropertyDocuments,
     getPropertyDescriptions,
-    addPropertyAmenities
+    addPropertyAmenities,
+    uploadPropertyImageDb // Export the new function
 };

@@ -129,12 +129,36 @@ const Propiedad = () => {
         fetchProperty();
     }, [id]);
 
-    const handleChange = (e, amenityId) => {
+    /* const handleChange = (e, amenityId) => {
         setAmenities((prevAmenities) =>
             e.target.checked
                 ? [...prevAmenities, amenityId] // Add the amenity ID if checked
                 : prevAmenities.filter((id) => id !== amenityId) // Remove the amenity ID if unchecked
         );
+    }; */
+
+    const handleChange = (e, amenityId) => {
+        const { name, value, type, checked } = e.target;
+        if (type === 'checkbox' && amenityId) {
+            // Handle amenities
+            setAmenities((prevAmenities) =>
+                checked
+                    ? [...prevAmenities, amenityId] // Add the amenity ID if checked
+                    : prevAmenities.filter((id) => id !== amenityId) // Remove the amenity ID if unchecked
+            );
+        } else if (type === 'checkbox') {
+            // Handle property checkboxes
+            setProperty((prevProperty) => ({
+                ...prevProperty,
+                [name]: checked,
+            }));
+        } else {
+            // Handle other property inputs
+            setProperty((prevProperty) => ({
+                ...prevProperty,
+                [name]: value,
+            }));
+        }
     };
 
     const handleTabChange = (event, newValue) => {
@@ -187,6 +211,7 @@ const Propiedad = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            console.log('Submitting property data:', property);
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -195,6 +220,19 @@ const Propiedad = () => {
                 body: JSON.stringify(property),
             });
             if (!response.ok) throw new Error('Failed to update property');
+
+            // Update amenities
+            if(isEditingAmenities) {
+                const amenitiesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}/amenities`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ amenities }),
+                });
+                if (!amenitiesResponse.ok) throw new Error('Failed to update amenities');
+            }
+
             setIsSaveDialogOpen(true);
             setTimeout(() => {
                 setIsSaveDialogOpen(false);
@@ -203,6 +241,27 @@ const Propiedad = () => {
         } catch (error) {
             console.error(error);
             setOpen(true);
+        }
+    };
+
+    const handleUpload = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('image', file);
+            console.log('Uploading file:', file);
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}/images`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                if (!response.ok) throw new Error('Failed to upload image');
+                const newImage = await response.json();
+                console.log('Uploaded image response:', newImage);
+                setImages((prevImages) => [...prevImages, newImage]);
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
         }
     };
 
@@ -244,6 +303,7 @@ const Propiedad = () => {
                                 images={images}
                                 setImages={setImages}
                                 isEditing={isEditingImages}
+                                handleUpload={handleUpload} // Pass handleUpload as a prop
                             />
                         )}
                         {activeTab === 3 && (

@@ -1,3 +1,5 @@
+// addP
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -32,12 +34,46 @@ const AddPropiedad = () => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
-    const handleChange = (e, amenityId) => {
+    /* const handleChange = (e, amenityId) => {
         setAmenities((prevAmenities) =>
             e.target.checked
                 ? [...prevAmenities, amenityId] // Add the amenity ID if checked
                 : prevAmenities.filter((id) => id !== amenityId) // Remove the amenity ID if unchecked
         );
+    }; */
+
+    const handleChange = (e, amenityId) => {
+        const { name, value, type } = e.target; // Remove 'checked' from destructuring
+    
+        if (type === 'checkbox' && amenityId) {
+            setAmenities((prevAmenities) =>
+                e.target.checked
+                    ? [...prevAmenities, amenityId] // Add the amenity ID if checked
+                    : prevAmenities.filter((id) => id !== amenityId) // Remove the amenity ID if unchecked
+            );
+        } else if (type === 'checkbox') {
+            setProperty({
+                ...property,
+                [name]: e.target.checked, // Use e.target.checked instead of 'checked' from destructuring
+            });
+        } else {
+            setProperty({
+                ...property,
+                [name]: value,
+            });
+        }
+    };
+
+    const handleUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const newImage = {
+                id: images.length + 1,
+                url: URL.createObjectURL(file),
+                fototitle: file.name,
+            };
+            setImages([...images, newImage]);
+        }
     };
 
     const handleTabChange = (event, newValue) => {
@@ -107,6 +143,7 @@ const AddPropiedad = () => {
                                 images={images}
                                 setImages={setImages}
                                 isEditing={true}
+                                handleUpload={handleUpload} // Pass handleUpload as a prop
                             />
                         )}
                         {activeTab === 3 && (

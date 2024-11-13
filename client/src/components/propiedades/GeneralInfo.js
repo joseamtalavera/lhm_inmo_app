@@ -323,7 +323,7 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                                     disabled={!isEditing}
                                     sx={{
                                         '& .MuiSelect-select': {
-                                            color: '#404040', // Darker gray color for the text in Select component
+                                            color: '#404040', 
                                         },
                                     }}
                                 >

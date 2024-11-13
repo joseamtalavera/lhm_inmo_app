@@ -1,3 +1,5 @@
+// Amenities.js
+
 import React from 'react';
 import { Box, Typography, Grid, FormControlLabel, Checkbox, Divider } from '@mui/material';
 
@@ -125,7 +127,7 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={amenities.includes(String(amenity.id)) || false}
+                                    checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)}
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
@@ -155,7 +157,7 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={amenities.includes(String(amenity.id)) || false}
+                                    checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)}
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
@@ -185,7 +187,7 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={amenities.includes(String(amenity.id)) || false}
+                                    checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)} 
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
@@ -215,7 +217,7 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={amenities.includes(String(amenity.id)) || false}
+                                    checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)} 
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
@@ -245,7 +247,7 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={amenities.includes(String(amenity.id)) || false}
+                                    checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)} 
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
@@ -275,7 +277,7 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => (
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={amenities.includes(String(amenity.id)) || false}
+                                    checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)} 
                                     onChange={(e) => handleChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}

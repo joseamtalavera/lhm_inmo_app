@@ -1,9 +1,12 @@
-import React from 'react';
-import { Box, Grid, Card, CardMedia, CardContent, IconButton, TextField } from '@mui/material';
+import React, { useRef } from 'react';
+import { Box, Grid, Card, CardMedia, CardContent, IconButton, TextField, Button, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-const Images = ({ images, setImages }) => {
+const Images = ({ images, setImages, isEditing, handleUpload }) => {
+    const fileInputRef = useRef(null);
+
     const handleDragEnd = (result) => {
         if (!result.destination) return;
 
@@ -61,6 +64,33 @@ const Images = ({ images, setImages }) => {
                                     )}
                                 </Draggable>
                             ))}
+                            {isEditing && (
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <Box sx={{ width: '100%', mb: 2 }}>
+                                        <Box
+                                            sx={{
+                                                width: '100%',
+                                                height: '200px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                border: '2px dashed #ddd',
+                                                borderRadius: '4px',
+                                                cursor: 'pointer'
+                                            }}
+                                            onClick={() => fileInputRef.current.click()}
+                                        >
+                                            <AddIcon sx={{ fontSize: 40, color: '#ddd' }} />
+                                        </Box>
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            hidden
+                                            onChange={handleUpload}
+                                        />
+                                    </Box>
+                                </Grid>
+                            )}
                             {provided.placeholder}
                         </Grid>
                     )}

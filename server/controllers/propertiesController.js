@@ -7,8 +7,12 @@ const {
     getPropertyAmenities,
     getPropertyImages,
     getPropertyDocuments,
-    addPropertyAmenities
-    } = require('../models/propertiesQueries');
+    addPropertyAmenities,
+    uploadPropertyImageDb,
+    updatePropertyAmenitiesDb
+} = require('../models/propertiesQueries');
+
+// get Controllers
 
 exports.getTableProperties = async (req, res, next) => {
     try { 
@@ -30,6 +34,17 @@ exports.getPropertyById = async (req, res, next) => {
         next(error);
     }
 }
+
+exports.getPropertyDescriptions = async (req, res, next) => {
+    try {
+        const ref = req.params.ref;
+        const descriptions = await getPropertyDescriptions(ref);
+        res.json(descriptions);
+    } catch (error) {
+        console.error('Error in getPropertyDescriptions:', error);
+        next(error);
+    }
+};
 
 exports.getPropertyAmenities = async (req, res, next) => {
     try {
@@ -64,13 +79,55 @@ exports.getPropertyDocuments = async (req, res, next) => {
     }
 }
 
-exports.getPropertyDescriptions = async (req, res, next) => {
+
+// put Controllers
+
+exports.updateProperty = async (req, res) => {
     try {
-        const ref = req.params.ref;
-        const descriptions = await getPropertyDescriptions(ref);
-        res.json(descriptions);
+        const id = req.params.id; // or however you retrieve the id
+        const property = req.body; // updated property data
+        const updatedProperty = await updatePropertyDb(property, id);
+        res.status(200).json(updatedProperty);
     } catch (error) {
-        console.error('Error in getPropertyDescriptions:', error);
+        console.error('Error updating property:', error);
+        res.status(500).json({ message: 'Error updating property' });
+    }
+};
+
+exports.updatePropertyAmenities = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { amenities } = req.body;
+
+        console.log('Received amenities for update:', amenities);
+
+        const updatedAmenities = await updatePropertyAmenitiesDb(id, amenities);
+
+        console.log('Updated amenities from DB:', updatedAmenities);
+
+        res.status(200).json(updatedAmenities);
+    } catch (error) {
+        console.error('Error updating amenities:', error);
+        next(error);
+    }
+};
+
+
+// post Controllers
+
+exports.addProperty = async (req, res, next) => {
+    try {
+        // First, add the property
+        const newProperty = await addPropertyDb(req.body);
+        
+        // Then, add amenities (if provided in the request)
+        if (req.body.amenities && req.body.amenities.length > 0) {
+            await addPropertyAmenities(newProperty.ref, req.body.amenities); // Using the property's ID or ref
+        }
+
+        res.json({ message: 'Property and amenities added successfully', property: newProperty });
+    } catch (error) {
+        console.error('Error in addProperty:', error);
         next(error);
     }
 };
@@ -87,44 +144,8 @@ exports.addPropertyAmenities = async (req, res, next) => {
     }
 };
 
-/* exports.addProperty = async (req, res, next) => {
-    try {
-        const newProperty = await addPropertyDb(req.body);
-        res.json({ message: 'Property added successfully', user: newProperty});
-    } catch (error) {
-        console.error('Error in addProperty:', error);
-        next(error);
-    }
-} */
 
-
-    exports.addProperty = async (req, res, next) => {
-        try {
-            // First, add the property
-            const newProperty = await addPropertyDb(req.body);
-            
-            // Then, add amenities (if provided in the request)
-            if (req.body.amenities && req.body.amenities.length > 0) {
-                await addPropertyAmenities(newProperty.id, req.body.amenities); // Using the property's ID or ref
-            }
-    
-            res.json({ message: 'Property and amenities added successfully', property: newProperty });
-        } catch (error) {
-            console.error('Error in addProperty:', error);
-            next(error);
-        }
-    };
-    
-
-exports.updateProperty = async (req, res, next) => {
-    try {
-        const updatedProperty = await updatePropertyDb(req.body);
-        res.json({ message: 'Property updated succesfully', user: updatedProperty});
-    } catch (error){
-        console.error('Error in updateProperty:', error);
-        next(error);
-    }
-}
+// delete Controllers   
 
 exports.deleteProperty = async (req, res, next) => {
     try {
@@ -135,3 +156,19 @@ exports.deleteProperty = async (req, res, next) => {
         next(error);
     }
 }
+
+
+// Upload image
+
+exports.uploadPropertyImage = async (req, res, next) => {
+    try {
+        const ref = req.params.ref;
+        const image = req.file; // Assuming you're using multer for file uploads
+        const newImage = await uploadPropertyImageDb(ref, image);
+        res.json(newImage);
+    } catch (error) {
+        console.error('Error in uploadPropertyImage:', error);
+        next(error);
+    }
+};
+

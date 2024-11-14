@@ -211,7 +211,6 @@ const Propiedad = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log('Submitting property data:', property);
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -221,9 +220,13 @@ const Propiedad = () => {
             });
             if (!response.ok) throw new Error('Failed to update property');
 
+            const updatedProperty = await response.json();
+            setProperty(updatedProperty); // Save the property with its `ref` to state
+
             // Update amenities
             if(isEditingAmenities) {
-                const amenitiesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}/amenities`, {
+                const ref = property.Ref;
+                const amenitiesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${ref}/amenities`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -245,16 +248,24 @@ const Propiedad = () => {
     };
 
     const handleUpload = async (e) => {
+        if (!property || !property.ref) {
+            console.error('property or property.ref is undefined');
+            return;
+        }
         const file = e.target.files[0];
         if (file) {
             const formData = new FormData();
             formData.append('image', file);
+            formData.append('ref', property.ref);
+
             console.log('Uploading file:', file);
             try {
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}/images`, {
+                console.log('Property ref:', property.ref); // Check if this is defined
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/images`, {
                     method: 'POST',
                     body: formData,
-                });
+            });
+
                 if (!response.ok) throw new Error('Failed to upload image');
                 const newImage = await response.json();
                 console.log('Uploaded image response:', newImage);

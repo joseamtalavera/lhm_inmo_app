@@ -77,6 +77,7 @@ const getPropertyById = async (id) => {
             [id]
         );
         return result.rows[0];
+        
     } catch (error) {
         console.error('Error in getPropertyById:', error);
         throw error;
@@ -119,7 +120,8 @@ const getPropertyImages = async (ref) => {
         const result = await pool.query(
             `SELECT id, Ref, Url, FotoTitle, Principal, Cabecera
              FROM lhainmobiliaria.vimages
-             WHERE Ref = $1`,
+             WHERE Ref = $1
+             ORDER BY principal DESC, cabecera DESC, id ASC`,
             [ref]
         );
         return result.rows;
@@ -254,7 +256,8 @@ const updatePropertyDb = async (property, id) => {
             estado, anoconstruccion, calificacion, cargas, planta, orientacionentrada, orientacionventana,
             certificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
             tributoibi, tributovado, tributorustico, gastosvarios, tipogerencia, comunidadgastos, comunidadderrama,
-            consumoelecticidad, consumoagua, tipointernet, tipogas, tipoite, tipotermoagua, tipoagua, active, idusuario
+            consumoelecticidad, consumoagua, tipointernet, tipogas, tipoite, tipotermoagua, tipoagua, active, idusuario,
+            description // Add description here
         } = property;
 
         console.log('Updating property with data:', property);
@@ -356,8 +359,15 @@ const updatePropertyDb = async (property, id) => {
                 consumoelecticidad, consumoagua, idinternet, idgas, idite, idtermoagua, idagua, active, idusuario, id // Ensure 'id' is included as the last parameter
             ]
         );
-
-        console.log('Database update result:', result.rows[0]); // Log the database update result
+        
+        // Update the description in the vdescriptions table
+        if (description) {
+            await pool.query(
+                `UPDATE lhainmobiliaria.vdescriptions SET description = $1 WHERE ref = $2 AND IdLenguaje = 3 RETURNING *`,
+                [description, ref]
+            );
+            
+        }      
 
         return result.rows[0];
     } catch (error) {
@@ -366,7 +376,28 @@ const updatePropertyDb = async (property, id) => {
     }
 };
 
-const updatePropertyAmenitiesDb = async (propertyId, amenities) => {}
+const updatePropertyAmenitiesDb = async (ref, amenities) => {
+    try {
+        // First, delete existing amenities for the property
+        await pool.query('DELETE FROM lhainmobiliaria.vamenitiesproperty WHERE idproperty = $1', [ref]);
+
+        // Then, insert the new amenities
+        const queries = amenities.map(async (amenityId) => {
+            const result = await pool.query(
+                'INSERT INTO lhainmobiliaria.vamenitiesproperty (idproperty, idamenityincluded) VALUES ($1, $2) RETURNING *',
+                [ref, amenityId]
+            );
+            return result.rows[0];
+        });
+
+        const updatedAmenities = await Promise.all(queries);
+        return updatedAmenities;
+    } catch (error) {
+        console.error('Error in updatePropertyAmenitiesDb:', error);
+        throw error;
+    }
+};
+
 
 
 
@@ -518,6 +549,23 @@ const addPropertyAmenities = async (ref, amenities) => {
     }
 };
 
+const uploadPropertyImageDb = async (imageDetails) => {
+    try{
+        const { ref, url, fototitle, principal, cabecera } = imageDetails;
+        console.log('Uploading image with details:', imageDetails);
+        const result = await pool.query(
+            `INSERT INTO lhainmobiliaria.vimages (ref, url, fototitle, principal, cabecera)
+             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+            [ref, url, fototitle, principal, cabecera]
+        );
+        return result.rows[0];
+
+    } catch (error) {
+        console.error('Error in uploadPropertyImageDb:', error);
+        throw error;
+    }
+}
+
 
 
 // delete Queries
@@ -534,31 +582,6 @@ const deletePropertyDb = async (id) => {
     }
 };
 
-
-// Uploading property images
-const uploadPropertyImageDb = async (ref, image) => {
-    try {
-        const { originalname, buffer } = image;
-        const url = `/uploads/${originalname}`; // Assuming you save the file in the /uploads directory
-
-        // Save the image file to the server (you need to implement this part)
-        // For example, using fs module:
-        // const fs = require('fs');
-        // fs.writeFileSync(`./uploads/${originalname}`, buffer);
-
-        const result = await pool.query(
-            `INSERT INTO lhainmobiliaria.vimages (ref, url, fototitle, principal, cabecera)
-             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-            [ref, url, originalname, false, false]
-        );
-
-        return result.rows[0];
-    } catch (error) {
-        console.error('Error in uploadPropertyImageDb:', error);
-        throw error;
-    }
-};
-
 module.exports = {
     getAllProperties,
     getPropertyById,
@@ -570,5 +593,7 @@ module.exports = {
     getPropertyDocuments,
     getPropertyDescriptions,
     addPropertyAmenities,
-    uploadPropertyImageDb // Export the new function
+    uploadPropertyImageDb,
+    updatePropertyAmenitiesDb,
+    uploadPropertyImageDb
 };

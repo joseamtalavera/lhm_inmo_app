@@ -9,8 +9,10 @@ const {
     getPropertyDocuments,
     addPropertyAmenities,
     uploadPropertyImageDb,
-    updatePropertyAmenitiesDb
+    updatePropertyAmenitiesDb,
+    updatePropertyImagesDb,
 } = require('../models/propertiesQueries');
+
 
 // get Controllers
 
@@ -80,6 +82,7 @@ exports.getPropertyDocuments = async (req, res, next) => {
 }
 
 
+
 // put Controllers
 
 exports.updateProperty = async (req, res) => {
@@ -96,21 +99,18 @@ exports.updateProperty = async (req, res) => {
 
 exports.updatePropertyAmenities = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const { amenities } = req.body;
+        const ref = req.params.ref;
+        const amenities = req.body.amenities;
 
-        console.log('Received amenities for update:', amenities);
-
-        const updatedAmenities = await updatePropertyAmenitiesDb(id, amenities);
-
-        console.log('Updated amenities from DB:', updatedAmenities);
-
+        const updatedAmenities = await updatePropertyAmenitiesDb(ref, amenities);
         res.status(200).json(updatedAmenities);
     } catch (error) {
         console.error('Error updating amenities:', error);
         next(error);
     }
 };
+
+
 
 
 // post Controllers
@@ -144,6 +144,45 @@ exports.addPropertyAmenities = async (req, res, next) => {
     }
 };
 
+exports.uploadPropertyImage = async (req, res, next) => {
+    try {
+        console.log('Request params:', req.params);
+        const ref = req.params.ref;
+        const image = req.file; 
+
+        console.log('Received ref:', ref);
+        console.log('Received image:', image);
+        console.log('Received body:', req.body);
+       
+        if (!image) {
+            return res.status(400).json({ message: 'No image uploaded' });
+        }
+
+        const imageUrl = `/uploads/${image.filename}`; 
+        const principalValue = req.body.principal === 'true' ? 1 : 0;
+        const cabeceraValue = req.body.cabecera === 'true' ? 1 : 0;
+
+        const imageDetails ={
+            ref, 
+            url: imageUrl,
+            fototile: req.body.fototitle || '',
+            principal: principalValue,
+            cabecera: cabeceraValue,
+        }
+
+        console.log('Image details:', imageDetails);
+
+        const savedImage = await uploadPropertyImageDb(imageDetails);
+
+        console.log('Saved image:', savedImage);
+
+        res.status(201).json(savedImage);
+    } catch (error) {
+        console.error('Error in uploadPropertyImage:', error);
+        next(error);
+    }
+};
+
 
 // delete Controllers   
 
@@ -158,17 +197,8 @@ exports.deleteProperty = async (req, res, next) => {
 }
 
 
-// Upload image
 
-exports.uploadPropertyImage = async (req, res, next) => {
-    try {
-        const ref = req.params.ref;
-        const image = req.file; // Assuming you're using multer for file uploads
-        const newImage = await uploadPropertyImageDb(ref, image);
-        res.json(newImage);
-    } catch (error) {
-        console.error('Error in uploadPropertyImage:', error);
-        next(error);
-    }
-};
+
+
+
 

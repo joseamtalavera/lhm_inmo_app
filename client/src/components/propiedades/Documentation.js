@@ -6,22 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
-const Documentation = ({ documents, setDocuments }) => {
-    const handleUpload = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const newDocument = {
-                id: documents.length + 1,
-                ref: 'some-ref', // Replace with actual reference if needed
-                url: URL.createObjectURL(file),
-                descripcion: file.name,
-                tipo: 'Plano', // Default type, you can change this as needed
-                fechaHora: new Date().toISOString(),
-            };
-            setDocuments([...documents, newDocument]);
-        }
-    };
-
+const Documentation = ({ documents, setDocuments, isEditing, handleUpload }) => {
     const handleDelete = (index) => {
         const updatedDocuments = documents.filter((_, i) => i !== index);
         setDocuments(updatedDocuments);
@@ -61,20 +46,22 @@ const Documentation = ({ documents, setDocuments }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Box sx={{ mt: 2 }}>
-                <Button
-                    variant="contained"
-                    component="label"
-                    startIcon={<UploadFileIcon />}
-                >
-                    Subir
-                    <input
-                        type="file"
-                        hidden
-                        onChange={handleUpload}
-                    />
-                </Button>
-            </Box>
+            {isEditing && (
+                <Box sx={{ mt: 2 }}>
+                    <Button
+                        variant="contained"
+                        component="label"
+                        startIcon={<UploadFileIcon />}
+                    >
+                        Subir
+                        <input
+                            type="file"
+                            hidden
+                            onChange={handleUpload}
+                        />
+                    </Button>
+                </Box>
+            )}
         </Box>
     );
 };

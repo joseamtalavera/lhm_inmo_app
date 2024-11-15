@@ -9,6 +9,7 @@ services:
       - '3010:3010'
     volumes:
       - ./client:/app
+      - /Users/josemolinatalavera/Coding/Coding_Projects/17-Lhm_inmobiliaria/lhm_inmo_app/server/uploads:/usr/share/nginx/uploads 
     environment:
       - CHOKIDAR_USEPOLLING=true  # For file change detection on some systems
       - NODE_ENV=development

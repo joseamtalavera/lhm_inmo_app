@@ -25,7 +25,7 @@ router.put('/properties/:ref/amenities', propertiesController.updatePropertyAmen
 router.post('/properties', propertiesController.addProperty);
 //router.post('/properties/:ref/amenities', propertiesController.addAmenity);
 router.post('/properties/:ref/images', upload.single('image'), propertiesController.uploadPropertyImage);
-//router.post('/properties/:ref/documents', propertiesController.uploadPropertyDocument);
+//router.post('/properties/:ref/documents', upload.single('document'), propertiesController.uploadPropertyDocument);
 
 
 

@@ -221,7 +221,11 @@ const Propiedad = () => {
             if (!response.ok) throw new Error('Failed to update property');
 
             const updatedProperty = await response.json();
-            setProperty(updatedProperty); // Save the property with its `ref` to state
+            setProperty((prevProperty) => ({
+                ...prevProperty,
+                ...updatedProperty,
+                Ref: prevProperty.Ref, // Ensure Ref is preserved
+            }));
 
             // Update amenities
             if(isEditingAmenities) {
@@ -235,11 +239,14 @@ const Propiedad = () => {
                 });
                 if (!amenitiesResponse.ok) throw new Error('Failed to update amenities');
             }
+            setIsEditingGeneralInfo(false);
+            setIsEditingAmenities(false);
+            setIsEditingImages(false);
+            setIsEditingDocumentation(false);
 
             setIsSaveDialogOpen(true);
             setTimeout(() => {
                 setIsSaveDialogOpen(false);
-                navigate('/dashboard/propiedades');
             }, 2000);
         } catch (error) {
             console.error(error);
@@ -248,12 +255,12 @@ const Propiedad = () => {
     };
 
     const handleUpload = async (e) => {
-        if (!property || !property.ref) {
-            console.error('property or property.ref is undefined');
-            return;
-        }
         const file = e.target.files[0];
         if (file) {
+            if (!property || !property.ref) {
+                console.error('property or property.ref is undefined');
+                return;
+            }
             const formData = new FormData();
             formData.append('image', file);
             formData.append('ref', property.ref);
@@ -272,6 +279,35 @@ const Propiedad = () => {
                 setImages((prevImages) => [...prevImages, newImage]);
             } catch (error) {
                 console.error('Error uploading image:', error);
+            }
+        }
+    };
+
+    const handleDocumentUpload = async (e) => {
+        if (!property || !property.ref) {
+            console.error('property or property.ref is undefined');
+            return;
+        }
+        const file = e.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('document', file);
+            formData.append('ref', property.ref);
+
+            console.log('Uploading document:', file);
+            try {
+                console.log('Property ref:', property.ref); // Check if this is defined
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/documents`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) throw new Error('Failed to upload document');
+                const newDocument = await response.json();
+                console.log('Uploaded document response:', newDocument);
+                setDocuments((prevDocuments) => [...prevDocuments, newDocument]);
+            } catch (error) {
+                console.error('Error uploading document:', error);
             }
         }
     };
@@ -321,10 +357,12 @@ const Propiedad = () => {
                             <Documentation
                                 documents={documents}
                                 setDocuments={setDocuments}
-                                isEditing={isEditingDocumentation}
+                                isEditing={isEditingDocumentation} // Pass isEditingDocumentation as a prop
+                                handleUpload={handleDocumentUpload} // Pass handleDocumentUpload as a prop
                             />
                         )}
                     </Box>
+                    
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '0px solid', borderColor: 'divider', mb: 2, mr: 2 }}>
                         <Box sx={{ alignSelf: 'flex-end', pt: 2 }}>
                             {activeTab === 0 && !isEditingGeneralInfo && (

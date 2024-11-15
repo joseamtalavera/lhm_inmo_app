@@ -260,8 +260,6 @@ const updatePropertyDb = async (property, id) => {
             description // Add description here
         } = property;
 
-        console.log('Updating property with data:', property);
-
         // Lookup foreign key IDs based on provided names
         let idtipopropiedad = null;
         if (tipopropiedad) {

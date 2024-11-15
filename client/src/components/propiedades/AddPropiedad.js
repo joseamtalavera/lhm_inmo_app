@@ -1,7 +1,7 @@
-// addP
+// addPropiedad.js
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+//import { useNavigate } from 'react-router-dom';
 import {
     Button,
     Box,
@@ -32,7 +32,7 @@ const AddPropiedad = () => {
     const [activeTab, setActiveTab] = useState(0);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
     const [open, setOpen] = useState(false);
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     /* const handleChange = (e, amenityId) => {
         setAmenities((prevAmenities) =>
@@ -41,6 +41,37 @@ const AddPropiedad = () => {
                 : prevAmenities.filter((id) => id !== amenityId) // Remove the amenity ID if unchecked
         );
     }; */
+
+    useEffect(() => {
+        const fetchExistingReferences = async () => {
+            const storedReferences = JSON.parse(localStorage.getItem('references')) || [];
+            return storedReferences; // Correctly close this function
+        };
+
+        const generateRef = async () => {
+            const prefix = 'LHA';
+            const existingReferences = await fetchExistingReferences();
+            const referenceNumbers = existingReferences.map(ref => parseInt(ref.replace(prefix, ''), 10));
+
+            let nextRefNumber = 1040;
+            while (referenceNumbers.includes(nextRefNumber)) {
+                nextRefNumber++;
+            }
+
+            const newRef = `${prefix}${nextRefNumber}`;
+            localStorage.setItem('references', JSON.stringify([...existingReferences, newRef]));
+
+            return newRef; // Ensure the function is properly closed here
+        };
+
+        generateRef().then(newRef => {
+            setProperty(prevProperty => ({
+                ...prevProperty,
+                Ref: newRef,
+            }));
+        });
+    }, []); // Dependency array ensures this runs only once
+    
 
     const handleChange = (e, amenityId) => {
         const { name, value, type } = e.target; // Remove 'checked' from destructuring
@@ -72,6 +103,7 @@ const AddPropiedad = () => {
                 url: URL.createObjectURL(file),
                 fototitle: file.name,
             };
+            console.log('New image URL:', newImage.url);    
             setImages([...images, newImage]);
         }
     };
@@ -101,13 +133,13 @@ const AddPropiedad = () => {
             setIsSaveDialogOpen(true);
             setTimeout(() => {
                 setIsSaveDialogOpen(false);
-                navigate('/dashboard/propiedades');
+                //navigate('/dashboard/propiedades');
             }, 2000);
         } catch (error) {
             console.error(error);
             setOpen(true);
         }
-    };
+    }; // Add closing bracket for handleSubmit
 
     return (
         <MenuLayout>
@@ -210,6 +242,6 @@ const AddPropiedad = () => {
             </ThemeProvider>
         </MenuLayout>
     );
-};
+}; // Add closing bracket for AddPropiedad component
 
 export default AddPropiedad;

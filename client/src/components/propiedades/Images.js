@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Box, Grid, Card, CardMedia, CardContent, IconButton, TextField, Button, Typography } from '@mui/material';
+import { Box, Grid, Card, CardMedia, CardContent, IconButton, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -30,7 +30,7 @@ const Images = ({ images, setImages, isEditing, handleUpload }) => {
     };
 
     return (
-        <Box>
+        <Box position={'relative'}>
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="images" direction="horizontal">
                     {(provided) => (
@@ -39,7 +39,7 @@ const Images = ({ images, setImages, isEditing, handleUpload }) => {
                                 <Draggable key={image.id} draggableId={image.id.toString()} index={index}>
                                     {(provided) => (
                                         <Grid item xs={12} sm={6} md={4} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                            <Card>
+                                            <Card sx={{position: 'relative'}}>
                                                 <CardMedia
                                                     component="img"
                                                     height="200"
@@ -52,9 +52,14 @@ const Images = ({ images, setImages, isEditing, handleUpload }) => {
                                                         value={image.fototitle || ''}
                                                         onChange={(e) => handleTitleChange(index, e.target.value)}
                                                         fullWidth
+                                                        disabled={!isEditing}
                                                     />
                                                     <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', height: '56px', border: '1px solid #ddd', padding: '8px', borderRadius: '4px' }}>
-                                                        <IconButton color="primary" onClick={() => handleDelete(index)}>
+                                                        <IconButton 
+                                                            color="primary" 
+                                                            onClick={() => handleDelete(index)}
+                                                            disabled={!isEditing}
+                                                            >
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </Box>
@@ -70,13 +75,13 @@ const Images = ({ images, setImages, isEditing, handleUpload }) => {
                                         <Box
                                             sx={{
                                                 width: '100%',
-                                                height: '200px',
+                                                height: '300px',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                                 border: '2px dashed #ddd',
                                                 borderRadius: '4px',
-                                                cursor: 'pointer'
+                                                cursor: 'pointer',
                                             }}
                                             onClick={() => fileInputRef.current.click()}
                                         >

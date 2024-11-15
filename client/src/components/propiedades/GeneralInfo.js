@@ -1,6 +1,6 @@
 //GeneralInfo.js
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect} from 'react';
 import { Box, Stack, Grid, Typography, FormControl, FormLabel, OutlinedInput, Select, MenuItem, Chip } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -210,7 +210,7 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
 
 const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActiveTab }) => {
     
-    useEffect(() => {
+    /* useEffect(() => {
         const fetchExistingReferences = async () => {
             const storedReferences = JSON.parse(localStorage.getItem('references')) || [];
             return storedReferences;
@@ -245,8 +245,8 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                 }));
             });
         }
-    }, [property, setProperty]);
-
+    }, []);
+ */
     const handleImageClick = () => {
         if (typeof setActiveTab === 'function') {
             setActiveTab(2); 

@@ -10,7 +10,6 @@ const {
     addPropertyAmenities,
     uploadPropertyImageDb,
     updatePropertyAmenitiesDb,
-    updatePropertyImagesDb,
 } = require('../models/propertiesQueries');
 
 
@@ -92,7 +91,6 @@ exports.updateProperty = async (req, res) => {
         const updatedProperty = await updatePropertyDb(property, id);
         res.status(200).json(updatedProperty);
     } catch (error) {
-        console.error('Error updating property:', error);
         res.status(500).json({ message: 'Error updating property' });
     }
 };
@@ -158,7 +156,8 @@ exports.uploadPropertyImage = async (req, res, next) => {
             return res.status(400).json({ message: 'No image uploaded' });
         }
 
-        const imageUrl = `/uploads/${image.filename}`; 
+        const imageUrl = `http://localhost:3010/uploads/${image.filename}`; 
+        
         const principalValue = req.body.principal === 'true' ? 1 : 0;
         const cabeceraValue = req.body.cabecera === 'true' ? 1 : 0;
 

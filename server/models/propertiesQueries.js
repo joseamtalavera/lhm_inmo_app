@@ -121,7 +121,7 @@ const getPropertyImages = async (ref) => {
             `SELECT id, Ref, Url, FotoTitle, Principal, Cabecera
              FROM lhainmobiliaria.vimages
              WHERE Ref = $1
-             ORDER BY principal DESC, cabecera DESC, id ASC`,
+             ORDER BY id ASC`,
             [ref]
         );
         return result.rows;
@@ -412,8 +412,6 @@ const addPropertyDb = async (property) => {
             consumoelecticidad, consumoagua, tipointernet, tipogas, tipoite, tipotermoagua, tipoagua, active, idusuario
         } = property;
 
-        console.log('Property data:', property);
-
         let idtipopropiedad = null;
         if (tipopropiedad) {
             idtipopropiedad = await getIdFromTable('lhainmobiliaria.tipopropiedad', 'idtipopropiedad', 'tipopropiedad', tipopropiedad);
@@ -550,7 +548,6 @@ const addPropertyAmenities = async (ref, amenities) => {
 const uploadPropertyImageDb = async (imageDetails) => {
     try{
         const { ref, url, fototitle, principal, cabecera } = imageDetails;
-        console.log('Uploading image with details:', imageDetails);
         const result = await pool.query(
             `INSERT INTO lhainmobiliaria.vimages (ref, url, fototitle, principal, cabecera)
              VALUES ($1, $2, $3, $4, $5) RETURNING *`,
@@ -580,6 +577,21 @@ const deletePropertyDb = async (id) => {
     }
 };
 
+const deleteImageDb = async (ref, imageId) => {
+    try {
+        console.log(`Attempting to delete image with ref: ${ref} and imageId: ${imageId}`);
+        const result = await pool.query(
+            'DELETE FROM lhainmobiliaria.vimages WHERE ref = $1 AND id = $2 RETURNING *',
+            [ref, imageId]
+        );
+        console.log('Deleted image:', result.rows[0]);
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in deleteImageDb:', error);
+        throw error;
+    }
+}
+
 module.exports = {
     getAllProperties,
     getPropertyById,
@@ -593,5 +605,6 @@ module.exports = {
     addPropertyAmenities,
     uploadPropertyImageDb,
     updatePropertyAmenitiesDb,
-    uploadPropertyImageDb
+    uploadPropertyImageDb,
+    deleteImageDb
 };

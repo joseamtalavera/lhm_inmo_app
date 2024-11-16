@@ -10,6 +10,7 @@ const {
     addPropertyAmenities,
     uploadPropertyImageDb,
     updatePropertyAmenitiesDb,
+    deleteImageDb,
 } = require('../models/propertiesQueries');
 
 
@@ -156,8 +157,31 @@ exports.uploadPropertyImage = async (req, res, next) => {
             return res.status(400).json({ message: 'No image uploaded' });
         }
 
-        const imageUrl = `http://localhost:3010/uploads/${image.filename}`; 
-        
+        // Fetch the current highest sequence number for this property
+        const currentImages = await getPropertyImages(ref);
+        const sequenceNumber = currentImages.length + 1;
+
+        // Generate the new file name
+        const fileExtension = image.originalname.split('.').pop();
+        const fileName = `${ref}-${sequenceNumber}.${fileExtension}`;
+
+        // Correct file handling to avoid EXDEV error
+        const fs = require('fs');
+        const path = require('path');
+
+        const uploadDir = 'uploads'; // Ensure this matches the uploads directory
+        const uploadPath = path.join(uploadDir, fileName);
+
+        // Copy the file instead of renaming (to handle cross-device link issues)
+        fs.copyFileSync(image.path, uploadPath);
+        fs.unlinkSync(image.path); // Delete the temporary file
+
+         // Generate the URL
+         const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+         const domain = process.env.APP_DOMAIN || 'localhost:3010';
+         const imageUrl = `${protocol}://${domain}/uploads/${fileName}`;
+
+        // Add metadata for the image
         const principalValue = req.body.principal === 'true' ? 1 : 0;
         const cabeceraValue = req.body.cabecera === 'true' ? 1 : 0;
 
@@ -191,6 +215,38 @@ exports.deleteProperty = async (req, res, next) => {
         res.json({ message: 'Property deleted successfully', user: deletedProperty});
     } catch (error) {
         console.error('Error in deleteProperty:', error);
+        next(error);
+    }
+}
+
+exports.deletePropertyImage = async (req, res, next) => {
+    try {
+        const { ref, imageId } = req.params;
+
+        // Delete the image from the database
+        const deletedImage = await deleteImageDb(ref, imageId);
+
+        if (!deletedImage) {
+            console.warn(`No image found with ref=${ref} and id=${imageId}`);
+            return res.status(404).json({ message: 'Image not found' });
+        }
+
+        // Extract the image URL and resolve the file path
+        const imageUrl = deletedImage.url;
+        const filePath = path.join('uploads', path.basename(imageUrl));
+
+        // Attempt to delete the file
+        if (fs.existsSync(filePath)){
+            fs.unlinkSync(filePath);
+            console.log(`File deleted: ${filePath}`);
+        } else {
+            console.warn(`File not found: ${filePath}`);
+        }
+
+        res.status(200).json({ message: 'Image deleted successfully' });
+
+    } catch (error) {
+        console.error('Error in deletePropertyImage:', error);
         next(error);
     }
 }

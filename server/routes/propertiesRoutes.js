@@ -4,7 +4,7 @@ const propertiesController = require('../controllers/propertiesController');
 const router = express.Router();
 const multer = require('multer');
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: '/usr/share/nginx/uploads/' });
 
 // get routes
 router.get('/properties', propertiesController.getTableProperties);
@@ -32,7 +32,7 @@ router.post('/properties/:ref/images', upload.single('image'), propertiesControl
 // delete routes
 router.delete('/properties/:id', propertiesController.deleteProperty);
 //router.delete('/properties/:ref/amenities', propertiesController.deleteAmenity);
-//router.delete('/properties/:ref/images', propertiesController.deletePropertyImage);
+router.delete('/properties/:ref/images/:imageId', propertiesController.deletePropertyImage);
 //router.delete('/properties/:ref/documents', propertiesController.deletePropertyDocument);
 
 

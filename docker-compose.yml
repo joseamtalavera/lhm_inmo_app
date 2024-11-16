@@ -4,12 +4,12 @@ services:
   frontend:
     build:
       context: ./client
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.dev.nginx
     ports:
-      - '3010:3010'
+      - '3010:80'
     volumes:
       - ./client:/app
-      - /Users/josemolinatalavera/Coding/Coding_Projects/17-Lhm_inmobiliaria/lhm_inmo_app/server/uploads:/usr/share/nginx/uploads 
+      - ./uploads:/usr/share/nginx/uploads
     environment:
       - CHOKIDAR_USEPOLLING=true  # For file change detection on some systems
       - NODE_ENV=development
@@ -26,6 +26,7 @@ services:
       - '5010:5010'
     volumes:
       - ./server:/app
+      - ./uploads:/app/uploads
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgres://postgres:postgres@db:5432/lhainmobiliaria

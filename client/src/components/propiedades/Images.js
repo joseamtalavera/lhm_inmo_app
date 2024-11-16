@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-const Images = ({ images, setImages, isEditing, handleUpload }) => {
+const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) => {
     const fileInputRef = useRef(null);
 
     const handleDragEnd = (result) => {
@@ -15,11 +15,6 @@ const Images = ({ images, setImages, isEditing, handleUpload }) => {
         reorderedImages.splice(result.destination.index, 0, movedImage);
 
         setImages(reorderedImages);
-    };
-
-    const handleDelete = (index) => {
-        const updatedImages = images.filter((_, i) => i !== index);
-        setImages(updatedImages);
     };
 
     const handleTitleChange = (index, newTitle) => {
@@ -57,7 +52,7 @@ const Images = ({ images, setImages, isEditing, handleUpload }) => {
                                                     <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', height: '56px', border: '1px solid #ddd', padding: '8px', borderRadius: '4px' }}>
                                                         <IconButton 
                                                             color="primary" 
-                                                            onClick={() => handleDelete(index)}
+                                                            onClick={() => handleDelete(image.id)}
                                                             disabled={!isEditing}
                                                             >
                                                             <DeleteIcon />

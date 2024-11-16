@@ -129,14 +129,6 @@ const Propiedad = () => {
         fetchProperty();
     }, [id]);
 
-    /* const handleChange = (e, amenityId) => {
-        setAmenities((prevAmenities) =>
-            e.target.checked
-                ? [...prevAmenities, amenityId] // Add the amenity ID if checked
-                : prevAmenities.filter((id) => id !== amenityId) // Remove the amenity ID if unchecked
-        );
-    }; */
-
     const handleChange = (e, amenityId) => {
         const { name, value, type, checked } = e.target;
         if (type === 'checkbox' && amenityId) {
@@ -268,18 +260,39 @@ const Propiedad = () => {
             console.log('Uploading file:', file);
             try {
                 console.log('Property ref:', property.ref); // Check if this is defined
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/images`, {
+                const response = await fetch(
+                    `${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/images`, 
+                    {
                     method: 'POST',
                     body: formData,
-            });
+                }
+            );
 
                 if (!response.ok) throw new Error('Failed to upload image');
                 const newImage = await response.json();
                 console.log('Uploaded image response:', newImage);
+                
                 setImages((prevImages) => [...prevImages, newImage]);
             } catch (error) {
                 console.error('Error uploading image:', error);
             }
+        }
+    };
+
+    const handleDelete = async (imageId) => {
+        try {
+            console.log(`Attempting to delete image with ID: ${imageId} for property ref: ${property.ref}`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/images/${imageId}`, {
+                method: 'DELETE',
+            });
+    
+            if (!response.ok) throw new Error('Failed to delete image');
+            
+            console.log(`Successfully deleted image with ID: ${imageId}`);
+            setImages((prevImages) => prevImages.filter((image) => image.id !== imageId));
+        } catch (error) {
+            console.error('Error deleting image:', error);
+            setOpen(true); // Optionally show an error dialog
         }
     };
 
@@ -351,6 +364,7 @@ const Propiedad = () => {
                                 setImages={setImages}
                                 isEditing={isEditingImages}
                                 handleUpload={handleUpload} // Pass handleUpload as a prop
+                                handleDelete={handleDelete} // Pass handleDelete as a prop
                             />
                         )}
                         {activeTab === 3 && (

@@ -4,9 +4,9 @@ services:
   frontend:
     build:
       context: ./client
-      dockerfile: Dockerfile.dev.nginx
+      dockerfile: Dockerfile.dev
     ports:
-      - '3010:80'
+      - '3010:3010'
     volumes:
       - ./client:/app
       - ./uploads:/usr/share/nginx/uploads

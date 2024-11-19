@@ -52,7 +52,10 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
                                                     <Box sx={{ ml: 2, display: 'flex', alignItems: 'center', height: '56px', border: '1px solid #ddd', padding: '8px', borderRadius: '4px' }}>
                                                         <IconButton 
                                                             color="primary" 
-                                                            onClick={() => handleDelete(image.id)}
+                                                            onClick={() => {
+                                                                console.log(`Delete button clicked for image ID: ${image.id}`);
+                                                                handleDelete(image.id);
+                                                            }}
                                                             disabled={!isEditing}
                                                             >
                                                             <DeleteIcon />

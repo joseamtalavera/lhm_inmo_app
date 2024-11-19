@@ -1,3 +1,4 @@
+const exp = require('constants');
 const { 
     getAllProperties, 
     addPropertyDb, 
@@ -11,7 +12,10 @@ const {
     uploadPropertyImageDb,
     updatePropertyAmenitiesDb,
     deleteImageDb,
+    uploadPropertyDocumentDb,
+    deleteDocumentDb,
 } = require('../models/propertiesQueries');
+
 
 
 // get Controllers
@@ -206,6 +210,63 @@ exports.uploadPropertyImage = async (req, res, next) => {
     }
 };
 
+exports.uploadPropertyDocument = async (req, res, next) => {
+    try {
+        console.log('Request params:', req.params);
+        const ref = req.params.ref;
+        const document = req.file; 
+
+        console.log('Received ref:', ref);
+        console.log('Received document:', document);
+        console.log('Received body:', req.body);
+       
+        if (!document) {
+            return res.status(400).json({ message: 'No document uploaded' });
+        }
+
+        // Fetch the current highest sequence number for this property
+        const currentDocuments = await getPropertyDocuments(ref);
+        const sequenceNumber = currentDocuments.length + 1;
+
+        // Generate the new file name
+        const fileExtension = document.originalname.split('.').pop();
+        const fileName = `${ref}-${sequenceNumber}.${fileExtension}`;
+
+        // Correct file handling to avoid EXDEV error
+        const fs = require('fs');
+        const path = require('path');
+
+        const uploadDir = 'documentos'; // Ensure this matches the uploads directory
+        const uploadPath = path.join(uploadDir, fileName);
+
+        // Copy the file instead of renaming (to handle cross-device link issues)
+        fs.copyFileSync(document.path, uploadPath);
+        fs.unlinkSync(document.path); // Delete the temporary file
+
+         // Generate the URL
+         const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+         const domain = process.env.APP_DOMAIN || 'localhost:3010';
+         const imageUrl = `${protocol}://${domain}/documentos/${fileName}`;
+
+        const documentDetails ={
+            ref, 
+            url: imageUrl,
+            descripcion: req.body.descripcion || '',
+        }
+
+        console.log('Document details:', documentDetails);
+
+        const savedDocument = await uploadPropertyDocumentDb(documentDetails);
+
+        console.log('Saved document:', savedDocument);
+
+        res.status(201).json(savedDocument);
+    } catch (error) {
+        console.error('Error in uploadPropertyDocument:', error);
+        next(error);
+    }
+};
+
 
 // delete Controllers   
 
@@ -221,22 +282,28 @@ exports.deleteProperty = async (req, res, next) => {
 
 exports.deletePropertyImage = async (req, res, next) => {
     try {
-        const { ref, imageId } = req.params;
+        console.log('deletePropertyImage called with params:', req.params);
+        const { imageId } = req.params; // No need for `ref`
+        console.log(`Received imageId=${imageId}`);
 
         // Delete the image from the database
-        const deletedImage = await deleteImageDb(ref, imageId);
+        const deletedImage = await deleteImageDb(imageId); // Pass only `imageId`
 
         if (!deletedImage) {
-            console.warn(`No image found with ref=${ref} and id=${imageId}`);
+            console.warn(`No image found with id=${imageId}`);
             return res.status(404).json({ message: 'Image not found' });
         }
+
+        // Correct file handling to avoid EXDEV error
+        const fs = require('fs');
+        const path = require('path');
 
         // Extract the image URL and resolve the file path
         const imageUrl = deletedImage.url;
         const filePath = path.join('uploads', path.basename(imageUrl));
 
         // Attempt to delete the file
-        if (fs.existsSync(filePath)){
+        if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
             console.log(`File deleted: ${filePath}`);
         } else {
@@ -249,7 +316,43 @@ exports.deletePropertyImage = async (req, res, next) => {
         console.error('Error in deletePropertyImage:', error);
         next(error);
     }
-}
+};
+
+exports.deletePropertyDocument = async (req, res, next) => {
+    try {
+        const { documentId } = req.params; 
+
+        // Delete the document from the database
+        const deletedDocument = await deleteDocumentDb(documentId); 
+
+        if (!deletedDocument) {
+            console.warn(`No document found with id=${documentId}`);
+            return res.status(404).json({ message: 'Document not found' });
+        }
+
+        // Correct file handling to avoid EXDEV error
+        const fs = require('fs');
+        const path = require('path');
+
+        // Extract the document URL and resolve the file path
+        const documentUrl = deletedDocument.url;
+        const filePath = path.join('documentos', path.basename(documentUrl));
+
+        // Attempt to delete the file
+        if (fs.existsSync(filePath)){
+            fs.unlinkSync(filePath);
+            console.log(`File deleted: ${filePath}`);
+        }   else {
+            console.warn(`File not found: ${filePath}`);
+        }
+
+        res.status(200).json({ message: 'Document deleted successfully' });
+    } catch (error) {
+        console.error('Error in deletePropertyDocument:', error);
+        next(error);
+    }
+};
+
 
 
 

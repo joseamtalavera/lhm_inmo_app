@@ -1,5 +1,6 @@
 // propertiesQueries.js
 
+const { uploadPropertyDocument } = require('../controllers/propertiesController');
 const pool = require('./db');
 
 // get Queries
@@ -561,6 +562,22 @@ const uploadPropertyImageDb = async (imageDetails) => {
     }
 }
 
+const uploadPropertyDocumentDb = async (documentDetails) => {
+    try {
+        const { ref, url, descripcion, tipo, fechahora } = documentDetails;
+        const result = await pool.query(
+            `INSERT INTO lhainmobiliaria.varchivos (ref, url, descripcion, tipo, fechahora)
+             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+            [ref, url, descripcion, tipo, fechahora]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in uploadPropertyDocumentDb:', error);
+        throw error;
+    }
+};
+
+
 
 
 // delete Queries
@@ -577,12 +594,12 @@ const deletePropertyDb = async (id) => {
     }
 };
 
-const deleteImageDb = async (ref, imageId) => {
+const deleteImageDb = async (imageId) => {
     try {
-        console.log(`Attempting to delete image with ref: ${ref} and imageId: ${imageId}`);
+        console.log(`Attempting to delete image with id: ${imageId}`);
         const result = await pool.query(
-            'DELETE FROM lhainmobiliaria.vimages WHERE ref = $1 AND id = $2 RETURNING *',
-            [ref, imageId]
+            'DELETE FROM lhainmobiliaria.vimages WHERE id = $1 RETURNING *',
+            [imageId]
         );
         console.log('Deleted image:', result.rows[0]);
         return result.rows[0];
@@ -590,7 +607,21 @@ const deleteImageDb = async (ref, imageId) => {
         console.error('Error in deleteImageDb:', error);
         throw error;
     }
-}
+};
+
+const deleteDocumentDb = async (documentId) => {
+    try {
+        const result = await pool.query(
+            'DELETE FROM lhainmobiliaria.varchivos WHERE id = $1 RETURNING *',
+            [documentId]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in deleteDocumentDb:', error);
+        throw error;
+    }
+};
+
 
 module.exports = {
     getAllProperties,
@@ -605,6 +636,7 @@ module.exports = {
     addPropertyAmenities,
     uploadPropertyImageDb,
     updatePropertyAmenitiesDb,
-    uploadPropertyImageDb,
-    deleteImageDb
+    deleteImageDb,
+    uploadPropertyDocumentDb,
+    deleteDocumentDb
 };

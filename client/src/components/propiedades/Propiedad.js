@@ -245,7 +245,7 @@ const Propiedad = () => {
             setOpen(true);
         }
     };
-
+    // Handle image upload
     const handleUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -281,20 +281,22 @@ const Propiedad = () => {
 
     const handleDelete = async (imageId) => {
         try {
-            console.log(`Attempting to delete image with ID: ${imageId} for property ref: ${property.ref}`);
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/images/${imageId}`, {
+            console.log(`Attempting to delete image with ID: ${imageId}`);
+    
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/images/${imageId}`, {
                 method: 'DELETE',
             });
     
             if (!response.ok) throw new Error('Failed to delete image');
-            
+    
             console.log(`Successfully deleted image with ID: ${imageId}`);
             setImages((prevImages) => prevImages.filter((image) => image.id !== imageId));
         } catch (error) {
             console.error('Error deleting image:', error);
-            setOpen(true); // Optionally show an error dialog
+            setOpen(true);
         }
     };
+    
 
     const handleDocumentUpload = async (e) => {
         if (!property || !property.ref) {
@@ -322,6 +324,22 @@ const Propiedad = () => {
             } catch (error) {
                 console.error('Error uploading document:', error);
             }
+        }
+    };
+
+    const handleDeleteDocument = async (documentId) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/documents/${documentId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) throw new Error('Failed to delete document');
+
+            console.log(`Successfully deleted document with ID: ${documentId}`);
+            setDocuments((prevDocuments) => prevDocuments.filter((document) => document.id !== documentId));
+        } catch (error) {
+            console.error('Error deleting document:', error);
+            setOpen(true);
         }
     };
 
@@ -363,16 +381,17 @@ const Propiedad = () => {
                                 images={images}
                                 setImages={setImages}
                                 isEditing={isEditingImages}
-                                handleUpload={handleUpload} // Pass handleUpload as a prop
-                                handleDelete={handleDelete} // Pass handleDelete as a prop
+                                handleUpload={handleUpload} 
+                                handleDelete={handleDelete}
                             />
                         )}
                         {activeTab === 3 && (
                             <Documentation
                                 documents={documents}
                                 setDocuments={setDocuments}
-                                isEditing={isEditingDocumentation} // Pass isEditingDocumentation as a prop
-                                handleUpload={handleDocumentUpload} // Pass handleDocumentUpload as a prop
+                                isEditing={isEditingDocumentation}
+                                handleDocumentUpload={handleDocumentUpload} 
+                                handleDeleteDocument={handleDeleteDocument}
                             />
                         )}
                     </Box>

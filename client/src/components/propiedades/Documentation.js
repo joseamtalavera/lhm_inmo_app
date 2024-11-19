@@ -6,12 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
-const Documentation = ({ documents, setDocuments, isEditing, handleUpload }) => {
-    const handleDelete = (index) => {
-        const updatedDocuments = documents.filter((_, i) => i !== index);
-        setDocuments(updatedDocuments);
-    };
-
+const Documentation = ({ documents, setDocuments, isEditing, handleDocumentUpload, handleDeleteDocument }) => {
     return (
         <Box>
             <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
@@ -36,7 +31,11 @@ const Documentation = ({ documents, setDocuments, isEditing, handleUpload }) => 
                                         <IconButton component="a" href={document.url} target="_blank" rel="noopener noreferrer">
                                             <VisibilityIcon />
                                         </IconButton>
-                                        <IconButton color="primary" onClick={() => handleDelete(index)}>
+                                        <IconButton 
+                                            color="primary" 
+                                            onClick={() => handleDeleteDocument(document.id)}
+                                            disabled={!isEditing}
+                                        >
                                             <DeleteIcon />
                                         </IconButton>
                                     </TableCell>
@@ -57,7 +56,7 @@ const Documentation = ({ documents, setDocuments, isEditing, handleUpload }) => 
                         <input
                             type="file"
                             hidden
-                            onChange={handleUpload}
+                            onChange={handleDocumentUpload}
                         />
                     </Button>
                 </Box>

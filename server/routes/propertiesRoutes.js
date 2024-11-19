@@ -5,8 +5,10 @@ const router = express.Router();
 const multer = require('multer');
 
 const upload = multer({ dest: '/usr/share/nginx/uploads/' });
+//const uploadDocuments = multer({ dest: '/usr/share/nginx/uploads/documents/' });   
+const uploadDocuments = multer({ dest: 'documentos' });
 
-// get routes
+// get 
 router.get('/properties', propertiesController.getTableProperties);
 router.get('/properties/:id', propertiesController.getPropertyById);
 router.get('/properties/:ref/amenities', propertiesController.getPropertyAmenities); 
@@ -15,25 +17,25 @@ router.get('/properties/:ref/documents', propertiesController.getPropertyDocumen
 
 
 
-// put routes
+// put 
 router.put('/properties/:id', propertiesController.updateProperty);
 router.put('/properties/:ref/amenities', propertiesController.updatePropertyAmenities); 
 
 
 
-// post routes
+// post 
 router.post('/properties', propertiesController.addProperty);
 //router.post('/properties/:ref/amenities', propertiesController.addAmenity);
 router.post('/properties/:ref/images', upload.single('image'), propertiesController.uploadPropertyImage);
-//router.post('/properties/:ref/documents', upload.single('document'), propertiesController.uploadPropertyDocument);
+router.post('/properties/:ref/documents', uploadDocuments.single('document'), propertiesController.uploadPropertyDocument);
 
 
 
-// delete routes
+// delete 
 router.delete('/properties/:id', propertiesController.deleteProperty);
 //router.delete('/properties/:ref/amenities', propertiesController.deleteAmenity);
-router.delete('/properties/:ref/images/:imageId', propertiesController.deletePropertyImage);
-//router.delete('/properties/:ref/documents', propertiesController.deletePropertyDocument);
+router.delete('/properties/images/:imageId', propertiesController.deletePropertyImage);
+router.delete('/properties/documents/:documentId', propertiesController.deletePropertyDocument);
 
 
 

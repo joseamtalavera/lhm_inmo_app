@@ -15,7 +15,8 @@ import Documentation from './Documentation';
 
 const Propiedad = () => {
     const { id } = useParams();
-    const [property, setProperty] = useState();
+    //const [property, setProperty] = useState();
+    const [property, setProperty] = useState({});
     const [amenities, setAmenities ] = useState([]);
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
@@ -251,7 +252,8 @@ const Propiedad = () => {
         if (file) {
             if (!property || !property.ref) {
                 console.error('property or property.ref is undefined');
-                return;
+                //return;
+                await saveProperty();
             }
             const formData = new FormData();
             formData.append('image', file);
@@ -278,6 +280,32 @@ const Propiedad = () => {
             }
         }
     };
+    // We need to save the property before uploading images
+    const saveProperty = async () => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(property),
+            });
+    
+            if (!response.ok) throw new Error('Failed to save property');
+    
+            const updatedProperty = await response.json();
+            setProperty((prevProperty) => ({
+                ...prevProperty,
+                ...updatedProperty,
+            }));
+    
+            console.log('Property saved successfully:', updatedProperty);
+        } catch (error) {
+            console.error('Error saving property:', error);
+            throw error; // Re-throw error to handle in the calling function
+        }
+    };
+
 
     const handleDelete = async (imageId) => {
         try {
@@ -383,6 +411,7 @@ const Propiedad = () => {
                                 isEditing={isEditingImages}
                                 handleUpload={handleUpload} 
                                 handleDelete={handleDelete}
+                                propertyRef={property?.ref}
                             />
                         )}
                         {activeTab === 3 && (

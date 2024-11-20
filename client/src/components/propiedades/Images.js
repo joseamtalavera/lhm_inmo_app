@@ -1,12 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Box, Grid, Card, CardMedia, CardContent, IconButton, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) => {
+const Images = ({ images, setImages, isEditing, handleUpload, handleDelete, propertyRef }) => {
     const fileInputRef = useRef(null);
-
+   
     const handleDragEnd = (result) => {
         if (!result.destination) return;
 
@@ -23,6 +23,8 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
         );
         setImages(updatedImages);
     };
+
+    
 
     return (
         <Box position={'relative'}>
@@ -90,6 +92,7 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
                                             ref={fileInputRef}
                                             hidden
                                             onChange={handleUpload}
+                                            //disabled={!propertyRef}
                                         />
                                     </Box>
                                 </Grid>

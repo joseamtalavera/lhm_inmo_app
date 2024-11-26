@@ -210,43 +210,6 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
 
 const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActiveTab }) => {
     
-    /* useEffect(() => {
-        const fetchExistingReferences = async () => {
-            const storedReferences = JSON.parse(localStorage.getItem('references')) || [];
-            return storedReferences;
-        };
-
-        const generateRef = async () => {
-            const prefix = 'LHA';
-            const existingReferences = await fetchExistingReferences();
-            const referenceNumbers = existingReferences.map(ref => parseInt(ref.replace(prefix, ''), 10));
-
-            // Find the first unused reference starting from 1000
-            let nextRefNumber = 1040;
-            while (referenceNumbers.includes(nextRefNumber)) {
-                nextRefNumber++;
-            }
-
-            // Create the new reference string
-            const newRef = `${prefix}${nextRefNumber}`;
-
-            // Save the new reference to local storage
-            localStorage.setItem('references', JSON.stringify([...existingReferences, newRef]));
-
-            return newRef;
-        };
-
-        // Check if the Ref is not already set, then generate and set it
-        if (!property.Ref) {
-            generateRef().then(newRef => {
-                setProperty((prevProperty) => ({
-                    ...prevProperty,
-                    Ref: newRef,
-                }));
-            });
-        }
-    }, []);
- */
     const handleImageClick = () => {
         if (typeof setActiveTab === 'function') {
             setActiveTab(2); 

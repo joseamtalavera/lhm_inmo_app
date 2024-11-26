@@ -29,6 +29,22 @@ import { ThemeProvider } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 
+const generateNextReference = async () => {
+    const prefix = 'LHA';
+    const storedReferences = JSON.parse(localStorage.getItem('references')) || [];
+    const referenceNumbers = storedReferences.map(ref => parseInt(ref.replace(prefix, ''), 10));
+
+    let nextRefNumber = 1040;
+    while (referenceNumbers.includes(nextRefNumber)) {
+        nextRefNumber++;
+    }
+
+    const newRef = `${prefix}${nextRefNumber}`;
+    localStorage.setItem('references', JSON.stringify([...storedReferences, newRef]));
+
+    return newRef;
+};
+
 export default function DataTable({ filter: initialFilter }) {
     const navigate = useNavigate();
     const [properties, setProperties] = useState([]);
@@ -39,7 +55,7 @@ export default function DataTable({ filter: initialFilter }) {
     const [orderBy, setOrderBy] = useState('ref');
     const [filter, setFilter] = useState(initialFilter);
 
-    useEffect(() => {
+    //useEffect(() => {
         const fetchProperties = async () => {
             setIsLoading(true);
             try {
@@ -60,6 +76,10 @@ export default function DataTable({ filter: initialFilter }) {
                 setIsLoading(false);
             }
         };
+        //fetchProperties();
+    //}, []);
+
+    useEffect(() => {
         fetchProperties();
     }, []);
 
@@ -100,8 +120,35 @@ export default function DataTable({ filter: initialFilter }) {
         setFilter(event.target.value);
     };
 
-    const handleOpen = () => {
+    /* const handleOpen = () => {
         navigate('/dashboard/propiedades/add-propiedad');
+    }; */
+
+    
+    const handleOpen = async () => {
+        try {
+            const newRef = await generateNextReference();
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ref: newRef, title: 'New Property' }) // Example data
+            });
+
+            if (!response.ok) throw new Error('Failed to create property');
+
+            const newProperty = await response.json();
+            console.log('Created property:', newProperty);
+
+            // Update the state with the new property
+            setProperties((prevProperties) => [newProperty, ...prevProperties]);
+
+            await fetchProperties();
+            
+        } catch (error) {
+            console.error('Error creating property:', error);
+        }
     };
 
     // Normalize text to remove accents and convert to lowercase
@@ -123,6 +170,8 @@ export default function DataTable({ filter: initialFilter }) {
     // Sort properties based on order and orderBy
     const sortedProperties = useMemo(() => {
         return filteredProperties.sort((a, b) => {
+            if (a.title === 'New Property' && b.title !== 'New Property') return -1;
+            if (a.title !== 'New Property' && b.title === 'New Property') return 1;
             if (orderBy === 'active') {
                 return (a[orderBy] === b[orderBy] ? 0 : a[orderBy] ? -1 : 1) * (order === 'asc' ? 1 : -1);
             }

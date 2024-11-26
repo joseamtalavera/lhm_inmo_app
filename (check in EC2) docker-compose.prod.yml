@@ -6,6 +6,8 @@ services:
     environment:
       - NODE_ENV=production
       - REACT_APP_API_URL=https://app.lhainmobiliaria.es
+    volumes:
+      - uploads:/usr/share/nginx/uploads
 
   backend:
     image: ghcr.io/josemolinatalavera/backend:latest
@@ -17,4 +19,7 @@ services:
       - NODE_ENV=production
       - DATABASE_URL=postgres://postgres:Rakna6164@database-2.c50syq0iyqal.eu-north-1.rds.amazonaws.com:5432/lhainmobiliaria
       - PGOPTIONS=--search_path=lhainmobiliaria
+      - APP_DOMAIN=app.lhainmobiliaria.es
+    volumes:
+       - /usr/share/nginx/uploads:/usr/share/nginx/uploads # Persist uploads in a shared volume
     restart: always

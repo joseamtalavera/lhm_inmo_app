@@ -2,7 +2,18 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, CircularProgress, Box, Card, Divider, Tabs, Tab, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { 
+    Button, 
+    CircularProgress, 
+    Box, Card, Divider, 
+    Tabs, 
+    Tab, 
+    Dialog, 
+    DialogTitle, 
+    DialogContent, 
+    DialogContentText, 
+    DialogActions 
+} from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -15,7 +26,6 @@ import Documentation from './Documentation';
 
 const Propiedad = () => {
     const { id } = useParams();
-    //const [property, setProperty] = useState();
     const [property, setProperty] = useState({});
     const [amenities, setAmenities ] = useState([]);
     const [images, setImages] = useState([]);
@@ -29,6 +39,7 @@ const Propiedad = () => {
     const [open, setOpen] = useState(false);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
     const navigate = useNavigate();
+    const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
         const fetchProperty = async () => {
@@ -246,42 +257,10 @@ const Propiedad = () => {
             setOpen(true);
         }
     };
-    // Handle image upload
-    const handleUpload = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (!property || !property.ref) {
-                console.error('property or property.ref is undefined');
-                //return;
-                await saveProperty();
-            }
-            const formData = new FormData();
-            formData.append('image', file);
-            formData.append('ref', property.ref);
 
-            console.log('Uploading file:', file);
-            try {
-                console.log('Property ref:', property.ref); // Check if this is defined
-                const response = await fetch(
-                    `${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/images`, 
-                    {
-                    method: 'POST',
-                    body: formData,
-                }
-            );
-
-                if (!response.ok) throw new Error('Failed to upload image');
-                const newImage = await response.json();
-                console.log('Uploaded image response:', newImage);
-                
-                setImages((prevImages) => [...prevImages, newImage]);
-            } catch (error) {
-                console.error('Error uploading image:', error);
-            }
-        }
-    };
-    // We need to save the property before uploading images
-    const saveProperty = async () => {
+     // We need to save the property before uploading images
+    /* const saveProperty = async () => {
+        setIsSaving(true);
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`, {
                 method: 'PUT',
@@ -300,12 +279,142 @@ const Propiedad = () => {
             }));
     
             console.log('Property saved successfully:', updatedProperty);
+            return updatedProperty;
         } catch (error) {
             console.error('Error saving property:', error);
             throw error; // Re-throw error to handle in the calling function
+        } finally {
+            setIsSaving(false);
         }
     };
+    
+    const handleUpload = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            let updatedProperty = property;
 
+            if (!property || !property.ref) {
+                console.error('property or property.ref is undefined');
+                const updatedProperty = await saveProperty();
+            
+                // Ensure property is saved before uploading images
+                if (!updatedProperty.ref){
+                    console.error('Property ref is undefined');
+                    return;
+                }
+
+                // Update the property state with the updated property
+                setProperty(updatedProperty);
+            }
+
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('ref', updatedProperty.ref);
+
+            console.log('Uploading file:', file);
+            try {
+                console.log('Property ref:', updatedProperty.ref); // Check if this is defined
+                const response = await fetch(
+                    `${process.env.REACT_APP_API_URL}/api/properties/${updatedProperty.ref}/images`, 
+                    {
+                    method: 'POST',
+                    body: formData,
+                }
+            );
+
+                if (!response.ok) throw new Error('Failed to upload image');
+                const newImage = await response.json();
+                console.log('Uploaded image response:', newImage);
+                
+                setImages((prevImages) => [...prevImages, newImage]);
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+        }
+    }; */
+
+    const saveProperty = async () => {
+        setIsSaving(true);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(property),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to save property');
+            }
+    
+            const updatedProperty = await response.json();
+            setProperty((prevProperty) => ({
+                ...prevProperty,
+                ...updatedProperty,
+            }));
+    
+            console.log('Property saved successfully:', updatedProperty);
+            return updatedProperty;
+        } catch (error) {
+            console.error('Error saving property:', error);
+            throw error; // Re-throw the error for further handling
+        } finally {
+            setIsSaving(false);
+        }
+    };
+    
+    const uploadImage = async (file, ref) => {
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('ref', ref);
+    
+        console.log('Uploading file:', file);
+    
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${ref}/images`, {
+                method: 'POST',
+                body: formData,
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to upload image');
+            }
+    
+            const newImage = await response.json();
+            console.log('Uploaded image response:', newImage);
+    
+            setImages((prevImages) => [...prevImages, newImage]);
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
+    };
+    
+    const handleUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) {
+            console.error('No file selected');
+            return;
+        }
+    
+        try {
+            // Ensure property is saved and ref is available
+            const updatedProperty = property?.ref
+                ? property
+                : await saveProperty();
+    
+            if (!updatedProperty.ref) {
+                console.error('Property ref is undefined after saving');
+                return;
+            }
+    
+            setProperty(updatedProperty); // Update property state
+            await uploadImage(file, updatedProperty.ref); // Upload the image
+        } catch (error) {
+            console.error('Error in handleUpload:', error);
+        }
+    };
+    
 
     const handleDelete = async (imageId) => {
         try {
@@ -412,6 +521,7 @@ const Propiedad = () => {
                                 handleUpload={handleUpload} 
                                 handleDelete={handleDelete}
                                 propertyRef={property?.ref}
+                                isSaving={isSaving}
                             />
                         )}
                         {activeTab === 3 && (

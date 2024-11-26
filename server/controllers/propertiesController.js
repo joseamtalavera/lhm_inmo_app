@@ -15,6 +15,8 @@ const {
     uploadPropertyDocumentDb,
     deleteDocumentDb,
 } = require('../models/propertiesQueries');
+const fs = require('fs');
+const path = require('path');
 
 
 
@@ -147,7 +149,7 @@ exports.addPropertyAmenities = async (req, res, next) => {
     }
 };
 
-exports.uploadPropertyImage = async (req, res, next) => {
+/* exports.uploadPropertyImage = async (req, res, next) => {
     try {
         console.log('Request params:', req.params);
         const ref = req.params.ref;
@@ -173,7 +175,7 @@ exports.uploadPropertyImage = async (req, res, next) => {
         const fs = require('fs');
         const path = require('path');
 
-        const uploadDir = 'uploads'; // Ensure this matches the uploads directory
+        const uploadDir = '/usr/share/nginx/uploads'; // Ensure this matches the uploads directory
         const uploadPath = path.join(uploadDir, fileName);
 
         // Copy the file instead of renaming (to handle cross-device link issues)
@@ -208,7 +210,72 @@ exports.uploadPropertyImage = async (req, res, next) => {
         console.error('Error in uploadPropertyImage:', error);
         next(error);
     }
+}; */
+
+exports.uploadPropertyImage = async (req, res, next) => {
+    try {
+        console.log('Request params:', req.params);
+        const ref = req.params.ref;
+        const image = req.file; 
+
+        console.log('Received ref:', ref);
+        console.log('Received image:', image);
+        console.log('Received body:', req.body);
+
+        if (!image) {
+            return res.status(400).json({ message: 'No image uploaded' });
+        }
+
+        // Fetch the current highest sequence number for this property
+        const currentImages = await getPropertyImages(ref);
+        const sequenceNumber = currentImages.length + 1;
+
+        // Generate the new file name
+        const fileExtension = image.originalname.split('.').pop();
+        const fileName = `${ref}-${sequenceNumber}.${fileExtension}`;
+        const uploadDir = '/usr/share/nginx/uploads'; // Match NGINX configuration
+        const uploadPath = path.join(uploadDir, fileName);
+
+        // Add debugging logs
+        console.log('Temporary file path:', image.path);
+        console.log('Destination file path:', uploadPath);
+
+
+        // Rename the file to the final name
+        fs.renameSync(image.path, uploadPath); // Move file to the final name
+        console.log('File successfully moved to:', uploadPath);
+
+        // Generate the URL
+        const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+        const domain = process.env.APP_DOMAIN || 'localhost:3010';
+        const imageUrl = `${protocol}://${domain}/uploads/${fileName}`;
+
+        // Add metadata for the image
+        const principalValue = req.body.principal === 'true' ? 1 : 0;
+        const cabeceraValue = req.body.cabecera === 'true' ? 1 : 0;
+
+        const imageDetails = {
+            ref, 
+            url: imageUrl,
+            fototitle: req.body.fototitle || '',
+            principal: principalValue,
+            cabecera: cabeceraValue,
+        };
+
+        console.log('Image details:', imageDetails);
+
+        // Save image details to the database
+        const savedImage = await uploadPropertyImageDb(imageDetails);
+
+        console.log('Saved image:', savedImage);
+
+        res.status(201).json(savedImage);
+    } catch (error) {
+        console.error('Error in uploadPropertyImage:', error);
+        next(error);
+    }
 };
+
 
 exports.uploadPropertyDocument = async (req, res, next) => {
     try {

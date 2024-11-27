@@ -14,6 +14,7 @@ const {
     deleteImageDb,
     uploadPropertyDocumentDb,
     deleteDocumentDb,
+    updateAllImagesDb,
 } = require('../models/propertiesQueries');
 const fs = require('fs');
 const path = require('path');
@@ -114,6 +115,20 @@ exports.updatePropertyAmenities = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.updateAllImages = async (req, res, next) => {
+    try {
+        const updatedImages = req.body;
+        console.log('Received updated images:', updatedImages);
+        const response = await updateAllImagesDb(updatedImages);
+        res.status(200).json({ message: 'Images updated successfully', data: response });
+
+    } catch (error) {
+        console.error('Error updating images:', error);
+        next(error);
+    }
+}
+
 
 
 

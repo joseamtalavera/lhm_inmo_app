@@ -6,31 +6,6 @@ const multer = require('multer');
 
 const upload = multer({ dest: '/usr/share/nginx/uploads/' });
 //const uploadDocuments = multer({ dest: '/usr/share/nginx/uploads/documents/' });  
-
-// Configure multer to save files to the correct directory
-/* const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, '/usr/share/nginx/uploads/'); // Ensure this matches your NGINX alias
-    },
-    filename: (req, file, cb) => {
-      // Temporary name; final renaming handled in the controller
-      cb(null, file.originalname); 
-    },
-  });
-  
-  // Define multer instances
-  const upload = multer({ storage });
-  const uploadDocuments = multer({
-    storage: multer.diskStorage({
-      destination: (req, file, cb) => {
-        cb(null, '/usr/share/nginx/uploads/documents/');
-      },
-      filename: (req, file, cb) => {
-        cb(null, file.originalname);
-      },
-    }),
-  });
- */
 const uploadDocuments = multer({ dest: 'documentos' });
 
 // get 
@@ -45,6 +20,7 @@ router.get('/properties/:ref/documents', propertiesController.getPropertyDocumen
 // put 
 router.put('/properties/:id', propertiesController.updateProperty);
 router.put('/properties/:ref/amenities', propertiesController.updatePropertyAmenities); 
+router.put('/properties/images/update-all', propertiesController.updateAllImages);
 
 
 

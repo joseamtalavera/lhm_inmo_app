@@ -397,6 +397,77 @@ const updatePropertyAmenitiesDb = async (ref, amenities) => {
     }
 };
 
+/* const updateAllImagesDb = async (updatedImages) => {
+    try {
+        console.log('Starting transaction to update all images');
+        await pool.query('BEGIN');
+
+        // Map through each image and update the `principal` and `cabecera` fields
+        const updatePromises = updatedImages.map((image) => {
+            console.log('Updating image:', image);
+            return pool.query(
+                `UPDATE lhainmobiliaria.vimages
+                 SET principal = $1, cabecera = $2
+                 WHERE id = $3`,
+                [image.principal, image.cabecera, image.id]
+            );
+            
+        });
+
+        // Wait for all updates to complete
+        await Promise.all(updatePromises);
+
+        // Commit the transaction
+        await pool.query('COMMIT');
+
+        return { message: `${updatedImages.length} images updated successfully` };
+    } catch (error) {
+        // Rollback transaction in case of error
+        await pool.query('ROLLBACK');
+        console.error('Error in updateAllImagesDb:', error);
+        throw error;
+    }
+};  */
+
+
+const updateAllImagesDb = async (updatedImages) => {
+    const client = await pool.connect(); // Get a client from the pool
+    try {
+        console.log('Starting transaction to update all images');
+        await client.query('BEGIN'); // Begin a transaction
+
+        // Map through each image and update the `principal` and `cabecera` fields
+        const updatePromises = updatedImages.map(async (image) => {
+            console.log('Updating image:', image);
+            const result = await client.query(
+                `UPDATE lhainmobiliaria.vimages
+                 SET principal = $1, cabecera = $2
+                 WHERE id = $3 RETURNING *`,
+                [image.principal, image.cabecera, image.id]
+            );
+            console.log('Update result:', result.rows[0]);
+            return result;
+        });
+
+        // Wait for all updates to complete
+        await Promise.all(updatePromises);
+
+        console.log('Committing transaction');
+        await client.query('COMMIT'); // Commit the transaction
+        console.log('Transaction committed successfully');
+
+        return { message: `${updatedImages.length} images updated successfully` };
+    } catch (error) {
+        console.error('Error in updateAllImagesDb:', error);
+        console.log('Rolling back transaction');
+        await client.query('ROLLBACK'); // Roll back the transaction on error
+        throw error;
+    } finally {
+        client.release(); // Release the client back to the pool
+        console.log('Client released');
+    }
+};
+
 
 
 
@@ -622,7 +693,6 @@ const deleteDocumentDb = async (documentId) => {
     }
 };
 
-
 module.exports = {
     getAllProperties,
     getPropertyById,
@@ -638,5 +708,6 @@ module.exports = {
     updatePropertyAmenitiesDb,
     deleteImageDb,
     uploadPropertyDocumentDb,
-    deleteDocumentDb
+    deleteDocumentDb,
+    updateAllImagesDb
 };

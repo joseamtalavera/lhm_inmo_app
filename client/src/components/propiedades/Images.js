@@ -14,7 +14,38 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
         const [movedImage] = reorderedImages.splice(result.source.index, 1);
         reorderedImages.splice(result.destination.index, 0, movedImage);
 
+        // Update the first image as the principal and cabecera image
+        const updatedImages = reorderedImages.map((image, index) => ({
+                ...image, 
+                principal: index === 0 ? 1 : 0,
+                cabecera: index === 0 ? 1 : 0,
+            }));
+
         setImages(reorderedImages);
+
+        // Update the images in the database
+        updateAllImages(updatedImages);
+    };
+
+    const updateAllImages = async (updatedImages) => {
+        try {
+            console.log('Updating all images: ', updatedImages);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/images/update-all`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedImages),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to update images');
+            }
+    
+            console.log('Successfully updated all images');
+        } catch (error) {
+            console.error('Error updating images:', error);
+        }
     };
 
     const handleTitleChange = (index, newTitle) => {
@@ -22,18 +53,23 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
             i === index ? { ...image, fototitle: newTitle } : image
         );
         setImages(updatedImages);
-    };
-
-    
+    };    
 
     return (
         <Box position={'relative'}>
-            <DragDropContext onDragEnd={handleDragEnd}>
+            <DragDropContext 
+                onDragEnd={isEditing ? handleDragEnd : () => {}}    
+                >
                 <Droppable droppableId="images" direction="horizontal">
                     {(provided) => (
                         <Grid container spacing={2} ref={provided.innerRef} {...provided.droppableProps}>
                             {images.map((image, index) => (
-                                <Draggable key={image.id} draggableId={image.id.toString()} index={index}>
+                                <Draggable 
+                                    key={image.id} 
+                                    draggableId={image.id.toString()} 
+                                    index={index}
+                                    isDragDisabled={!isEditing}
+                                    >
                                     {(provided) => (
                                         <Grid item xs={12} sm={6} md={4} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                             <Card sx={{position: 'relative'}}>

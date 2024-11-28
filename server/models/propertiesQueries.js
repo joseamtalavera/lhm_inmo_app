@@ -49,7 +49,7 @@ const getPropertyById = async (id) => {
                 tta.tipotermoagua AS termoagua, tag.tipoagua, p.active, p.created_at, p.updated_at, p.idusuario, 
                 v.url AS foto, 
                 CASE 
-                    WHEN d.destacada = 1 THEN 'Yes'
+                    WHEN d.destacada = 1 THEN 'Si'
                     ELSE 'No'
                 END AS destacada,
                 vd.Description AS description
@@ -258,7 +258,7 @@ const updatePropertyDb = async (property, id) => {
             certificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
             tributoibi, tributovado, tributorustico, gastosvarios, tipogerencia, comunidadgastos, comunidadderrama,
             consumoelecticidad, consumoagua, tipointernet, tipogas, tipoite, tipotermoagua, tipoagua, active, idusuario,
-            description // Add description here
+            description, destacada // Add description here
         } = property;
 
         // Lookup foreign key IDs based on provided names
@@ -366,7 +366,15 @@ const updatePropertyDb = async (property, id) => {
                 [description, ref]
             );
             
-        }      
+        }     
+        
+        // Update the property as 'destacada' in the 'destacadas' table
+        if (destacada) {
+            await pool.query(
+                `INSERT INTO lhainmobiliaria.destacadas (ref, destacada) VALUES ($1, $2) ON CONFLICT (ref) DO UPDATE SET destacada = $2 RETURNING *`,
+                [ref, destacada === 'Si' ? 1 : 0]
+            );
+        }
 
         return result.rows[0];
     } catch (error) {

@@ -38,7 +38,7 @@ export const StyledSecondaryTypography = styled(Typography)`
     /*font-weight: bold;*/
     margin: 10px 0;
     line-height: 1.5;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     padding: 0 10px;
     height: 1.8em;
     width: 100%;
@@ -102,6 +102,12 @@ export const MainPicture = styled.div`
             height: 200px; /* Fixed height on mobile */
         }
     }
+`;
+
+export const StyledParagraph = styled.p`
+    font-size: 1.5rem;
+    margin-top: 2px;
+    color: #616161;
 `;
 
 

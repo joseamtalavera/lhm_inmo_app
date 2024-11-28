@@ -11,7 +11,8 @@ import {
   DrawerContainer, 
   StyledButton,
   MainPicture,
-  ContentWrapper
+  ContentWrapper,
+  StyledParagraph
 } from './styles/AppStyles';
 import { Link } from 'react-router-dom'; // for navigation
 
@@ -34,6 +35,8 @@ const App = () => {
           <StyledSecondaryTypography variant='h3'>
             Propiedades Destacadas        
           </StyledSecondaryTypography>
+          <StyledParagraph>Las últimas novedades y lanzamientos inmobiliarios en la Costa del Sol</StyledParagraph>
+          <StyledParagraph>No pierdas la vivienda de sus sueños</StyledParagraph>
 
           <PropiedadesDestacadas />
 

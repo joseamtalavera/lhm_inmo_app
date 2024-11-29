@@ -2,8 +2,38 @@
 
 import styled from "styled-components";
 
+export const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensures it takes up the entire viewport height */
+`;
+
+// Drawer container that handles menu
+export const DrawerContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure the drawer is on top of other content */
+  background-color: white;
+  margin-bottom: 50px;
+`;
+
+// Wrapper for the main content in the middle of the page
+export const ContentWrapper = styled.div`
+  flex: 1; /* Ensures it grows and fills available space */
+  display: flex;
+  padding: 20px;
+  margin-top: 50px;
+`;
+
+export const FiltersContainer = styled.div`
+  flex: 0 0 240px;
+  margin-right: 20px;
+`;
 
 export const PropertiesContainer = styled.div`
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -15,9 +45,11 @@ export const PropertyCard = styled.div`
   background-color: #fff;
   border: 1px solid #ddd;
   margin: 1em;
-  width: 280px;
+  width: 100%;
+  max-width: 600px;
   border-radius: 8px;
   overflow: hidden;
+  display: flex;
   transition: box-shadow 0.3s ease;
 
   &:hover {
@@ -33,6 +65,9 @@ export const PropertyImage = styled.img`
 
 export const PropertyInfo = styled.div`
   padding: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 export const PropertyTitle = styled.h3`
@@ -43,6 +78,11 @@ export const PropertyTitle = styled.h3`
 export const PropertyDescription = styled.p`
   font-size: 0.9em;
   color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
 `;
 
 export const PropertyPrice = styled.p`

@@ -27,9 +27,15 @@ export const ContentWrapper = styled.div`
     align-items: center;
     padding: 0;
     margin-top: 50px;
-    
+`;
+export const FiltersContainer = styled.div`
+    flex: 0 0 240px;
+    margin-right: 20px;
 `;
 
+export const PropertiesContainer = styled.div`
+    flex: 1;
+`;
 // Styled typography for the main title
 export const StyledSecondaryTypography = styled(Typography)`
     color: #1E90FF;
@@ -51,8 +57,8 @@ export const StyledSecondaryTypography = styled(Typography)`
 
 // Button with custom styeles
 export const StyledButton = styled(Button)`
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 75px;
+    margin-bottom: 75px;
     color: white;
     background-color: #1E90FF;
 

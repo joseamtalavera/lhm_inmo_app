@@ -16,7 +16,6 @@ import {
 import BedIcon from '@mui/icons-material/Bed';
 import BathIcon from '@mui/icons-material/Bathtub';
 import WcIcon from '@mui/icons-material/Wc';
-import { Square } from '@mui/icons-material';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
 
 const PropiedadesDestacadas = () => {
@@ -53,7 +52,7 @@ const PropiedadesDestacadas = () => {
   }
 
   const featuredProperties = properties.filter(property => {
-    return property.destacada === "1";
+    return property.destacada === "Si";
   });
   console.log('Featured Properties:', featuredProperties);
 
@@ -71,7 +70,7 @@ const PropiedadesDestacadas = () => {
             <PropertyDetails>
               <PropertyDetailItem>
                 <BedIcon />
-                <span>{property.habitaciones}</span>
+                <span>{property.habitaciones} habitaciones</span>
               </PropertyDetailItem>
               <PropertyDetailItem>
                 <SquareFootIcon />
@@ -81,14 +80,13 @@ const PropiedadesDestacadas = () => {
             <PropertyDetails>
               <PropertyDetailItem>
                 <BathIcon />
-                <span>{property.banos}</span>
+                <span>{property.banos} baños</span>
               </PropertyDetailItem>
               <PropertyDetailItem>
                 <WcIcon />
-                <span>{property.aseos}</span>
+                <span>{property.aseos} aseos</span>
               </PropertyDetailItem>
             </PropertyDetails>
-            <p>{property.description}</p>
           </PropertyInfo>
         </PropertyCard>
       ))}

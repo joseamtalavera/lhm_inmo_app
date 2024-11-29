@@ -16,22 +16,11 @@ const Propiedades = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => {
-    navigate('/dashboard/propiedades/add-propiedad');
-  }
+  
 
   return (
     <MenuLayout>
       <StyledBox>
-       {/*  <InnerBox>
-          <StyledButton
-            variant="outlined"
-            startIcon={<AddIcon />}
-            onClick={handleOpen}
-          >
-            Add
-          </StyledButton>
-        </InnerBox> */}
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
           <Box sx={{ maxWidth: '1200px', width: '100%', padding: '1rem' }}>
             <BasicTablePropiedades />

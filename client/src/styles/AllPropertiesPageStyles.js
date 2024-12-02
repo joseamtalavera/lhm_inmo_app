@@ -25,6 +25,7 @@ export const ContentWrapper = styled.div`
   display: flex;
   padding: 20px;
   margin-top: 50px;
+  background-color: #f9f9f9;
 `;
 
 export const FiltersContainer = styled.div`

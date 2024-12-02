@@ -26,12 +26,13 @@ export const PropertyCard = styled.div`
 `;
 
 export const PropertyImage = styled.img`
-  width: 100%;
+  width: 40%;
   height: 180%;
   object-fit: cover;
 `;
 
 export const PropertyInfo = styled.div`
+  width: 60%;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -45,14 +46,21 @@ export const PropertyTitle = styled.h3`
 
 export const PropertyLocation = styled.p`
   margin: 0 0 8px;
-  color: #757575;
+  color: #1E90FF;
+  font-size: 1.2em;
 `;
 
 export const PropertyPrice = styled.p`
-  margin: 0 0 16px;
-  font-size: 1.2em;
+  font-size: 2em;
+  color: #333;
   font-weight: bold;
-  color: #424242;
+  margin-top: 0.5em;
+`;
+
+export const Divider = styled.hr`
+  border: none;
+  border-top: 1px solid #1E90FF;
+  margin: 1em 0;
 `;
 
 export const PropertyDetails = styled.div`

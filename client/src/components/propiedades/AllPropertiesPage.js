@@ -13,11 +13,15 @@ import {
   FiltersContainer,
   PropertiesContainer
 } from '../../styles/AllPropertiesPageStyles';
+import TablePagination  from '@mui/material/TablePagination';
+import Box from '@mui/material/Box';
 
 const AllPropertiesPage = () => {
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Fetch properties from backend API or static data
   useEffect(() => {
@@ -59,7 +63,19 @@ const AllPropertiesPage = () => {
       );
     });
     setFilteredProperties(filtered);
+    setPage(0);
   };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  }
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  }
+
+  const paginatedProperties = filteredProperties.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -80,7 +96,18 @@ const AllPropertiesPage = () => {
             <Filters onFilterChange={handleFilterChange} />
           </FiltersContainer>
           <PropertiesContainer>
-            <PropertyList properties={filteredProperties} />
+            <PropertyList properties={paginatedProperties} />
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 50]}
+                component="div"
+                count={filteredProperties.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Box>
           </PropertiesContainer>
         </ContentWrapper>
 

@@ -11,7 +11,8 @@ import {
   PropertyPrice,
   PropertyLocation,
   PropertyRow,
-  PropertyDescription
+  PropertyDescription,
+  Divider
 } from '../../styles/PropertyListStyles';
 import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
@@ -26,31 +27,28 @@ const PropertyList = ({ properties }) => {
           <PropertyImage src={property.foto} alt={property.title} />
           <PropertyInfo>
             <PropertyTitle>{property.title}</PropertyTitle>
-            <PropertyRow>
-              <PropertyLocation>{property.localidad}</PropertyLocation>
-              <PropertyPrice>{property.precio} €</PropertyPrice>
-            </PropertyRow>
+            <PropertyDescription>{property.description}</PropertyDescription>
+            <PropertyLocation>{property.localidad}</PropertyLocation>
+            <PropertyPrice>{property.precio} €</PropertyPrice>
+            <Divider />
             <PropertyDetails>
               <PropertyDetailItem>
                 <BedIcon />
-                <span>{property.habitaciones}</span>
+                <span>{property.habitaciones} habitaciones</span>
               </PropertyDetailItem>
               <PropertyDetailItem>
                 <SquareFootIcon />
                 <span>{property.metrosconstruidos} m²</span>
               </PropertyDetailItem>
-            </PropertyDetails>
-            <PropertyDetails>
               <PropertyDetailItem>
                 <BathtubIcon />
-                <span>{property.banos}</span>
+                <span>{property.banos} baños</span>
               </PropertyDetailItem>
               <PropertyDetailItem>
                 <WcIcon />
-                <span>{property.aseos}</span>
+                <span>{property.aseos} aseos</span>
               </PropertyDetailItem>
             </PropertyDetails>
-            <PropertyDescription>{property.description}</PropertyDescription>
           </PropertyInfo>
         </PropertyCard>
       ))}

@@ -6,6 +6,8 @@ export const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* Ensures it takes up the entire viewport height */
+  padding: 0;
+  margin: 0;
 `;
 
 // Drawer container that handles menu
@@ -24,22 +26,43 @@ export const ContentWrapper = styled.div`
   flex: 1; /* Ensures it grows and fills available space */
   display: flex;
   padding: 20px;
-  margin-top: 50px;
+  margin-top: 50px; /* Adjust margin-top to align with the drawer */
   background-color: #f9f9f9;
+  align-items: flex-start; /* Ensure children align at the start */
+`;
+
+export const MainContainer = styled.div`
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-top: 20px;
 `;
 
 export const FiltersContainer = styled.div`
-  flex: 0 0 240px;
-  margin-right: 20px;
+  flex: 0 0 300px; /* Increase the width to match the new max-width */
+  margin-right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;  /* Adds some spacing between each filter field */
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 17px;
 `;
 
 export const PropertiesContainer = styled.div`
   flex: 1;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 2em auto;
-  max-width: 1200px;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: flex-start;
+  /* margin: 2em auto;
+  max-width: 1200px; */
+  max-width: calc(100% - 260px); /* Make sure it takes available space considering filter's width */
+ 
 `;
 
 export const PropertyCard = styled.div`

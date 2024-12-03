@@ -13,6 +13,7 @@ import PrivateRoute from './components/login/PrivateRoute';
 import theme from './styles/theme';
 import { ThemeProvider } from '@mui/material/styles';
 import AllPropertiesPage from './components/propiedades/AllPropertiesPage';
+import PropertyPage from './components/propiedades/PropertyPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -23,6 +24,7 @@ root.render(
         <Route path="/" element={<App />} />
         <Route path="/login" element={<LoginPage />} /> 
         <Route path="/all-propiedades" element={<AllPropertiesPage />} /> 
+        <Route path="/viviendas/:id" element={<PropertyPage />} />
         <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path='dashboard/propiedades' element={<PrivateRoute><Propiedades /></PrivateRoute>} />
         <Route path="/dashboard/propiedades/:id" element={<PrivateRoute><Propiedad /></PrivateRoute>} />

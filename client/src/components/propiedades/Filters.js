@@ -1,6 +1,15 @@
 // src/components/Filters.js
 
 import React, { useState } from 'react';
+import { 
+  FiltersContainer,
+  FilterLabel,
+  FilterInput,
+  FilterButton,
+  Title,
+  FilterGroup,
+  FilterRow
+} from '../../styles/FitersStyles';
 
 const Filters = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({
@@ -10,7 +19,8 @@ const Filters = ({ onFilterChange }) => {
     minSize: '',
     maxSize: '',
     bedrooms: '',
-    bathrooms: ''
+    bathrooms: '',
+    location: ''
   });
 
   const handleChange = (e) => {
@@ -27,72 +37,104 @@ const Filters = ({ onFilterChange }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Property Type:</label>
-        <input
-          type="text"
-          name="propertyType"
-          value={filters.propertyType}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Min Price:</label>
-        <input
-          type="number"
-          name="minPrice"
-          value={filters.minPrice}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Max Price:</label>
-        <input
-          type="number"
-          name="maxPrice"
-          value={filters.maxPrice}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Min Size:</label>
-        <input
-          type="number"
-          name="minSize"
-          value={filters.minSize}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Max Size:</label>
-        <input
-          type="number"
-          name="maxSize"
-          value={filters.maxSize}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Bedrooms:</label>
-        <input
-          type="number"
-          name="bedrooms"
-          value={filters.bedrooms}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Bathrooms:</label>
-        <input
-          type="number"
-          name="bathrooms"
-          value={filters.bathrooms}
-          onChange={handleChange}
-        />
-      </div>
-      <button type="submit">Apply Filters</button>
-    </form>
+    <FiltersContainer>
+        <Title>INTRODUZCA SU BUSQUEDA</Title>
+        <form onSubmit={handleSubmit}>
+        <FilterRow>
+          <FilterLabel>Localidad:</FilterLabel>
+          <FilterInput
+            type="text"
+            name="location"
+            value={filters.location}
+            onChange={handleChange}
+          />
+        </FilterRow>
+        <FilterRow>
+            <FilterLabel>Tipo Propiedad:</FilterLabel>
+            <FilterInput
+              type="text"
+              name="propertyType"
+              value={filters.propertyType}
+              onChange={handleChange}
+            />
+          </FilterRow>
+
+        <FilterGroup>
+          <div>
+            <FilterLabel>Min Precio:</FilterLabel>
+            <FilterInput
+              type="number"
+              name="minPrice"
+              value={filters.minPrice}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <FilterLabel>Max Precio:</FilterLabel>
+            <FilterInput
+              type="number"
+              name="maxPrice"
+              value={filters.maxPrice}
+              onChange={handleChange}
+            />
+          </div>
+        </FilterGroup>
+        <FilterGroup>
+          <div>
+            <FilterLabel>Min Tamaño:</FilterLabel>
+            <FilterInput
+              type="number"
+              name="minSize"
+              value={filters.minSize}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <FilterLabel>Max Tamaño:</FilterLabel>
+            <FilterInput
+              type="number"
+              name="maxSize"
+              value={filters.maxSize}
+              onChange={handleChange}
+            />
+          </div>
+        </FilterGroup>
+        <FilterRow>
+          <div>
+            <FilterLabel>Habitaciones:</FilterLabel>
+            <FilterInput
+              type="number"
+              name="bedrooms"
+              value={filters.bedrooms}
+              onChange={handleChange}
+            />
+          </div>
+        </FilterRow>
+        <FilterRow>
+          <div>
+            <FilterLabel>Baños:</FilterLabel>
+            <FilterInput
+              type="number"
+              name="bathrooms"
+              value={filters.bathrooms}
+              onChange={handleChange}
+            />
+          </div>
+        </FilterRow>
+        <FilterRow>
+          <div>
+            <FilterLabel>Aseos:</FilterLabel>
+            <FilterInput
+              type="number"
+              name="aseos"
+              value={filters.aseos || ''}
+              onChange={handleChange}
+            />
+          </div>
+        </FilterRow>
+        <FilterButton type="submit">Aplicar Filtros</FilterButton>
+      </form>
+    </FiltersContainer>
   );
 };
 

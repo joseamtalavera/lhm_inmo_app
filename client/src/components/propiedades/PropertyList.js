@@ -1,6 +1,7 @@
 // PropertyList.js
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { 
   PropertyCard, 
   PropertyImage, 
@@ -10,7 +11,6 @@ import {
   PropertyDetailItem,
   PropertyPrice,
   PropertyLocation,
-  PropertyRow,
   PropertyDescription,
   Divider
 } from '../../styles/PropertyListStyles';
@@ -23,6 +23,7 @@ const PropertyList = ({ properties }) => {
   return (
     <div>
       {properties.map((property) => (
+        <Link to={`/viviendas/${property.id}`} key={property.id} style={{ textDecoration: 'none', color: 'inherit' }}>
         <PropertyCard key={property.id}>
           <PropertyImage src={property.foto} alt={property.title} />
           <PropertyInfo>
@@ -51,6 +52,7 @@ const PropertyList = ({ properties }) => {
             </PropertyDetails>
           </PropertyInfo>
         </PropertyCard>
+        </Link>
       ))}
     </div>
   );

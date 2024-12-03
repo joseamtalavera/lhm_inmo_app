@@ -11,7 +11,8 @@ import {
   DrawerContainer, 
   ContentWrapper,
   FiltersContainer,
-  PropertiesContainer
+  PropertiesContainer,
+  MainContainer
 } from '../../styles/AllPropertiesPageStyles';
 import TablePagination  from '@mui/material/TablePagination';
 import Box from '@mui/material/Box';
@@ -92,6 +93,7 @@ const AllPropertiesPage = () => {
 
         {/* Main content area */}
         <ContentWrapper>
+          <MainContainer>
           <FiltersContainer>
             <Filters onFilterChange={handleFilterChange} />
           </FiltersContainer>
@@ -109,6 +111,7 @@ const AllPropertiesPage = () => {
               />
             </Box>
           </PropertiesContainer>
+          </MainContainer>
         </ContentWrapper>
 
         {/* Footer */}

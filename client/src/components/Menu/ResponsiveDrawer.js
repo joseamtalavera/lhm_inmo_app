@@ -20,7 +20,12 @@ import {
     LogoImage,
 } from '../../styles/ResponsiveDrawerStyles';
 
-const menuItems = ['Propiedades', 'Opciones', 'Valora tu Propiedad', 'Partners'];
+const menuItems = [
+    { text: 'Propiedades', link: '/propiedades' },
+    { text: 'Opciones', link: '/opciones' },
+    { text: 'Valora tu Propiedad', link: '/valora-tu-propiedad' },
+    { text: 'Partners', link: '/partners' }
+];
 
 const ResponsiveDrawer = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -43,9 +48,9 @@ const ResponsiveDrawer = () => {
                 <CloseIcon />
             </CloseButton>
             <List>
-                {menuItems.map((text) => (
-                    <ListItem button key={text}>
-                        <StyledListItemText primary={text}/>
+                {menuItems.map((item) => (
+                    <ListItem button key={item.text} component={Link} to={item.link}>
+                        <StyledListItemText primary={item.text}/>
                     </ListItem>
                 ))}
                 <ListItem button key="Login" component={Link} to="/login">
@@ -60,7 +65,7 @@ const ResponsiveDrawer = () => {
             <StyledAppBar position="static" elevation={0}>
                 <StyledToolbar >
                 <Box>
-                    <LogoImage src="logo300x212.png" alt="Logo"/>
+                    <LogoImage src="/logo300x212.png" alt="Logo"/>
                 </Box>
                     {isMobile ? (
                         <StyledIconButton
@@ -74,9 +79,9 @@ const ResponsiveDrawer = () => {
                         </StyledIconButton>
                     ) : (
                         <DesktopMenu >
-                            {menuItems.map((text, index) => (
-                                <MenuItem key={index} >
-                                    {text}
+                            {menuItems.map((item, index) => (
+                                <MenuItem key={index} component={Link} to={item.link}>
+                                    {item.text}
                                 </MenuItem>
                             ))}
                            <LoginButton 

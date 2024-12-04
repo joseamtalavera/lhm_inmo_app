@@ -14,6 +14,7 @@ import theme from './styles/theme';
 import { ThemeProvider } from '@mui/material/styles';
 import AllPropertiesPage from './components/propiedades/AllPropertiesPage';
 import PropertyPage from './components/propiedades/PropertyPage';
+import Partners from './components/Menu/Partners';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -23,6 +24,7 @@ root.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/login" element={<LoginPage />} /> 
+        <Route path="/partners" element={<Partners />} />
         <Route path="/all-propiedades" element={<AllPropertiesPage />} /> 
         <Route path="/viviendas/:id" element={<PropertyPage />} />
         <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />

@@ -19,9 +19,17 @@ import {
   StyledSubtitle,
   PropertyDetailsRow,
   PropertyDetailLocalidad,
-  PropertyDetailPrecio
+  PropertyDetailPrecio,
+  AmenitiesContainer,
+  Tick,
+  AmenityLabel,
+  AmenityItem,
+  AmenitySection,
+  AmenityTitle
 } from '../../styles/PropertyPageStyles';
-import { Divider } from '@mui/material';
+
+import Divider from '@mui/material/Divider'; // Import Divider from Material-UI
+import CheckIcon from '../../styles/CheckIcon'; // Import the custom icon
 
 const PropertyPage = () => {
   const { id } = useParams();
@@ -52,6 +60,7 @@ const PropertyPage = () => {
           throw new Error('Failed to fetch amenities');
         }
         const amenitiesData = await amenitiesresponse.json();
+        console.log('Amenities:', amenitiesData);
 
         setProperty(propertyData);
         setImages(imagesData);
@@ -77,6 +86,15 @@ const PropertyPage = () => {
   const handleFullScreenToggle = () => {
     setIsFullScreen(!isFullScreen);
   }
+
+  const categorizedAmenities = {
+    "Acceso adaptado a personas con movilidad reducida": amenities.filter(amenity => amenity.category === "Acceso adaptado a personas con movilidad reducida"),
+    "Equipamiento edificio": amenities.filter(amenity => amenity.category === "Equipamiento edificio"),
+    "Vistas": amenities.filter(amenity => amenity.category === "Vistas"),
+    "Características de acondicionamiento exterior": amenities.filter(amenity => amenity.category === "Características de acondicionamiento exterior"),
+    "Equipamiento adicional": amenities.filter(amenity => amenity.category === "Equipamiento adicional"),
+    "Características de acondicionamiento interior": amenities.filter(amenity => amenity.category === "Características de acondicionamiento interior"),
+  };
 
   return (
     <>
@@ -113,16 +131,34 @@ const PropertyPage = () => {
               <StyledSubtitle>Descripción</StyledSubtitle>
               <p>{property.description}</p>
               <Divider />
+              <StyledSubtitle>Informcion General</StyledSubtitle>
+              
+              <Divider />
               <StyledSubtitle>Características Básicas</StyledSubtitle>
-              <ul>
-                {amenities.length > 0 ? (
-                  amenities.map((amenity, index) => (
-                    <li key={index}>{amenity.name}</li>
-                  ))
-                ) : (
-                  <p>No amenities available</p>
-                )}
-              </ul>
+              {Object.keys(categorizedAmenities).map((category, index) => (
+                <AmenitySection key={index}>
+                  <AmenityTitle>{category}</AmenityTitle>
+                  <AmenitiesContainer>
+                    {categorizedAmenities[category].map((amenity, index) => (
+                      <React.Fragment key={index}>
+                        <Tick>
+        <CheckIcon size={20} />
+      </Tick>
+      <AmenityLabel>{amenity.label}</AmenityLabel>
+      </React.Fragment>
+                    ))}
+                  </AmenitiesContainer>
+                </AmenitySection>
+              ))}
+
+              <Divider />
+              <StyledSubtitle>Video</StyledSubtitle>
+              <Divider />
+              <StyledSubtitle>Plano</StyledSubtitle>
+              <Divider />
+              <StyledSubtitle>Ubicación</StyledSubtitle>
+              <Divider />
+              <StyledSubtitle>Certificado Energético</StyledSubtitle>
             </ContentWrapperBelowImage>
           </MainContainer>
         </ContentWrapper>

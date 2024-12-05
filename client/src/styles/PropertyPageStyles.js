@@ -56,6 +56,7 @@ export const AppContainer = styled.div`
   min-height: 100vh; /* Ensures it takes up the entire viewport height */
   padding: 0;
   margin: 0;
+  overflow-x: hidden; /* Prevents horizontal scrolling */
 `;
 
 export const DrawerContainer = styled.div`
@@ -75,6 +76,8 @@ export const ContentWrapper = styled.div`
   padding: 20px;
   margin-top: 50px; /* Adjust margin-top to align with the drawer */
   background-color: #f9f9f9;
+  width: 100%;
+  box-sizing: border-box;
   
 `;
 
@@ -87,6 +90,7 @@ export const MainContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 50px;
+  box-sizing: border-box;
 `;
 
 export const ContentWrapperBelowImage = styled.div`
@@ -127,4 +131,52 @@ export const PropertyDetailPrecio = styled.div`
   color: #333;
   font-weight: bold;
   margin-top: 0.5em;
+`;
+
+export const AmenitiesContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, max-content auto); /* Two ticks + Two labels */
+  column-gap: 30px; /* Space between columns */
+  row-gap: 10px; /* Space between rows */
+  align-items: center; /* Aligns content vertically */
+  width: 100%;
+  max-width: 100%; /* Ensures the container doesn't exceed the viewport */
+  overflow-x: hidden;
+  margin-bottom: 20px;
+`;
+
+export const Tick = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px; /* Fixed width for consistent alignment */
+`;
+
+export const AmenityLabel = styled.div`
+  font-size: 1rem;
+  color: #666;
+`;
+
+export const AmenityItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Justify content to the left */
+  width: calc(50% - 10px); /* Two columns with gap */
+  margin-bottom: 10px;
+  font-size: 1rem;
+  color: #666;
+
+  svg {
+    margin-right: 5px; /* Adjust margin to bring text closer to the icon */
+  }
+`;
+
+export const AmenitySection = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const AmenityTitle = styled.h3`
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-bottom: 10px;
 `;

@@ -45,7 +45,7 @@ const App = () => {
             color='primary' 
             size='large' 
             component={Link}
-            to='/all-propiedades'
+            to='/allviviendas'
           >
             Ver todas las propiedades
           </StyledButton>

@@ -1,5 +1,6 @@
 
 import styled from 'styled-components';
+import Divider from '@mui/material/Divider';
 
 export const carouselContainer = {
   position: 'relative',
@@ -90,14 +91,16 @@ export const MainContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 50px;
+  margin-bottom: 0px;
   box-sizing: border-box;
 `;
 
 export const ContentWrapperBelowImage = styled.div`
   width: 100%;
-  padding: 20px;
+  padding: 0px;
   box-sizing: border-box;
   text-align: left;
+  margin-top: 0px;
 `;
 
 export const StyledTitle = styled.h1`
@@ -179,4 +182,47 @@ export const AmenityTitle = styled.h3`
   font-size: 1.2rem;
   font-weight: 300;
   margin-bottom: 10px;
+`;
+
+export const CollapsibleHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+`;
+
+export const PlusMinus = styled.span`
+  color: #1E90FF;
+  font-weight: bold;
+`;
+
+export const PropertyInfoContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 20px;
+`;
+
+export const PropertyInfoItem = styled.div`
+  flex: 1 1 200px;
+
+  strong {
+    font-weight: bold;
+    color: #666;
+  }
+`;
+
+export const BlueDivider = styled(Divider)`
+  border-color: #1E90FF !important;
+`;
+
+export const CarouselRequestContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+  gap: 30px;
 `;

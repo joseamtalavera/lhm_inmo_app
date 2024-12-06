@@ -21,7 +21,7 @@ import {
 } from '../../styles/ResponsiveDrawerStyles';
 
 const menuItems = [
-    { text: 'Propiedades', link: '/propiedades' },
+    { text: 'Propiedades', link: '/allviviendas' },
     { text: 'Opciones', link: '/opciones' },
     { text: 'Valora tu Propiedad', link: '/valora-tu-propiedad' },
     { text: 'Partners', link: '/partners' }

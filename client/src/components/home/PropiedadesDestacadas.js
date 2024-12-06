@@ -54,7 +54,6 @@ const PropiedadesDestacadas = () => {
   const featuredProperties = properties.filter(property => {
     return property.destacada === "Si";
   });
-  console.log('Featured Properties:', featuredProperties);
 
   return (
     <FeaturedPropertiesContainer>

@@ -25,7 +25,7 @@ root.render(
         <Route path="/" element={<App />} />
         <Route path="/login" element={<LoginPage />} /> 
         <Route path="/partners" element={<Partners />} />
-        <Route path="/all-propiedades" element={<AllPropertiesPage />} /> 
+        <Route path="/allviviendas" element={<AllPropertiesPage />} /> 
         <Route path="/viviendas/:id" element={<PropertyPage />} />
         <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path='dashboard/propiedades' element={<PrivateRoute><Propiedades /></PrivateRoute>} />

@@ -1,56 +1,7 @@
-
 import styled from 'styled-components';
 import Divider from '@mui/material/Divider';
 
-export const carouselContainer = {
-  position: 'relative',
-  width: '100%',
-  maxWidth: '800px',
-  margin: '0 auto',
-};
-
-export const carouselImage = {
-  width: '100%',
-  height: 'auto',
-  objectFit: 'cover',
-  borderRadius: '8px',
-};
-
-export const badgeStyle = {
-  position: 'absolute',
-  top: '10px',
-  right: '10px',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  color: 'white',
-  padding: '10px',
-  borderRadius: '50%',
-  cursor: 'pointer',
-};
-
-export const fullScreenContainer = {
-  position: 'fixed',
-  top: '0',
-  left: '0',
-  width: '100%',
-  height: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.8)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  zIndex: '1000',
-};
-
-export const arrowStyle = {
-  position: 'absolute',
-  top: '50%',
-  transform: 'translateY(-50%)',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  color: 'white',
-  padding: '10px',
-  borderRadius: '50%',
-  cursor: 'pointer',
-};
-
+// Layout Containers
 export const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -79,7 +30,6 @@ export const ContentWrapper = styled.div`
   background-color: #f9f9f9;
   width: 100%;
   box-sizing: border-box;
-  
 `;
 
 export const MainContainer = styled.div`
@@ -103,6 +53,59 @@ export const ContentWrapperBelowImage = styled.div`
   margin-top: 0px;
 `;
 
+// Styled Carousel Container
+export const StyledCarouselContainer = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+`;
+
+// Styled Arrow
+export const StyledArrow = styled.div`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+`;
+
+// Carousel Styles
+
+export const CarouselRequestContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+  gap: 30px;
+`;
+
+// Styled Full Screen Container
+export const StyledFullScreenContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+// Styled Request Box Container
+export const RequestBoxContainer = styled.div`
+  flex: 1;
+  max-width: 300px;
+`;
+
+// Removed unused style object: arrowStyle
+
+// Typography
 export const StyledTitle = styled.h1`
   font-size: 2.5rem;
   font-weight: 300; /* Thinner font weight */
@@ -116,6 +119,7 @@ export const StyledSubtitle = styled.h2`
   margin-bottom: 10px;
 `;
 
+// Property Details
 export const PropertyDetailsRow = styled.div`
   display: flex;
   justify-content: space-between;
@@ -136,6 +140,7 @@ export const PropertyDetailPrecio = styled.div`
   margin-top: 0.5em;
 `;
 
+// Amenities
 export const AmenitiesContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, max-content auto); /* Two ticks + Two labels */
@@ -160,20 +165,6 @@ export const AmenityLabel = styled.div`
   color: #666;
 `;
 
-export const AmenityItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* Justify content to the left */
-  width: calc(50% - 10px); /* Two columns with gap */
-  margin-bottom: 10px;
-  font-size: 1rem;
-  color: #666;
-
-  svg {
-    margin-right: 5px; /* Adjust margin to bring text closer to the icon */
-  }
-`;
-
 export const AmenitySection = styled.div`
   margin-bottom: 20px;
 `;
@@ -184,6 +175,7 @@ export const AmenityTitle = styled.h3`
   margin-bottom: 10px;
 `;
 
+// Collapsible Sections
 export const CollapsibleHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -196,6 +188,7 @@ export const PlusMinus = styled.span`
   font-weight: bold;
 `;
 
+// Property Information
 export const PropertyInfoContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -215,14 +208,7 @@ export const PropertyInfoItem = styled.div`
   }
 `;
 
+// Divider
 export const BlueDivider = styled(Divider)`
   border-color: #1E90FF !important;
-`;
-
-export const CarouselRequestContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 20px;
-  gap: 30px;
 `;

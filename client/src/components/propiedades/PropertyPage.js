@@ -5,9 +5,6 @@ import { GlobalStyle } from '../../styles/GlobalStyles';
 import ResponsiveDrawer from '../Menu/ResponsiveDrawer';
 import Footer from '../home/Footer';
 import { 
-  carouselContainer, 
-  fullScreenContainer, 
-  arrowStyle,
   AppContainer,
   DrawerContainer,
   ContentWrapper,
@@ -28,7 +25,11 @@ import {
   PropertyInfoContainer,
   PropertyInfoItem,
   BlueDivider,
-  CarouselRequestContainer
+  CarouselRequestContainer,
+  StyledCarouselContainer,
+  StyledArrow,
+  StyledFullScreenContainer, 
+  RequestBoxContainer,       
 } from '../../styles/PropertyPageStyles';
 import CheckIcon from '../../styles/CheckIcon';
 import RequestBox from './RequestBox';
@@ -188,21 +189,21 @@ const PropertyPage = () => {
         <ContentWrapper>
           <MainContainer>
             <CarouselRequestContainer>
-            <div style={carouselContainer}>
-              <Carousel images={images} />
-              <div onClick={handleFullScreenToggle}></div>
-            </div>
+              <StyledCarouselContainer>
+                <Carousel images={images} />
+                <StyledArrow onClick={handleFullScreenToggle}></StyledArrow>
+              </StyledCarouselContainer>
 
-            <div style={{ flex: '1', maxWidth: '300px' }}>
-              <RequestBox onSubmitRequest={handleRequestSubmit} />
-            </div>
+              <RequestBoxContainer> 
+                <RequestBox onSubmitRequest={handleRequestSubmit} />
+              </RequestBoxContainer>
             </CarouselRequestContainer>
 
             {isFullScreen && (
-              <div style={fullScreenContainer}>
+              <StyledFullScreenContainer>
                 <Carousel images={images} />
-                <div style={arrowStyle} onClick={handleFullScreenToggle}></div>
-              </div>
+                <StyledArrow onClick={handleFullScreenToggle}></StyledArrow>
+              </StyledFullScreenContainer>
             )}
 
             <ContentWrapperBelowImage>

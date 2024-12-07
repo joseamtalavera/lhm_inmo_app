@@ -36,7 +36,7 @@ const RequestBox = ({ onSubmitRequest }) => {
           rows={4}
         />
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        <RequestButton type="submit">Contactar por chat</RequestButton>
+        <RequestButton type="submit">Contactar por email</RequestButton>
       </RequestForm>
       <Divider />
       <ContactInfoContainer>

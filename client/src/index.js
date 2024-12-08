@@ -15,6 +15,11 @@ import { ThemeProvider } from '@mui/material/styles';
 import AllPropertiesPage from './components/propiedades/AllPropertiesPage';
 import PropertyPage from './components/propiedades/PropertyPage';
 import Partners from './components/Menu/Partners';
+import Opciones from './components/Menu/Opciones';
+import ValoraTuPropiedad from './components/Menu/ValoraTuPropiedad';
+import Clientes from './components/clientes/Clientes';
+import Settings from './components/settings/Settings';
+import Ayuda from './components/ayuda/Ayuda'; 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -25,18 +30,21 @@ root.render(
         <Route path="/" element={<App />} />
         <Route path="/login" element={<LoginPage />} /> 
         <Route path="/partners" element={<Partners />} />
+        <Route path="/opciones" element={<Opciones />} />
+        <Route path="/valora-tu-propiedad" element={<ValoraTuPropiedad />} />
         <Route path="/allviviendas" element={<AllPropertiesPage />} /> 
         <Route path="/viviendas/:id" element={<PropertyPage />} />
         <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-        <Route path='dashboard/propiedades' element={<PrivateRoute><Propiedades /></PrivateRoute>} />
+        <Route path='/dashboard/propiedades' element={<PrivateRoute><Propiedades /></PrivateRoute>} />
         <Route path="/dashboard/propiedades/:id" element={<PrivateRoute><Propiedad /></PrivateRoute>} />
         <Route path="/dashboard/propiedades/add-propiedad" element={<PrivateRoute><AddPropiedad /></PrivateRoute>} />
+        <Route path="/dashboard/clientes" element={<PrivateRoute><Clientes /></PrivateRoute>} />
+        <Route path="/dashboard/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+        <Route path="/dashboard/ayuda" element={<PrivateRoute><Ayuda /></PrivateRoute>} />
       </Routes>
     </Router>
   </ThemeProvider>
 );
-
-// test sync
 
 /* 
 Summary of Comments:

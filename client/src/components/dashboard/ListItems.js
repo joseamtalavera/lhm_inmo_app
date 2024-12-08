@@ -55,8 +55,8 @@ export const moreItems = [
     { text: 'Reviews', icon: <ReviewsIcon sx={{fontSize: 20}} /> }, */
     { text: 'Propiedades', icon: <CentresIcon sx={{fontSize: 20}} />, path: '/dashboard/propiedades'},
     // { text: 'Product', icon: <ProductIcon sx={{fontSize: 20}} /> },
-    { text: 'Settings', icon: <SettingsIcon sx={{fontSize: 20}} /> },
-    { text: 'Ayuda', icon: <HelpIcon sx={{fontSize: 20}} /> },
+    { text: 'Settings', icon: <SettingsIcon sx={{fontSize: 20}} />, path: '/dashboard/settings'},
+    { text: 'Ayuda', icon: <HelpIcon sx={{fontSize: 20}} />, path: '/dashboard/ayuda'},
     { text: 'Logout', icon: <LogoutIcon sx={{fontSize: 20}} />, onClick: handleLogout},
 ];
 

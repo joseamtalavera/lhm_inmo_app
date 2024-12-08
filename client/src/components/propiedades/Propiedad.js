@@ -31,10 +31,10 @@ const Propiedad = () => {
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [isEditingGeneralInfo, setIsEditingGeneralInfo] = useState(false);
-    const [isEditingAmenities, setIsEditingAmenities] = useState(false);
-    const [isEditingImages, setIsEditingImages] = useState(false);
-    const [isEditingDocumentation, setIsEditingDocumentation] = useState(false);
+    const [isEditingGeneralInfo, setIsEditingGeneralInfo] = useState(true);
+    const [isEditingAmenities, setIsEditingAmenities] = useState(true);
+    const [isEditingImages, setIsEditingImages] = useState(true);
+    const [isEditingDocumentation, setIsEditingDocumentation] = useState(true);
     const [activeTab, setActiveTab] = useState(0);
     const [open, setOpen] = useState(false);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);

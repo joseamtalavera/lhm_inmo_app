@@ -1,5 +1,3 @@
-// BasicTablePropiedades 
-
 import React, { useEffect, useState, useMemo } from 'react';
 import { 
     Box, 
@@ -56,37 +54,37 @@ export default function DataTable({ filter: initialFilter }) {
     const [filter, setFilter] = useState(initialFilter);
 
     //useEffect(() => {
-        const fetchProperties = async () => {
-            setIsLoading(true);
-            try {
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error('Failed to fetch properties');
-                }
-                const data = await response.json();
-                setProperties(data);
-            } catch (error) {
-                console.error('Error:', error);
-            } finally {
-                setIsLoading(false);
+    const fetchProperties = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch properties');
             }
-        };
-        //fetchProperties();
+            const data = await response.json();
+            setProperties(data);
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    //fetchProperties();
     //}, []);
 
     useEffect(() => {
         fetchProperties();
     }, []);
 
-    const handleRowClick = (id) => {
+    /* const handleRowClick = (id) => {
         const property = properties.find(property => property.id === id);
         navigate(`/dashboard/propiedades/${id}`, { state: { property: property } });
-    };
+    }; */
 
     const handleDelete = async (id) => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`, {
@@ -124,7 +122,6 @@ export default function DataTable({ filter: initialFilter }) {
         navigate('/dashboard/propiedades/add-propiedad');
     }; */
 
-    
     const handleOpen = async () => {
         try {
             const newRef = await generateNextReference();
@@ -233,89 +230,95 @@ export default function DataTable({ filter: initialFilter }) {
                     <CircularProgress />
                 ) : (
                     <>
-                    <TableContainer component={Paper} sx={ '100%'}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Foto Principal</TableCell>
-                                    <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
-                                        <TableSortLabel
-                                            active={orderBy === 'ref'}
-                                            direction={orderBy === 'ref' ? order : 'asc'}
-                                            onClick={() => handleRequestSort('ref')}
-                                        >
-                                            Refencia
-                                        </TableSortLabel>
-                                    </TableCell>
-                                    <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
-                                        <TableSortLabel
-                                            active={orderBy === 'title'}
-                                            direction={orderBy === 'title' ? order : 'asc'}
-                                            onClick={() => handleRequestSort('title')}
-                                        >
-                                            Título
-                                        </TableSortLabel>
-                                    </TableCell>
-                                    <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
-                                        <TableSortLabel
-                                            active={orderBy === 'localidad'}
-                                            direction={orderBy === 'localidad' ? order : 'asc'}
-                                            onClick={() => handleRequestSort('localidad')}
-                                        >
-                                            Localidad
-                                        </TableSortLabel>
-                                    </TableCell>
-                                    <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
-                                        <TableSortLabel
-                                            active={orderBy === 'active'}
-                                            direction={orderBy === 'active' ? order : 'asc'}
-                                            onClick={() => handleRequestSort('active')}
-                                        >
-                                            Activa
-                                        </TableSortLabel>
-                                    </TableCell>
-                                    <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Acciones</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                            {sortedProperties.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((property) => (
-                                    <TableRow key={property.id} onClick={() => handleRowClick(property.id)} style={{ cursor: 'pointer' }}>
-                                        <TableCell>
-                                            <img src={property.foto} alt="Foto Principal" style={{ width: '100px', height: 'auto' }} />
+                        <TableContainer component={Paper} sx={{ width: '100%' }}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Foto Principal</TableCell>
+                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
+                                            <TableSortLabel
+                                                active={orderBy === 'ref'}
+                                                direction={orderBy === 'ref' ? order : 'asc'}
+                                                onClick={() => handleRequestSort('ref')}
+                                            >
+                                                Refencia
+                                            </TableSortLabel>
                                         </TableCell>
-                                        <TableCell>{property.ref}</TableCell>
-                                        <TableCell>{property.title}</TableCell>
-                                        <TableCell>{property.localidad}</TableCell>
-                                        <TableCell>
-                                            <Chip
-                                                label={property.active ? "Activa" : "Inactiva"}
-                                                icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
-                                                color={property.active ? "success" : "error"}
-                                                variant="outlined"
-                                            />
+                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
+                                            <TableSortLabel
+                                                active={orderBy === 'title'}
+                                                direction={orderBy === 'title' ? order : 'asc'}
+                                                onClick={() => handleRequestSort('title')}
+                                            >
+                                                Título
+                                            </TableSortLabel>
                                         </TableCell>
-                                        <TableCell>
-                                            <IconButton color="primary" onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/propiedades/${property.id}`); }}>
-                                                <EditIcon />
-                                            </IconButton>
-                                            <IconButton color="red" onClick={(e) => { e.stopPropagation(); handleDelete(property.id); }}>
-                                                <DeleteIcon />
-                                            </IconButton>
+                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
+                                            <TableSortLabel
+                                                active={orderBy === 'localidad'}
+                                                direction={orderBy === 'localidad' ? order : 'asc'}
+                                                onClick={() => handleRequestSort('localidad')}
+                                            >
+                                                Localidad
+                                            </TableSortLabel>
                                         </TableCell>
+                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
+                                            <TableSortLabel
+                                                active={orderBy === 'active'}
+                                                direction={orderBy === 'active' ? order : 'asc'}
+                                                onClick={() => handleRequestSort('active')}
+                                            >
+                                                Activa
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Acciones</TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[10, 25, 50]}
-                        component="div"
-                        count={sortedProperties.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
+                                </TableHead>
+                                <TableBody>
+                                    {sortedProperties.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((property) => (
+                                        <TableRow key={property.id}>
+                                            <TableCell>
+                                                <img src={property.foto} alt="Foto Principal" style={{ width: '100px', height: 'auto' }} />
+                                            </TableCell>
+                                            <TableCell>{property.ref}</TableCell>
+                                            <TableCell>{property.title}</TableCell>
+                                            <TableCell>{property.localidad}</TableCell>
+                                            <TableCell>
+                                                <Chip
+                                                    label={property.active ? "Activa" : "Inactiva"}
+                                                    icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
+                                                    color={property.active ? "success" : "error"}
+                                                    variant="outlined"
+                                                />
+                                            </TableCell>
+                                            <TableCell>
+                                                <IconButton 
+                                                    color="primary" 
+                                                    onClick={(e) => { 
+                                                        e.stopPropagation(); 
+                                                        navigate(`/dashboard/propiedades/${property.id}`); 
+                                                    }}
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
+                                                <IconButton color="red" onClick={(e) => { e.stopPropagation(); handleDelete(property.id); }}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[10, 25, 50]}
+                            component="div"
+                            count={sortedProperties.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
                     </>
                 )}
             </Box>

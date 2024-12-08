@@ -29,7 +29,7 @@ const menuItems = [
 
 const ResponsiveDrawer = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const theme = useTheme(); // get the theme object
+    const theme = useTheme();
     // useMediaQuery takes a theme object and returns a function that can be called with a breakpoint key to check if the screen is at that breakpoint or smaller (.dow())
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -65,7 +65,9 @@ const ResponsiveDrawer = () => {
             <StyledAppBar position="static" elevation={0}>
                 <StyledToolbar >
                 <Box>
-                    <LogoImage src="/logo300x212.png" alt="Logo"/>
+                    <Link to="/">
+                        <LogoImage src="/logo300x212.png" alt="Logo"/>
+                    </Link>
                 </Box>
                     {isMobile ? (
                         <StyledIconButton

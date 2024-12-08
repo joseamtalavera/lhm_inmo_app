@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { styled, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,7 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from '../dashboard/ListItems';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link as RouterLink } from 'react-router-dom';
 import { listItems, moreItems } from '../dashboard/ListItems';
 import theme from '../../styles/theme';
 
@@ -152,11 +151,22 @@ export default function Layout({ children }) {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'flex-end',
+              justifyContent: 'space-between', // Changed from 'flex-end' to 'space-between'
               px: [1],
             }}
           >
-            <img src="/logo300x212.png" alt="Logo" style={{ maxWidth: '125px', maxHeight: '50px', marginTop: '0px', position: 'absolute', left: '15px' }} />             
+            <RouterLink to="/dashboard">
+              <img
+                src="/logo300x212.png"
+                alt="Logo"
+                style={{
+                  maxWidth: '125px',
+                  maxHeight: '50px',
+                  marginTop: '0px',
+                  marginLeft: '15px', // Adjusted margin for left alignment
+                }}
+              />
+            </RouterLink>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
             </IconButton>

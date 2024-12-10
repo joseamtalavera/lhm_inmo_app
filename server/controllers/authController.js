@@ -1,12 +1,11 @@
 // controllers/authController.js
 
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const { getUserByEmail } = require('../models/Queries');
 const { validationResult } = require('express-validator');
 
-// User login function
 exports.login = async (req, res) => {
-  // Validate inputs (check if any validation error exists)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -15,7 +14,6 @@ exports.login = async (req, res) => {
   console.log('Received req.body:', req.body);
 
   try {
-    // Check if the user exists
     const user = await getUserByEmail(email);
     console.log('user:', user);
 
@@ -23,19 +21,15 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    // Validate password
-   /*  const isMatch = await bcrypt.compare(password, user.password);
-    console.log('isMatch:', isMatch);
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Password match:', isMatch);  
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });
-    } */
+    }
 
-    // Generate JWT token
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
-
-    // Send response
     res.status(200).json({
       token,
       user: { email: user.email },

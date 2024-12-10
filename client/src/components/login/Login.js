@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Grid, DialogContent,  DialogActions } from '@mui/material';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
-import { useNavigate } from 'react-router-dom';
 import {
   FormContainer,
   LoginGrid,
@@ -15,6 +14,7 @@ import {
   BlueText,
   DialogButton,
 } from '../../styles/LoginStyles';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -22,24 +22,20 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [open, setOpen] = useState(false); 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  // handle email input change
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
 
-  // handle password input change
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
 
-  // handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
   
     try {
-      // Pause the execution of the function until the fetch promise is resolved
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
         method: 'POST',
         headers: {
@@ -49,18 +45,19 @@ function Login() {
         credentials: 'include', 
       });
 
-      // Check if the response is not ok
       if (!response.ok) {
         const errorData = await response.json();
-        setErrorMessage(errorData.message ||'Email or pass is incorrect'); //errorData.message is the message from authRoutes.js
+        setErrorMessage(errorData.message ||'Email or pass is incorrect'); 
         setOpen(true);
       } else {
-          const data = await response.json();
-          console.log('Login successful');
-          localStorage.setItem('token', data.token); // Store the token in local storage
-          navigate('/dashboard');
+        const data = await response.json();
+        console.log('Login successful');
+        localStorage.setItem('token', data.token); 
+        console.log('Token:', data.token);
+        //window.location.href = '/dashboard';
+        navigate('/dashboard');
       }
-      // If there is an error, catch it and log it to the console
+      
     } catch (error) {
       console.error('Error:', error);
       setErrorMessage(error.message);
@@ -73,20 +70,19 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
-  
   return (
     <FormContainer component="form" onSubmit={handleSubmit}>  
-      <LoginGrid container direction= "column" spacing={2}>
-            <Grid item>
-              <TitleTypography variant="h4">
-                  Login
-              </TitleTypography>
-              <BodyTypography variant="body1" sx={{mb:2, textAlign: 'center'}}>
-                  Introduce tu correo electrónico y contraseña
-              </BodyTypography>
-            </Grid>
+      <LoginGrid container direction="column" spacing={2}>
+        <Grid item>
+          <TitleTypography variant="h4">
+            Login
+          </TitleTypography>
+          <BodyTypography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+            Introduce tu correo electrónico y contraseña
+          </BodyTypography>
+        </Grid>
 
-        <Grid item >
+        <Grid item>
           <EmailInput
             email={email}
             handleEmailChange={handleEmailChange}
@@ -111,7 +107,6 @@ function Login() {
           >
             Log In
           </LoginButton>
-
         </Grid>
       </LoginGrid>
 
@@ -119,8 +114,10 @@ function Login() {
         open={open}
         onClose={() => setOpen(false)}
       >
-        <StyledDialogTitle style={{ fontSize: errorMessage.includes('must') ? '12px' : 'default'}} >{errorMessage}</StyledDialogTitle>
-        <DialogContent >
+        <StyledDialogTitle style={{ fontSize: errorMessage.includes('must') ? '12px' : 'default' }}>
+          {errorMessage}
+        </StyledDialogTitle>
+        <DialogContent>
           <BlueText>
             Please try again
           </BlueText>

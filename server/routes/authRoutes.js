@@ -5,7 +5,6 @@ const { login } = require('../controllers/authController');
 const router = express.Router();
 const { body } = require('express-validator');
 
-// POST route for user login
 router.post(
     '/login',
     [

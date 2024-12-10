@@ -11,7 +11,7 @@ function PrivateRoute({ children }) {
     // it calls the useAuth hook to check if the user is authenticated
     // it destructures the isAuthenticated and isLoading values from the useAuth hook. 
     // the component will use these values to determine the rendering logic.
-    // data coming from the useAuth hook to determine the rendering logic, line 22 
+    // data coming from the useAuth hook to determine the rendering logic, line 20 
     const { isAuthenticated, isLoading } = useAuth();
     // If authentication is in progress, show a loading spinner
     if (isLoading) {

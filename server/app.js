@@ -1,9 +1,9 @@
+// App.js
 
 require('dotenv').config();
 
 const express = require('express');
 const passport = require('passport');
-const session = require('express-session');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -17,17 +17,17 @@ const app = express();
 
 app.use(helmet());
 app.use(morgan('combined'));
-// app.use(express.static(path.join(__dirname, '../client/build')));
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../client/build/index.html'));
-//   });
-
-
 app.use(cookieParser());
 
 const port = process.env.PORT || 5010;
 
-const allowedOrigins = [ 'http://localhost:3010', 'http://13.53.38.238:3010','http://13.53.38.238', 'https://app.lhainmobiliaria.es'];
+const allowedOrigins = [ 
+  'http://localhost:3010',
+  'http://13.53.38.238:3010',
+  'http://13.53.38.238', 
+  'https://app.lhainmobiliaria.es'
+  ];
+  
 app.use(cors({
     origin: function(origin, callback){
         if(!origin) return callback(null, true);
@@ -43,12 +43,6 @@ app.use(cors({
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
-
-app.use(session({ // use express-session to maintain session data
-    secret: 'some random secret', 
-    resave: false, 
-    saveUninitialized: false 
-}));
 
 app.use('/api', authRoutes);
 app.use('/api', propertiesRoutes);

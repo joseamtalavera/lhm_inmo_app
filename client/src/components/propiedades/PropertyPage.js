@@ -33,6 +33,7 @@ import {
 } from '../../styles/PropertyPageStyles';
 import CheckIcon from '../../styles/CheckIcon';
 import RequestBox from './RequestBox';
+import { CircularProgress, Box } from '@mui/material';
 
 const CollapsibleSection = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -154,7 +155,11 @@ const PropertyPage = () => {
   }, [id]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (!property) {

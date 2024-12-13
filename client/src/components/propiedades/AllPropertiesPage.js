@@ -15,7 +15,7 @@ import {
   MainContainer
 } from '../../styles/AllPropertiesPageStyles';
 import TablePagination  from '@mui/material/TablePagination';
-import Box from '@mui/material/Box';
+import { CircularProgress, Box } from '@mui/material';
 
 const AllPropertiesPage = () => {
   const [properties, setProperties] = useState([]);
@@ -79,7 +79,11 @@ const AllPropertiesPage = () => {
   const paginatedProperties = filteredProperties.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (

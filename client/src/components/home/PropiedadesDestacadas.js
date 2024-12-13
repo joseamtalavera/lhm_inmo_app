@@ -1,6 +1,7 @@
 // src/components/PropiedadesDestacadas.js
 
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   FeaturedPropertiesContainer, 
   PropertyCard, 
@@ -17,10 +18,12 @@ import BedIcon from '@mui/icons-material/Bed';
 import BathIcon from '@mui/icons-material/Bathtub';
 import WcIcon from '@mui/icons-material/Wc';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import CircularProgress from '@mui/material/CircularProgress'; // Add this import
 
 const PropiedadesDestacadas = () => {
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -48,17 +51,22 @@ const PropiedadesDestacadas = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><CircularProgress /></div>;
   }
 
   const featuredProperties = properties.filter(property => {
     return property.destacada === "Si";
   });
 
+  const handleCardClick = (id) => {
+    console.log(`Navigating to property with id: ${id}`);
+    navigate(`/viviendas/${id}`);
+  };
+
   return (
     <FeaturedPropertiesContainer>
       {featuredProperties.map((property) => (
-        <PropertyCard key={property.id}>
+        <PropertyCard key={property.id} onClick={() => handleCardClick(property.id)}>
           <PropertyImage src={property.foto} alt={property.title} />
           <PropertyInfo>
             <PropertyTitle>{property.title}</PropertyTitle>

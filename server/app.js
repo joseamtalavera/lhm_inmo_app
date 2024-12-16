@@ -21,27 +21,27 @@ app.use(cookieParser());
 
 const port = process.env.PORT || 5010;
 
-const allowedOrigins = [ 
+const allowedOrigins = [
   'http://localhost:3010',
   'http://13.53.38.238:3010',
-  'http://13.53.38.238', 
+  'http://13.53.38.238',
   'https://app.lhainmobiliaria.es'
-  ];
-  
+];
+
 app.use(cors({
-    origin: function(origin, callback){
-        if(!origin) return callback(null, true);
-        if(allowedOrigins.indexOf(origin) === -1){
-            var msg = 'The CORS policy for this site does not ' +
-                                'allow access from the specified Origin.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    },
-    credentials: true,
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      var msg = 'The CORS policy for this site does not ' +
+        'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
 }));
 
-app.use(express.json()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', authRoutes);
@@ -67,23 +67,20 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-
-passport.serializeUser(function(user, done) {// This function is used to store the user object into the session
-    done(null, user);
+passport.serializeUser(function (user, done) { // This function is used to store the user object into the session
+  done(null, user);
 });
-passport.deserializeUser(function(user, done) {// This function is used to retrieve the user object from the session
-    done(null, user);
-});
-
-
-app.use(function(err, req, res, next) {
-    console.error(err.stack);
-    res.status(500).send('Something went wrong');
+passport.deserializeUser(function (user, done) { // This function is used to retrieve the user object from the session
+  done(null, user);
 });
 
+app.use(function (err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong');
+});
 
 app.listen(port, () => {
-    console.log(`Server is running on Port ${port}`);
-  });
+  console.log(`Server is running on Port ${port}`);
+});
 
-  module.exports = verifyToken;
+module.exports = verifyToken;

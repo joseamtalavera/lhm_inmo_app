@@ -14,7 +14,7 @@ import {
   ContentWrapper,
   StyledParagraph
 } from './styles/AppStyles';
-import { Link } from 'react-router-dom'; // for navigation
+import { Link } from 'react-router-dom';
 
 const App = () => {
   return (
@@ -42,7 +42,6 @@ const App = () => {
 
           <StyledButton 
             variant='contained' 
-            color='primary' 
             size='large' 
             component={Link}
             to='/allviviendas'
@@ -59,3 +58,6 @@ const App = () => {
 };
 
 export default App;
+
+
+

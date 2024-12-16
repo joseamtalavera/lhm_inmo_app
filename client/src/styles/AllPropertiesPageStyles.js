@@ -8,6 +8,7 @@ export const AppContainer = styled.div`
   min-height: 100vh; /* Ensures it takes up the entire viewport height */
   padding: 0;
   margin: 0;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 `;
 
 // Drawer container that handles menu
@@ -19,6 +20,11 @@ export const DrawerContainer = styled.div`
   z-index: 1000; /* Ensure the drawer is on top of other content */
   background-color: white;
   margin-bottom: 50px;
+
+   @media (max-width: 780px) {
+        position: relative;
+        margin-bottom: 20px;
+    }
 `;
 
 // Wrapper for the main content in the middle of the page
@@ -29,20 +35,30 @@ export const ContentWrapper = styled.div`
   margin-top: 50px; /* Adjust margin-top to align with the drawer */
   background-color: #f9f9f9;
   align-items: flex-start; /* Ensure children align at the start */
+  flex-direction: column;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
 `;
 
 export const MainContainer = styled.div`
   display: flex;
   width: 100%;
-  gap: 20px;
-  align-items: flex-start;
+  gap: 10px; /* Reduced gap */
+  align-items: stretch;
   justify-content: flex-start;
   margin-top: 20px;
+  flex-direction: column;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
 `;
 
 export const FiltersContainer = styled.div`
-  flex: 0 0 300px; /* Increase the width to match the new max-width */
-  margin-right: 30px;
+  flex: 1; /* Ensure it takes full width in mobile view */
+  margin-right: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;  /* Adds some spacing between each filter field */
@@ -51,6 +67,11 @@ export const FiltersContainer = styled.div`
   border: 1px solid #ddd;
   border-radius: 8px;
   margin-top: 17px;
+
+  @media (min-width: 768px) {
+    flex: 0 0 300px;
+    margin-right: 10px; /* Further reduced margin-right */
+  }
 `;
 
 export const PropertiesContainer = styled.div`
@@ -59,10 +80,17 @@ export const PropertiesContainer = styled.div`
   flex-direction: column;
   gap: 20px;
   justify-content: flex-start;
-  /* margin: 2em auto;
-  max-width: 1200px; */
-  max-width: calc(100% - 260px); /* Make sure it takes available space considering filter's width */
- 
+  max-width: 100%;
+  align-items: center; /* Center the container */
+  padding: 0 10px; /* Add padding to avoid content touching the edges */
+
+  @media (max-width: 768px) {
+    width: 100%; /* Ensure it takes full width in mobile view */
+  }
+
+  @media (min-width: 768px) {
+    max-width: calc(100% - 310px); /* Adjusted to match the reduced margin-right */
+  }
 `;
 
 export const PropertyCard = styled.div`
@@ -74,10 +102,15 @@ export const PropertyCard = styled.div`
   border-radius: 8px;
   overflow: hidden;
   display: flex;
+  flex-direction: column;
   transition: box-shadow 0.3s ease;
 
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (min-width: 768px) {
+    flex-direction: row;
   }
 `;
 
@@ -85,6 +118,10 @@ export const PropertyImage = styled.img`
   width: 100%;
   height: 180px;
   object-fit: cover;
+
+  @media (min-width: 768px) {
+    width: 50%;
+  }
 `;
 
 export const PropertyInfo = styled.div`
@@ -129,3 +166,12 @@ export const PropertyButton = styled.button`
     background-color: #0056b3;
   }
 `;
+
+
+
+
+
+
+
+
+

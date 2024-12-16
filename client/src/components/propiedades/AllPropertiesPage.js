@@ -1,6 +1,6 @@
 // AllPropertiesPage.js
 
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { GlobalStyle } from '../../styles/GlobalStyles';
 import ResponsiveDrawer from '../Menu/ResponsiveDrawer';
 import Footer from '../home/Footer';
@@ -14,7 +14,7 @@ import {
   PropertiesContainer,
   MainContainer
 } from '../../styles/AllPropertiesPageStyles';
-import TablePagination  from '@mui/material/TablePagination';
+import TablePagination from '@mui/material/TablePagination';
 import { CircularProgress, Box } from '@mui/material';
 
 const AllPropertiesPage = () => {
@@ -29,24 +29,24 @@ const AllPropertiesPage = () => {
     const fetchProperties = async () => {
       setIsLoading(true);
       try {
-          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties`, {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-          });
-          if (!response.ok) {
-              throw new Error('Failed to fetch properties');
-          }
-          const data = await response.json();
-          setProperties(data);
-          setFilteredProperties(data);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch properties');
+        }
+        const data = await response.json();
+        setProperties(data);
+        setFilteredProperties(data);
       } catch (error) {
-          console.error('Error:', error);
+        console.error('Error:', error);
       } finally {
-          setIsLoading(false);
+        setIsLoading(false);
       }
-  };
+    };
 
     fetchProperties();
   }, []);
@@ -69,12 +69,12 @@ const AllPropertiesPage = () => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-  }
+  };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  }
+  };
 
   const paginatedProperties = filteredProperties.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -98,23 +98,23 @@ const AllPropertiesPage = () => {
         {/* Main content area */}
         <ContentWrapper>
           <MainContainer>
-          <FiltersContainer>
-            <Filters onFilterChange={handleFilterChange} />
-          </FiltersContainer>
-          <PropertiesContainer>
-            <PropertyList properties={paginatedProperties} />
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <TablePagination
-                rowsPerPageOptions={[10, 25, 50]}
-                component="div"
-                count={filteredProperties.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </Box>
-          </PropertiesContainer>
+            <FiltersContainer>
+              <Filters onFilterChange={handleFilterChange} />
+            </FiltersContainer>
+            <PropertiesContainer>
+              <PropertyList properties={paginatedProperties} />
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                <TablePagination
+                  rowsPerPageOptions={[10, 25, 50]}
+                  component="div"
+                  count={filteredProperties.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </Box>
+            </PropertiesContainer>
           </MainContainer>
         </ContentWrapper>
 
@@ -126,3 +126,5 @@ const AllPropertiesPage = () => {
 };
 
 export default AllPropertiesPage;
+
+

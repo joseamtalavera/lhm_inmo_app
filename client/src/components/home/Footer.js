@@ -12,6 +12,7 @@ import {
   FooterDetailItem,
   FooterDetailItemCentered,
 } from '../../styles/FooterStyles';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const Footer = () => {
   return (
@@ -66,11 +67,11 @@ const Footer = () => {
           </FooterDetailItem>
           <FooterDetailItem>
             <FooterLink 
-              href="https://goo.gl/maps/YourGoogleMapsLink" 
+              href="https://www.google.es/maps/place/C.+Alejandro+Dumas,+17,+Carretera+de+C%C3%A1diz,+29004+M%C3%A1laga,+Hispaania/@36.6940622,-4.4572845,17z/data=!3m1!4b1!4m6!3m5!1s0xd72f99d0c089249:0x6c52b645c94d72a6!8m2!3d36.6940622!4d-4.4572845!16s%2Fg%2F11wwt1s_lc?entry=ttu&g_ep=EgoyMDI0MTIxMS4wIKXMDSoASAFQAw%3D%3D" 
               target="_blank" 
               rel="noopener noreferrer"
             >
-              Cómo llegar
+              <LocationOnIcon /> Cómo llegar
             </FooterLink>
           </FooterDetailItem>
           <FooterDetailItem>
@@ -90,3 +91,6 @@ const Footer = () => {
 };
 
 export default Footer;
+
+
+

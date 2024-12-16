@@ -13,12 +13,13 @@ import {
   PropertyPrice,
   PropertyLocation,
   PropertyRow,
+  LoadingContainer, 
 } from '../../styles/PropiedadesDestacadasStyles';
 import BedIcon from '@mui/icons-material/Bed';
 import BathIcon from '@mui/icons-material/Bathtub';
 import WcIcon from '@mui/icons-material/Wc';
 import SquareFootIcon from '@mui/icons-material/SquareFoot';
-import CircularProgress from '@mui/material/CircularProgress'; // Add this import
+import CircularProgress from '@mui/material/CircularProgress'; 
 
 const PropiedadesDestacadas = () => {
   const [properties, setProperties] = useState([]);
@@ -51,7 +52,7 @@ const PropiedadesDestacadas = () => {
   }, []);
 
   if (isLoading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}><CircularProgress /></div>;
+    return <LoadingContainer><CircularProgress /></LoadingContainer>;
   }
 
   const featuredProperties = properties.filter(property => {
@@ -102,3 +103,4 @@ const PropiedadesDestacadas = () => {
 };
 
 export default PropiedadesDestacadas;
+

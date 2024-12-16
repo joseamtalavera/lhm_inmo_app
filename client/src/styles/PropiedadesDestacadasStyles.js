@@ -66,3 +66,11 @@ export const PropertyRow = styled.div`
   justify-content: space-between;
   margin-bottom: 8px;
 `;
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+

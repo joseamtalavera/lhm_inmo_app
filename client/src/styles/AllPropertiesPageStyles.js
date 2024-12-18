@@ -1,5 +1,3 @@
-// src/styles/AllPropertiesPageStyles.js
-
 import styled from "styled-components";
 
 export const AppContainer = styled.div`
@@ -11,7 +9,6 @@ export const AppContainer = styled.div`
   overflow-x: hidden; /* Prevent horizontal scrolling */
 `;
 
-// Drawer container that handles menu
 export const DrawerContainer = styled.div`
   position: fixed;
   top: 0;
@@ -27,7 +24,6 @@ export const DrawerContainer = styled.div`
     }
 `;
 
-// Wrapper for the main content in the middle of the page
 export const ContentWrapper = styled.div`
   flex: 1; /* Ensures it grows and fills available space */
   display: flex;
@@ -39,6 +35,11 @@ export const ContentWrapper = styled.div`
 
   @media (min-width: 768px) {
     flex-direction: row;
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 0; /* Remove margin-top in mobile view */
+    align-items: center; /* Center content in mobile view */
   }
 `;
 
@@ -53,6 +54,11 @@ export const MainContainer = styled.div`
 
   @media (min-width: 768px) {
     flex-direction: row;
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 0; /* Remove margin-top in mobile view */
+    align-items: center; /* Center content in mobile view */
   }
 `;
 
@@ -72,6 +78,10 @@ export const FiltersContainer = styled.div`
     flex: 0 0 300px;
     margin-right: 10px; /* Further reduced margin-right */
   }
+
+  @media (max-width: 768px) {
+    margin-top: 0; /* Remove margin-top in mobile view */
+  }
 `;
 
 export const PropertiesContainer = styled.div`
@@ -86,92 +96,9 @@ export const PropertiesContainer = styled.div`
 
   @media (max-width: 768px) {
     width: 100%; /* Ensure it takes full width in mobile view */
-  }
-
-  @media (min-width: 768px) {
-    max-width: calc(100% - 310px); /* Adjusted to match the reduced margin-right */
-  }
-`;
-
-export const PropertyCard = styled.div`
-  background-color: #fff;
-  border: 1px solid #ddd;
-  margin: 1em;
-  width: 100%;
-  max-width: 600px;
-  border-radius: 8px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: box-shadow 0.3s ease;
-
-  &:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  @media (min-width: 768px) {
-    flex-direction: row;
+    align-items: center; /* Center content in mobile view */
+    justify-content: center; /* Center content in mobile view */
+    padding: 0; /* Remove padding in mobile view */
+    max-width: 100%; /* Increase the max-width to take more space */
   }
 `;
-
-export const PropertyImage = styled.img`
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-
-  @media (min-width: 768px) {
-    width: 50%;
-  }
-`;
-
-export const PropertyInfo = styled.div`
-  padding: 1em;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-export const PropertyTitle = styled.h3`
-  margin: 0 0 0.5em 0;
-  font-size: 1.2em;
-`;
-
-export const PropertyDescription = styled.p`
-  font-size: 0.9em;
-  color: #666;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 3 lines */
-  -webkit-box-orient: vertical;
-`;
-
-export const PropertyPrice = styled.p`
-  font-size: 1em;
-  color: #333;
-  font-weight: bold;
-  margin-top: 0.5em;
-`;
-
-export const PropertyButton = styled.button`
-  background-color: #007BFF;
-  color: #fff;
-  padding: 0.75em 1em;
-  border: none;
-  border-radius: 4px;
-  margin-top: 1em;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-
-
-
-
-
-
-
-

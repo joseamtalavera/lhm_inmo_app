@@ -128,3 +128,4 @@ const AllPropertiesPage = () => {
 export default AllPropertiesPage;
 
 
+

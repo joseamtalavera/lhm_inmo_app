@@ -21,7 +21,12 @@ import SquareFootIcon from '@mui/icons-material/SquareFoot';
 
 const PropertyList = ({ properties }) => {
   return (
-    <div>
+    <div tyle={{ 
+      display: "flex", 
+      flexDirection: "column", 
+      alignItems: "center", 
+      width: "100%"
+      }}>
       {properties.map((property) => (
         <Link to={`/viviendas/${property.id}`} key={property.id} style={{ textDecoration: 'none', color: 'inherit' }}>
         <PropertyCard key={property.id}>

@@ -53,19 +53,34 @@ const AllPropertiesPage = () => {
 
   const handleFilterChange = (filters) => {
     const filtered = properties.filter((property) => {
+
+      const normalizeText = (text) => 
+        text ? text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : '';
+
+      const matchLocation = !filters.location || 
+        normalizeText(property.localidad).includes(normalizeText(filters.location));
+      
+      console.log('Property:', property);
+      console.log('Filters:', filters);
+  
       return (
-        (!filters.propertyType || property.type === filters.propertyType) &&
-        (!filters.minPrice || property.price >= filters.minPrice) &&
-        (!filters.maxPrice || property.price <= filters.maxPrice) &&
-        (!filters.minSize || property.size >= filters.minSize) &&
-        (!filters.maxSize || property.size <= filters.maxSize) &&
-        (!filters.bedrooms || property.bedrooms === Number(filters.bedrooms)) &&
-        (!filters.bathrooms || property.bathrooms === Number(filters.bathrooms))
+        matchLocation && 
+        (!filters.propertyType || property.tipo_propiedad === filters.propertyType) &&
+        (!filters.minPrice || property.precio >= filters.minPrice) &&
+        (!filters.maxPrice || property.precio <= filters.maxPrice) &&
+        (!filters.minSize || property.metrosconstruidos >= filters.minSize) &&
+        (!filters.maxSize || property.metrosconstruidos <= filters.maxSize) &&
+        (!filters.bedrooms || property.habitaciones === Number(filters.bedrooms)) && 
+        (!filters.bathrooms || property.banos === Number(filters.bathrooms))
       );
     });
+
+    console.log('Filtered properties:', filtered);
+  
     setFilteredProperties(filtered);
     setPage(0);
   };
+  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

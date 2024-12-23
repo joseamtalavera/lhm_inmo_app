@@ -70,8 +70,9 @@ const AllPropertiesPage = () => {
         (!filters.maxPrice || property.precio <= filters.maxPrice) &&
         (!filters.minSize || property.metrosconstruidos >= filters.minSize) &&
         (!filters.maxSize || property.metrosconstruidos <= filters.maxSize) &&
-        (!filters.bedrooms || property.habitaciones === Number(filters.bedrooms)) && 
-        (!filters.bathrooms || property.banos === Number(filters.bathrooms))
+        (!filters.bedrooms || property.habitaciones == filters.bedrooms) && 
+        (!filters.bathrooms || property.banos == filters.bathrooms) &&
+        (!filters.location || property.aseos == filters.aseos)
       );
     });
 
@@ -141,6 +142,7 @@ const AllPropertiesPage = () => {
 };
 
 export default AllPropertiesPage;
+
 
 
 

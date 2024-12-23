@@ -38,7 +38,7 @@ export const FilterRow = styled.div`
 
 export const FilterLabel = styled.label`
   font-size: 14px;
-  color: #333;
+  color: #000; // Change color to black
   font-weight: bold;
   margin-bottom: 5px;
   display: block;
@@ -51,19 +51,31 @@ export const FilterInput = styled.input`
   border-radius: 4px;
   width: 100%;
   max-width: 100%; /* Ensure inputs take up the full width of the container */
+  color: #000; /* Explicitly set font color to black */
 `;
 
 export const FilterButton = styled.button`
   padding: 10px;
-  background-color: #1E90FF;
-  color: white;
-  border: none;
+  background-color: transparent; /* Make the background transparent */
+  color: #1E90FF; /* Change text color to match the outline */
+  border: 1px solid #1E90FF; /* Add a border with the desired color */
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  width: 100%; /* Make the button take the full width */
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #1E90FF; /* Change background color on hover */
+    color: white; /* Change text color on hover */
   }
 `;
+
+export const FilterButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px; /* Set the gap between buttons */
+  width: 100%; /* Ensure the group takes up the full width */
+`;
+
 

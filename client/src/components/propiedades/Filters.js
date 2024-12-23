@@ -8,11 +8,12 @@ import {
   FilterButton,
   Title,
   FilterGroup,
-  FilterRow
+  FilterRow,
+  FilterButtonGroup
 } from '../../styles/FitersStyles';
 
 const Filters = ({ onFilterChange }) => {
-  const [filters, setFilters] = useState({
+  const initialFilters = {
     propertyType: '',
     minPrice: '',
     maxPrice: '',
@@ -21,7 +22,9 @@ const Filters = ({ onFilterChange }) => {
     bedrooms: '',
     bathrooms: '',
     location: '',
-  });
+  };
+
+  const [filters, setFilters] = useState(initialFilters);
 
   const tipoPropiedadOptions = [
     "Casa rustica o de campo",
@@ -55,6 +58,11 @@ const Filters = ({ onFilterChange }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onFilterChange(filters);
+  };
+
+  const handleReset = () => {
+    setFilters(initialFilters);
+    onFilterChange(initialFilters);
   };
 
   return (
@@ -165,11 +173,25 @@ const Filters = ({ onFilterChange }) => {
             />
           </div>
         </FilterRow>
-        <FilterButton type="submit">Aplicar Filtros</FilterButton>
+        <FilterButtonGroup>
+          <div>
+            <FilterButton type="submit">
+              Filtrar
+            </FilterButton>
+          </div>
+          <div>
+            <FilterButton type="button" onClick={handleReset} aria-label='reset filters'>
+              Resetear
+            </FilterButton>
+          </div>
+        </FilterButtonGroup>
       </form>
     </FiltersContainer>
   );
 };
 
 export default Filters;
+
+
+
 

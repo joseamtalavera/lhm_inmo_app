@@ -195,7 +195,7 @@ const PropertyPage = () => {
               </StyledCarouselContainer>
 
               <RequestBoxContainer> 
-                <RequestBox onSubmitRequest={handleRequestSubmit} />
+                <RequestBox onSubmitRequest={handleRequestSubmit} propertyRef={property.Ref} />
               </RequestBoxContainer>
             </CarouselRequestContainer>
 

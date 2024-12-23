@@ -80,7 +80,8 @@ export const CarouselRequestContainer = styled.div`
   justify-content: space-between;
   width: 100%;
   margin-bottom: 20px;
-  gap: 30px;
+  margin-right: 20px;
+  gap: 15px;
 `;
 
 // Styled Full Screen Container
@@ -103,7 +104,6 @@ export const RequestBoxContainer = styled.div`
   max-width: 300px;
 `;
 
-// Removed unused style object: arrowStyle
 
 // Typography
 export const StyledTitle = styled.h1`

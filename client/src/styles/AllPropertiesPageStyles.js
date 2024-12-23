@@ -17,6 +17,7 @@ export const DrawerContainer = styled.div`
   z-index: 1000; /* Ensure the drawer is on top of other content */
   background-color: white;
   margin-bottom: 50px;
+  padding: 10px;
 
    @media (max-width: 780px) {
         position: relative;

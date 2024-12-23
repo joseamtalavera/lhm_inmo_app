@@ -8,6 +8,41 @@ export const RequestBoxContainer = styled.div`
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
+  position: relative;
+
+  @media (max-width: 1020px) {
+    width: 100%;
+    margin-right: 0;
+    margin-top: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    margin-right: 0;
+    margin-top: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+`;
+
+export const CloseDash = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 12px; /* Made the font size smaller */
+  cursor: pointer;
+  &:after {
+    content: 'X';
+  }
 `;
 
 export const RequestForm = styled.form`
@@ -24,6 +59,21 @@ export const RequestTextarea = styled.textarea`
   resize: none;
   font-family: inherit;
   line-height: 1.4;
+  color: #333;
+  &:focus {
+    border-color: #5b197f;
+    outline: none;
+  }
+`;
+
+export const RequestInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #1E90FF;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-top: 10px;
+  font-family: inherit;
   color: #333;
   &:focus {
     border-color: #5b197f;

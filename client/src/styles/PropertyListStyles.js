@@ -25,7 +25,7 @@ export const PropertyCard = styled.div`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
-  @media (max-width: 820px) {
+  @media (max-width: 1024px) {
     flex-direction: column;
   }
 `;
@@ -35,7 +35,7 @@ export const PropertyImage = styled.img`
   height: auto;
   object-fit: cover;
 
-  @media (max-width: 820px) {
+  @media (max-width: 1024px) {
     width: 100%;
     height: auto;
   }
@@ -48,7 +48,7 @@ export const PropertyInfo = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
-  @media (max-width: 820px) {
+  @media (max-width: 1024px) {
     width: 100%;
   }
 `;
@@ -71,7 +71,7 @@ export const PropertyPrice = styled.p`
   margin-top: 0.5em;
   text-align: right;
 
-  @media (max-width: 820px) {
+  @media (max-width: 1024px) {
     text-align: right;
   }
 `;
@@ -88,7 +88,7 @@ export const PropertyDetails = styled.div`
   gap: 8px 40px; /* Row and column gap */
   margin-bottom: 16px;
 
-  @media (max-width: 820px) {
+  @media (max-width: 1024px) {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }

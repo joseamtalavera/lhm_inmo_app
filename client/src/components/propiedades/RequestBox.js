@@ -17,6 +17,7 @@ const RequestBox = ({ onSubmitRequest, propertyRef }) => {
   const [email, setEmail] = useState('');
   const [telephone, setTelephone] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [isFormVisible, setIsFormVisible] = useState(true);
 
   useEffect(() => {
@@ -41,14 +42,35 @@ const RequestBox = ({ onSubmitRequest, propertyRef }) => {
     if (name === 'telephone') setTelephone(value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (!message || !email || !telephone) {
       setError('Todos los campos son obligatorios.');
       return;
     }
-    setError('');
-    onSubmitRequest({ message, email, telephone });
+
+    try { 
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message, email, telephone, propertyRef })
+      });
+
+      if(response.ok) {
+        setSuccess('Mensaje enviado correctamente.');
+        setMessage('');
+        setEmail('');
+        setTelephone('');
+        setError('');
+      }else {
+        setError('Ha ocurrido un error. Inténtalo de nuevo.');
+      }
+
+    } catch (error) {
+      setError('Ha ocurrido un error. Inténtalo de nuevo.');
+    }
   };
 
   const handleButtonClick = () => {

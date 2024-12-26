@@ -13,6 +13,10 @@ export const FiltersContainer = styled.div`
   width: 100%; /* Makes the container take up the full width */
   max-width: 400px; /* Increase the max-width to make it wider */
   box-sizing: border-box; /* Ensure padding is included in the width */
+
+  @media (max-width: 820px) {
+    max-width: 100%;  /* Override so it takes the full width below 820px */
+  }
 `;
 
 export const Title = styled.h2`

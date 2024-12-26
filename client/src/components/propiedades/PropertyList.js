@@ -21,7 +21,7 @@ import SquareFootIcon from '@mui/icons-material/SquareFoot';
 
 const PropertyList = ({ properties }) => {
   return (
-    <div tyle={{ 
+    <div style={{ 
       display: "flex", 
       flexDirection: "column", 
       alignItems: "center", 

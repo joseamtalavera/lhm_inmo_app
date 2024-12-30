@@ -12,7 +12,7 @@ import {
   CloseDash
 } from '../../styles/RequestBoxStyles';
 
-const RequestBox = ({ onSubmitRequest, propertyRef }) => {
+const RequestBox = ({ propertyRef }) => {
   const [message, setMessage] = useState('');
   const [email, setEmail] = useState('');
   const [telephone, setTelephone] = useState('');
@@ -49,8 +49,11 @@ const RequestBox = ({ onSubmitRequest, propertyRef }) => {
       return;
     }
 
+    // Add debugging logs
+    console.log('Sending request data:', { message, email, telephone, propertyRef });
+
     try { 
-      const response = await fetch('/api/send-email', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contactar-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -10,18 +10,7 @@ export const RequestBoxContainer = styled.div`
   font-family: Arial, sans-serif;
   position: relative;
 
-  @media (max-width: 1020px) {
-    width: 100%;
-    margin-right: 0;
-    margin-top: 20px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-  }
-
-  @media (max-width: 480px) {
+  @media (max-width: 1024px) {
     width: 100%;
     margin-right: 0;
     margin-top: 20px;

@@ -15,10 +15,11 @@ const {
     uploadPropertyDocumentDb,
     deleteDocumentDb,
     updateAllImagesDb,
+    addRequestDb,
 } = require('../models/propertiesQueries');
 const fs = require('fs');
 const path = require('path');
-
+const nodemailer = require('nodemailer');
 
 
 // get Controllers
@@ -349,6 +350,52 @@ exports.uploadPropertyDocument = async (req, res, next) => {
     }
 };
 
+exports.sendEmail = async (req, res, next) => {
+    const { message, email, telephone, propertyRef } = req.body;
+
+    // Add debugging logs
+    console.log('Received request data:', { message, email, telephone, propertyRef });
+
+    try {
+        // save the request to the database
+        const newRequest = await addRequestDb({ message, email, telephone, propertyRef });
+
+        // send the confirmation email to the user
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.ionos.es',
+            port: 587,
+            secure: false,
+            auth: {
+                user: 'info@mo-rentals.com',
+                pass: '@Rakna03100310',
+            },
+        });
+
+        const mailOptions = {
+            from: '"Lha Inmobiliaria" info@mo-rentals.com', // Corrected sender address
+            to: email,
+            subject: 'Solicitud de información',
+            text: 'Hemos recibido tu solicitud de información. Nos pondremos en contacto contigo lo antes posible.',
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        // send the email to the admin
+        const adminMailOptions = {
+            from: '"Lha Inmobiliaria" info@mo-rentals.com', // Corrected sender address
+            to: 'info@mo-rentals.com',
+            subject: 'Nueva solicitud de información',
+            text: `New request received for property ${propertyRef}.\n\nMessage: ${message}\nEmail: ${email}\nTelephone: ${telephone}`
+    };
+
+    await transporter.sendMail(adminMailOptions);
+
+    res.status(200).json({ message: 'Email sent successfully' });
+    }catch (error) {
+        console.error('Error in sendEmail:', error);
+        res.status(500).json({ message: 'Error sending email' });
+    }
+};
 
 // delete Controllers   
 

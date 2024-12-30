@@ -1,5 +1,6 @@
 // propertiesQueries.js
 
+const { request } = require('express');
 const { uploadPropertyDocument } = require('../controllers/propertiesController');
 const pool = require('./db');
 
@@ -705,6 +706,21 @@ const uploadPropertyDocumentDb = async (documentDetails) => {
     }
 };
 
+const addRequestDb = async (request) => {
+    try {
+        const { message, email, telephone, propertyRef } = request;
+        const result = await pool.query(
+            `INSERT INTO lhainmobiliaria.contactos (message, email, telephone, property_ref, created_at)
+                VALUES ($1, $2, $3, $4, NOW()) RETURNING *`,
+            [message, email, telephone, propertyRef]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in addRequestDb:', error);
+        throw error;
+    }
+};
+
 
 
 
@@ -766,5 +782,6 @@ module.exports = {
     deleteImageDb,
     uploadPropertyDocumentDb,
     deleteDocumentDb,
-    updateAllImagesDb
+    updateAllImagesDb,
+    addRequestDb
 };

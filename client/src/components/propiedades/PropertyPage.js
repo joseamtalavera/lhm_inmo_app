@@ -179,9 +179,6 @@ const PropertyPage = () => {
     "Características de acondicionamiento interior": amenities.filter(amenity => amenity.category === "Características de acondicionamiento interior"),
   };
 
-  const handleRequestSubmit = (message) => {
-    console.log('Request submitted:', message);
-  };
 
   return (
     <>
@@ -200,7 +197,7 @@ const PropertyPage = () => {
               </StyledCarouselContainer>
 
               <RequestBoxContainer> 
-                <RequestBox onSubmitRequest={handleRequestSubmit} propertyRef={property.Ref} />
+                <RequestBox propertyRef={property.Ref} />
               </RequestBoxContainer>
             </CarouselRequestContainer>
 

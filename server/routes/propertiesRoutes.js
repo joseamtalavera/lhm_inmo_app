@@ -29,7 +29,7 @@ router.post('/properties', propertiesController.addProperty);
 //router.post('/properties/:ref/amenities', propertiesController.addAmenity);
 router.post('/properties/:ref/images', upload.single('image'), propertiesController.uploadPropertyImage);
 router.post('/properties/:ref/documents', uploadDocuments.single('document'), propertiesController.uploadPropertyDocument);
-
+router.post('/contactar-email', propertiesController.sendEmail);
 
 
 // delete 

@@ -36,6 +36,10 @@ export const ContentWrapper = styled.div`
   background-color: #f9f9f9;
   width: 100%;
   box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    margin-top: 10px; /* Adjust the value as needed */
+  }
 `;
 
 export const MainContainer = styled.div`
@@ -49,6 +53,10 @@ export const MainContainer = styled.div`
   margin-top: 50px;
   margin-bottom: 0px;
   box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    margin-top: 10px; /* Adjust the value as needed */
+  }
 `;
 
 export const ContentWrapperBelowImage = styled.div`

@@ -17,23 +17,36 @@ import {
     CloseButton,
     DrawerContent,
     LogoImage,
+    Selector,
+    SelectorOption,
+    ArrowIcon,
+    IndentedListItem,
+    IndentedSelectorOption
 } from '../../styles/ResponsiveDrawerStyles';
 
 const menuItems = [
     { text: 'Propiedades', link: '/allviviendas' },
-    { text: 'Opciones', link: '/opciones' },
-    { text: 'Valora tu Propiedad', link: '/valora-tu-propiedad' },
+    { text: 'Qué necesitas?', link: '#' },
+    { text: 'Quienes Somos', link: '/somos' },
     { text: 'Partners', link: '/partners' }
 ];
 
 const ResponsiveDrawer = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('');
+    const [isSelectorOpen, setIsSelectorOpen] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+
+    const handleMenuItemClick = (item) => {
+        if (item.text === 'Qué necesitas?') {
+            setIsSelectorOpen(!isSelectorOpen);
+        } 
+    }
 
     const drawer = (
         <DrawerContent data-testid="drawer-content">
@@ -47,13 +60,38 @@ const ResponsiveDrawer = () => {
             </CloseButton>
             <List>
                 {menuItems.map((item) => (
-                    <ListItem button key={item.text} component={Link} to={item.link}>
+                    <>
+                    <IndentedListItem 
+                        button 
+                        key={item.text} 
+                        component={item.text === 'Qué necesitas?' ? 'button' : Link}
+                        to={item.text !== 'Qué necesitas?' ? item.link : undefined}
+                        onClick={() => handleMenuItemClick(item)}   
+                    >
                         <ListItemText primary={item.text} />
-                    </ListItem>
+                        {item.text === 'Qué necesitas?' && (
+                            <ArrowIcon>{isSelectorOpen ? '▲' : '▼'}</ArrowIcon>
+                        )}
+                    </IndentedListItem>
+                    {item.text === 'Qué necesitas?' && isSelectorOpen && (
+                            <List component="div" disablePadding>
+                                <IndentedSelectorOption button component={Link} to="/comprar" >
+                                    <ListItemText primary="Comprar" />
+                                </IndentedSelectorOption>
+                                <IndentedSelectorOption button component={Link} to="/vender" >
+                                    <ListItemText primary="Vender" />
+                                </IndentedSelectorOption>
+                                <IndentedSelectorOption button component={Link} to="/valoracion" >
+                                    <ListItemText primary="Valoración" />
+                                </IndentedSelectorOption>
+                            </List>
+                        )}
+                    </>
+
                 ))}
-                <ListItem button key="Login" component={Link} to="/login">
+                <IndentedListItem button key="Login" component={Link} to="/login">
                     <ListItemText primary="Login" />
-                </ListItem>
+                </IndentedListItem>
             </List>
         </DrawerContent>
     );
@@ -80,9 +118,21 @@ const ResponsiveDrawer = () => {
                     ) : (
                         <DesktopMenu>
                             {menuItems.map((item, index) => (
-                                <MenuItem key={index} component={Link} to={item.link}>
-                                    {item.text}
-                                </MenuItem>
+                                <div key={index} style={{ position: 'relative' }}>
+                                    <MenuItem component={Link} to={item.link} onClick={() => handleMenuItemClick(item)}>
+                                        {item.text}
+                                        {item.text === 'Qué necesitas?' && (
+                                            <ArrowIcon>{isSelectorOpen ? '▲' : '▼'}</ArrowIcon>
+                        )}
+                                    </MenuItem>
+                                    {item.text === 'Qué necesitas?' && isSelectorOpen && (
+                                        <Selector>
+                                            <SelectorOption component={Link} to="/comprar">Comprar</SelectorOption>
+                                            <SelectorOption component={Link} to="/vender">Vender</SelectorOption>
+                                            <SelectorOption component={Link} to="/valoracion">Valoración</SelectorOption>
+                                        </Selector>
+                                    )}
+                                </div>
                             ))}
                             <LoginButton
                                 variant="contained"

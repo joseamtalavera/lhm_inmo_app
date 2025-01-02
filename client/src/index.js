@@ -15,11 +15,14 @@ import { ThemeProvider } from '@mui/material/styles';
 import AllPropertiesPage from './components/propiedades/AllPropertiesPage';
 import PropertyPage from './components/propiedades/PropertyPage';
 import Partners from './components/Menu/Partners';
-import Opciones from './components/Menu/Opciones';
-import ValoraTuPropiedad from './components/Menu/ValoraTuPropiedad';
+import QuienesSomos from './components/Menu/QuienesSomos';
 import Clientes from './components/clientes/Clientes';
 import Settings from './components/settings/Settings';
 import Ayuda from './components/ayuda/Ayuda'; 
+import Comprar from './components/Menu/Comprar';
+import Vender from './components/Menu/Vender';
+import Valoracion from './components/Menu/Valoracion';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -30,8 +33,10 @@ root.render(
         <Route path="/" element={<App />} />
         <Route path="/login" element={<LoginPage />} /> 
         <Route path="/partners" element={<Partners />} />
-        <Route path="/opciones" element={<Opciones />} />
-        <Route path="/valora-tu-propiedad" element={<ValoraTuPropiedad />} />
+        <Route path="/comprar" element={<Comprar />} />
+        <Route path="/vender" element={<Vender />} />
+        <Route path="/valoracion" element={<Valoracion />} />
+        <Route path="/somos" element={<QuienesSomos/>} />
         <Route path="/allviviendas" element={<AllPropertiesPage />} /> 
         <Route path="/viviendas/:id" element={<PropertyPage />} />
         <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />

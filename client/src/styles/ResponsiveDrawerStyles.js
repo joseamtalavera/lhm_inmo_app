@@ -1,7 +1,8 @@
 // ResponsiveDrawerStyles.js 
 
 import styled from 'styled-components';
-import { AppBar, Toolbar, IconButton, Typography, Button, Drawer } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Button, Drawer,ListItem } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 // Styles for the AppBar component
 export const StyledAppBar = styled(AppBar)`
@@ -101,6 +102,51 @@ export const DrawerContent = styled('div')`
     width: 100%;
     height: 100%;
     padding-top: 50px; /* Add padding to create space between CloseIcon and menu items */
+`;
+
+// Styles for the selector component
+export const Selector = styled('div')`
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: white;
+    position: absolute;
+    z-index: 10;
+`;
+
+// Styles for the selector options
+export const SelectorOption = styled(Link)`
+    color: #1E90FF;
+    padding: 5px 0;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+        color: darkblue;
+    }
+`;
+
+// Styles for the arrow icon
+export const ArrowIcon = styled('span')`
+    margin-left: 5px; /* Space between text and icon */
+    font-size: 12px;
+    color: inherit; /* Inherits text color */
+    display: inline-block; /* Aligns with text */
+    vertical-align: middle; /* Ensures proper alignment */
+    cursor: pointer; /* Indicate clickable behavior */
+`;
+
+
+// Styles for the indented list items
+export const IndentedListItem = styled(ListItem)`
+    padding-left: ${({ level }) => (level ? `${level * 32}px` : '16px')} !important;
+`;
+
+// Styles for the indented selector options
+export const IndentedSelectorOption = styled(ListItem)`
+    padding-left: 48px !important;
 `;
 
 

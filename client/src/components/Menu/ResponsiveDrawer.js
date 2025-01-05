@@ -5,6 +5,8 @@ import { List, ListItem, ListItemText, useMediaQuery, useTheme, Box } from '@mui
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
+import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import {
     StyledAppBar,
     StyledToolbar,
@@ -70,7 +72,9 @@ const ResponsiveDrawer = () => {
                     >
                         <ListItemText primary={item.text} />
                         {item.text === 'Qué necesitas?' && (
-                            <ArrowIcon>{isSelectorOpen ? '▲' : '▼'}</ArrowIcon>
+                            <ArrowIcon>
+                                {isSelectorOpen ? <ExpandLessOutlinedIcon/> : <ExpandMoreOutlinedIcon/>}
+                            </ArrowIcon>
                         )}
                     </IndentedListItem>
                     {item.text === 'Qué necesitas?' && isSelectorOpen && (
@@ -122,7 +126,9 @@ const ResponsiveDrawer = () => {
                                     <MenuItem component={Link} to={item.link} onClick={() => handleMenuItemClick(item)}>
                                         {item.text}
                                         {item.text === 'Qué necesitas?' && (
-                                            <ArrowIcon>{isSelectorOpen ? '▲' : '▼'}</ArrowIcon>
+                                            <ArrowIcon>
+                                                {isSelectorOpen ? <ExpandLessOutlinedIcon/> : <ExpandMoreOutlinedIcon/>}
+                                            </ArrowIcon>
                         )}
                                     </MenuItem>
                                     {item.text === 'Qué necesitas?' && isSelectorOpen && (

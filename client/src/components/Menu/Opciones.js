@@ -9,7 +9,7 @@ import {
 } from '../../styles/AppStyles';
 import { Container, Typography, Box } from '@mui/material';
 
-const Partners = () => {
+const Opciones = () => {
   return (
     <>
       <GlobalStyle />
@@ -23,7 +23,6 @@ const Partners = () => {
         <ContentWrapper>
         <Container>
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh">
-          {/* <ConstructionIcon style={{ fontSize: 100, color: '#f0ad4e' }} /> */}
           <Typography variant="h4" component="h1" gutterBottom>
             Opciones Under Construction. Thanks for your patience.
           </Typography>
@@ -41,4 +40,4 @@ const Partners = () => {
   );
 };
 
-export default Partners;
+export default Opciones;

@@ -7,9 +7,48 @@ import {
   DrawerContainer, 
   ContentWrapper 
 } from '../../styles/AppStyles';
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Box, Grid } from '@mui/material';
+import { SectionContent, ImageContainer, StyledCardContent, OverlayText, ZigzagContainer, ZigzagItem, RoundImage } from '../../styles/PartnersStyles';
 
 const Partners = () => {
+  const data = [
+    {
+      title: "Viajes Fomentur",
+      description: "Aman lo que hacen, y eso se nota. Con más de 20 años de experiencia en el sector. Diseñan y proporcionan los mejores viajes, creando una experiencia única.",
+      image: "fomentur2.jpg"
+    },
+    {
+      title: "KUKI Mascota Feliz",
+      description: "Son una empresa familiar con experiencia el el sector y han creado su tienda on-line con el objetivo de ofrecer a todos sus clientes, la facilidad de comprar con un simple click, una amplia gama de productos para sus mascotas.",
+      image: "kuki.png"
+    },
+    {
+      title: "Aranzazu Triguero (ABOGADA)",
+      description: "Abogada colegiada núm. 5516 del ICAMALAGA desde marzo 2002. Licenciada en Derecho Universidad de Málaga 2001. NOS PROTEGE, NOS CUIDA Y NOS MIMA.",
+      image: "abogada.png"
+    },
+    {
+      title: "MAPFRE Seguros",
+      description: "Nuestro Asesor, quien se ocupa de asegurar y protegernos frente a cualquier incidencia. Sucursal El Molinillo. Asesor PACO. Calle San Bartolomé, 14. 29013 Málaga. Teléfono 952 65 78 01",
+      image: "mapfre.png"
+    },
+    {
+      title: "Ingenium Group",
+      description: "Como contratistas generales supervisan proyectos de construcción y/o renovación en los sectores comerciales y residenciales. Se han ocupado de todos los proyectos de gran envergadura.",
+      image: "ingenium.png"
+    },
+    {
+      title: "Acorán",
+      description: "Empresa dedicada a la Consultoría en Protección de Datos y a la Formación. Ofrecen a sus clientes un trato excepcional y un servicio diferenciado, personalizado y completo, siempre enmarcando las actividades realizadas con la mayor integridad y calidad. Se aseguran de que cumplamos todas las directivas sobre la LOPD y LSSI-CE. GRACIAS",
+      image: "acoran.png"
+    },
+    {
+      title: "La Huella Azul",
+      description: "Dedicada al cuidado y guardería de mascotas.",
+      image: "logolahuellaazul.jpg"
+    }
+  ];
+
   return (
     <>
       <GlobalStyle />
@@ -21,17 +60,38 @@ const Partners = () => {
 
         {/* Main content area */}
         <ContentWrapper>
-        <Container>
-        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh">
-          {/* <ConstructionIcon style={{ fontSize: 100, color: '#f0ad4e' }} /> */}
-          <Typography variant="h4" component="h1" gutterBottom>
-            Partner Under Construction. Thanks for your patience.
-          </Typography>
-          <Typography variant="body1">
-            We are working hard to bring you the best experience. Please check back later.
-          </Typography>
-        </Box>
-      </Container>  
+          <Container>
+            <Box sx={{ padding: 4 }}>
+              <ImageContainer>
+                <img src="partners.png" alt="Background" />
+                <OverlayText variant="h2" align="center" gutterBottom>
+                  Partners
+                  <SectionContent variant="body1" align="center" gutterBottom>
+                      Te presentamos a nuestros colaboradores. Empresa que confian en nuestra filosofía y trabajan con nosotros para ofrecerte un servicio.
+                  </SectionContent>
+                </OverlayText>
+              </ImageContainer>
+              {data.map((item, index) => (
+                <ZigzagContainer key={index} reverse={index % 2 !== 0}>
+                  <ZigzagItem>
+                    {item.image === "abogada.png" ? (
+                      <RoundImage src={item.image} alt={item.title} style={{ width: '100%', height: 'auto' }} />
+                    ) : (
+                      <img src={item.image} alt={item.title} style={{ width: '100%', height: 'auto' }} />
+                    )}
+                  </ZigzagItem>
+                  <ZigzagItem>
+                    <StyledCardContent variant="h4" align="left" gutterBottom>
+                      {item.title}
+                    </StyledCardContent>
+                    <SectionContent variant="body1" gutterBottom>
+                      {item.description}
+                    </SectionContent>
+                  </ZigzagItem>
+                </ZigzagContainer>
+              ))}
+            </Box>
+          </Container>  
         </ContentWrapper>
 
         {/* Footer */}

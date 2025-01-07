@@ -7,9 +7,8 @@ import {
   DrawerContainer, 
   ContentWrapper 
 } from '../../styles/AppStyles';
-import { Card, CardContent, Grid } from '@mui/material';
-import { Container, Typography, Box } from '@mui/material';
-import { Section, SectionTitle, SectionContent, ImageContainer, OverlayText } from '../../styles/ComprarStyles';
+import { Container, CardContent, Box, Grid } from '@mui/material';
+import { SectionContent, ImageContainer, OverlayText, StyledCard, StyledCardContent } from '../../styles/ValoracionStyled';
 
 const Comprar = () => {
   const data = [
@@ -117,26 +116,26 @@ const Comprar = () => {
           <Container>
             <Box sx={{ padding: 4 }}>
               <ImageContainer>
-                <img src="comprar.jpg" alt="Background" />
+                <img src="pic1.png" alt="Background" />
               </ImageContainer>
               <OverlayText variant="h2" align="center" gutterBottom>
                 Gastos Como Comprador
                 <SectionContent variant="body1" align="center" gutterBottom>
-                Aquí encontrarás información detallada sobre los gastos asociados a la compra de una vivienda.
-              </SectionContent>
+                Esta es la información detallada sobre los gastos asociados a la compra de una vivienda.
+                </SectionContent>
               </OverlayText>
               
               <Grid container spacing={2}>
                 {data.map((item, index) => (
                   <Grid item xs={12} key={index}>
-                    <Card variant="outlined" sx={{ height: "100%" }}>
+                    <StyledCard variant="outlined" sx={{ height: "100%" }}>
                       <CardContent>
-                        <Typography variant="h6" gutterBottom>
+                        <StyledCardContent variant="h4" gutterBottom>
                           {item.title}
-                        </Typography>
+                        </StyledCardContent>
                         {item.description}
                       </CardContent>
-                    </Card>
+                    </StyledCard>
                   </Grid>
                 ))}
               </Grid>

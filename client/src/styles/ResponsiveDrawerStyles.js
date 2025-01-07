@@ -112,6 +112,7 @@ export const Selector = styled('div')`
     padding: 5px;
     border-radius: 5px;
     background-color: white;
+    border: 1px solid #1E90FF;
     position: absolute;
     z-index: 10;
 `;

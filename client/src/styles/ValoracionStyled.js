@@ -12,7 +12,9 @@ export const SectionTitle = styled(Typography)({
 
 export const SectionContent = styled(Typography)({
   marginBottom: '1rem',
-  fontSize: '1.2rem',
+  '@media (max-width: 600px)': {
+    fontSize: '0.875rem', 
+    },
 });
 
 export const ImageContainer = styled('div')({
@@ -36,7 +38,7 @@ export const ImageContainer = styled('div')({
     width: '100%',
     height: '100%',
     backgroundColor: '#1E90FF',
-    opacity: 0.6, // Adjust the opacity to achieve the desired light filter effect
+    opacity: 0.3, // Adjust the opacity to achieve the desired light filter effect
     pointerEvents: 'none', // Ensure the overlay does not interfere with interactions
   },
 });

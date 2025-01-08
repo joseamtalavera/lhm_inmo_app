@@ -1,5 +1,3 @@
-// src/styles/PropiedadesDestacadasStyles.js
-
 import styled from 'styled-components';
 
 export const FeaturedPropertiesContainer = styled.div`
@@ -61,6 +59,7 @@ export const PropertyDetailItem = styled.div`
     margin-right: 4px;
   }
 `;
+
 export const PropertyRow = styled.div`
   display: flex;
   justify-content: space-between;

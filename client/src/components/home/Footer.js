@@ -1,5 +1,3 @@
-// src/components/Footer.js
-
 import React from 'react';
 import { 
   FooterContainer, 
@@ -18,9 +16,7 @@ const Footer = () => {
   return (
     <FooterContainer>
       <FooterContent>
-        {/* Column 1 */}
         <FooterColumn>
-          {/* Logo and Company Name */}
           <FooterLogoContainer>
             <FooterLogo 
               src="/logo300x212.png" 
@@ -33,7 +29,6 @@ const Footer = () => {
           <FooterDetailItem>NIF: B93590792</FooterDetailItem>
         </FooterColumn>
 
-        {/* Column 2 */}
         <FooterColumn>
           <FooterTitle>Contacto</FooterTitle>
           <FooterDetailItem>
@@ -48,7 +43,6 @@ const Footer = () => {
             Apartado de Correos ES18561<br />
             29006 Málaga
           </FooterDetailItem>
-          {/* Iso logo */}
           <FooterLogoContainer>
             <FooterLogo 
               src="/iso-fin.png" 
@@ -57,7 +51,6 @@ const Footer = () => {
           </FooterLogoContainer>
         </FooterColumn>
 
-        {/* Column 3 */}
         <FooterColumn>
           <FooterTitle>Oficina</FooterTitle>
           <FooterDetailItem>
@@ -82,9 +75,15 @@ const Footer = () => {
         </FooterColumn>
       </FooterContent>
 
-      {/* Footer Bottom */}
-      <FooterDetailItemCentered >
+      <FooterDetailItemCentered>
         &copy; {new Date().getFullYear()} LHA Inmobiliaria. Todos los derechos reservados.
+        <br />
+        <FooterLink href="/politica-de-privacidad">
+          Política de Privacidad
+        </FooterLink> | 
+        <FooterLink href="/aviso-legal">
+          Aviso Legal
+        </FooterLink>
       </FooterDetailItemCentered>
     </FooterContainer>
   );

@@ -55,7 +55,10 @@ export const PropertyInfo = styled.div`
 
 export const PropertyTitle = styled.h3`
   margin: 0 0 8px;
-  font-size: 1.2em;
+  font-size: 20px;
+  color: black;
+  font-weight: 250;
+  margin-bottom: 20px;
 `;
 
 export const PropertyLocation = styled.p`
@@ -64,10 +67,16 @@ export const PropertyLocation = styled.p`
   font-size: 1.2em;
 `;
 
+export const PropertyRef = styled.p`
+  margin: 0 0 8px;
+  color: #1E90FF;
+  font-size: 1.2em;
+`;
+
 export const PropertyPrice = styled.p`
   font-size: 2em;
   color: #333;
-  font-weight: bold;
+  font-weight: 250;
   margin-top: 0.5em;
   text-align: right;
 

@@ -1,5 +1,3 @@
-// src/components/PropiedadesDestacadas.js
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -55,9 +53,7 @@ const PropiedadesDestacadas = () => {
     return <LoadingContainer><CircularProgress /></LoadingContainer>;
   }
 
-  const featuredProperties = properties.filter(property => {
-    return property.destacada === "Si";
-  });
+  const featuredProperties = properties.filter(property => property.destacada === "Si");
 
   const handleCardClick = (id) => {
     console.log(`Navigating to property with id: ${id}`);

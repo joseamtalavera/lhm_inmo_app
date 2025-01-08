@@ -4,20 +4,19 @@ import { Typography, Button } from '@mui/material';
 export const AppContainer = styled.div`
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensures it takes up the entire viewport height */
-    
+    min-height: 100vh;
+
     @media (max-width: 780px) {
         padding: 0 10px;
     }
 `;
 
-// Drawer container that handle menu
 export const DrawerContainer = styled.div`
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000; /* Ensure the drawer is on top of other container */
+    z-index: 1000;
     background-color: white;
     margin-bottom: 50px;
 
@@ -27,9 +26,8 @@ export const DrawerContainer = styled.div`
     }
 `;
 
-// Wrapper for the main content in the middle of the page
 export const ContentWrapper = styled.div`
-    flex: 1; /* Ensures it grows and fills available space */
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -41,7 +39,6 @@ export const ContentWrapper = styled.div`
     }
 `;
 
-// Main picture at the top of the page
 export const MainPicture = styled.div`
     height: 680px;
     width: 100%;
@@ -54,7 +51,7 @@ export const MainPicture = styled.div`
     padding: 0;
 
     @media (max-width: 780px) {
-        display: none; /* Hide the main picture on mobile */
+        display: none;
     }
 
     img {
@@ -64,33 +61,28 @@ export const MainPicture = styled.div`
         position: relative;
         margin: 0;
         padding: 0;
-    
 
         @media (max-width: 2000px) {
-        /* When the viewport is 2000px or smaller, start reducing the image size */
             width: 100%;
-            height: auto; /* Mantain the aspect ratio */
+            height: auto;
         }
 
         @media (max-width: 1200px) {
             width: 80%;
-            height: auto; /* Mantain aspect ratio */
+            height: auto;
         }
 
         @media (max-width: 780px) {
-        /* Mobile view: reduce height and make sure it's responsive */
             width: 100%;
-            height: 200px; /* Fixed height on mobile */
+            height: 200px;
         }
     }
 `;
 
-// Styled typography for the main title
 export const StyledSecondaryTypography = styled(Typography)`
     color: #1E90FF;
     position: relative;
     text-align: center;
-    /*font-weight: bold;*/
     margin: 10px 0;
     line-height: 1.5;
     margin-bottom: 10px;
@@ -115,7 +107,6 @@ export const StyledParagraph = styled.p`
     }
 `;
 
-// Button with custom styles
 export const StyledButton = styled(Button)`
     margin-top: 75px;
     margin-bottom: 75px;

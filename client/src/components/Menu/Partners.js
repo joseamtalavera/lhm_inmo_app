@@ -7,45 +7,52 @@ import {
   DrawerContainer, 
   ContentWrapper 
 } from '../../styles/AppStyles';
-import { Container, Box, Grid } from '@mui/material';
-import { SectionContent, ImageContainer, StyledCardContent, OverlayText, ZigzagContainer, ZigzagItem, RoundImage } from '../../styles/PartnersStyles';
+import { Container, Box, Grid } from '@mui/material'; // Remove Button import
+import { SectionContent, ImageContainer, StyledCardContent, OverlayText, ZigzagContainer, ZigzagItem, ZigzagItemTitle, RoundImage, StyledButton } from '../../styles/PartnersStyles'; // Import StyledButton
 
 const Partners = () => {
   const data = [
     {
       title: "Viajes Fomentur",
       description: "Aman lo que hacen, y eso se nota. Con más de 20 años de experiencia en el sector. Diseñan y proporcionan los mejores viajes, creando una experiencia única.",
-      image: "fomentur2.jpg"
+      image: "fomentur2.jpg",
+      link: "https://viajesfomentur.com"
     },
     {
       title: "KUKI Mascota Feliz",
       description: "Son una empresa familiar con experiencia el el sector y han creado su tienda on-line con el objetivo de ofrecer a todos sus clientes, la facilidad de comprar con un simple click, una amplia gama de productos para sus mascotas.",
-      image: "kuki.png"
-    },
-    {
-      title: "Aranzazu Triguero (ABOGADA)",
-      description: "Abogada colegiada núm. 5516 del ICAMALAGA desde marzo 2002. Licenciada en Derecho Universidad de Málaga 2001. NOS PROTEGE, NOS CUIDA Y NOS MIMA.",
-      image: "abogada.png"
-    },
-    {
-      title: "MAPFRE Seguros",
-      description: "Nuestro Asesor, quien se ocupa de asegurar y protegernos frente a cualquier incidencia. Sucursal El Molinillo. Asesor PACO. Calle San Bartolomé, 14. 29013 Málaga. Teléfono 952 65 78 01",
-      image: "mapfre.png"
+      image: "kuki.png",
+      link: "https://kukimascotafeliz.com"
     },
     {
       title: "Ingenium Group",
       description: "Como contratistas generales supervisan proyectos de construcción y/o renovación en los sectores comerciales y residenciales. Se han ocupado de todos los proyectos de gran envergadura.",
-      image: "ingenium.png"
+      image: "ingenium.png",
+      link: "https://ingeniumgr.com/"
+    },
+    {
+      title: "Aranzazu Triguero (Abogada)",
+      description: "Abogada colegiada núm. 5516 del ICAMALAGA desde marzo 2002. Licenciada en Derecho Universidad de Málaga 2001. NOS PROTEGE, NOS CUIDA Y NOS MIMA.",
+      image: "abogada.png",
+      link: "https://civisabogados.es/"
     },
     {
       title: "Acorán",
       description: "Empresa dedicada a la Consultoría en Protección de Datos y a la Formación. Ofrecen a sus clientes un trato excepcional y un servicio diferenciado, personalizado y completo, siempre enmarcando las actividades realizadas con la mayor integridad y calidad. Se aseguran de que cumplamos todas las directivas sobre la LOPD y LSSI-CE. GRACIAS",
-      image: "acoran.png"
+      image: "acoran.png",
+      link: "https://www.acoran.es/"
+    },
+    {
+      title: "MAPFRE Seguros",
+      description: "Nuestro Asesor, quien se ocupa de asegurar y protegernos frente a cualquier incidencia. Sucursal El Molinillo. Asesor PACO. Calle San Bartolomé, 14. 29013 Málaga. Teléfono 952 65 78 01",
+      image: "mapfre.png",
+      link: "https://mapfre.com"
     },
     {
       title: "La Huella Azul",
-      description: "Dedicada al cuidado y guardería de mascotas.",
-      image: "logolahuellaazul.jpg"
+      description: "Dedicada al cuidado y guardería de mascotas. La Huella Azul: Pasión por los animales. Nuestra dedicación al cuidado de nuestros más íntimos, fieles y cariñosos bebés, no es solo un hobby, trabajo o pasatiempo. Es algo tan inexplicable, que la única manera de definirlo sería FELICIDAD.",
+      image: "logolahuellaazul.jpg",
+      link: "https://lahuellaazul.com"
     }
   ];
 
@@ -72,7 +79,7 @@ const Partners = () => {
                 </OverlayText>
               </ImageContainer>
               {data.map((item, index) => (
-                <ZigzagContainer key={index} reverse={index % 2 !== 0}>
+                <ZigzagContainer key={index} reverse={index % 2 !== 0} >
                   <ZigzagItem>
                     {item.image === "abogada.png" ? (
                       <RoundImage src={item.image} alt={item.title} style={{ width: '100%', height: 'auto' }} />
@@ -80,14 +87,22 @@ const Partners = () => {
                       <img src={item.image} alt={item.title} style={{ width: '100%', height: 'auto' }} />
                     )}
                   </ZigzagItem>
-                  <ZigzagItem>
+                  <ZigzagItemTitle>
                     <StyledCardContent variant="h4" align="left" gutterBottom>
                       {item.title}
                     </StyledCardContent>
                     <SectionContent variant="body1" gutterBottom>
                       {item.description}
                     </SectionContent>
-                  </ZigzagItem>
+                    <StyledButton 
+                      variant="outlined" 
+                      href={item.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      Visita la Web
+                    </StyledButton> 
+                  </ZigzagItemTitle>
                 </ZigzagContainer>
               ))}
             </Box>

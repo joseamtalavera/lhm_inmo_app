@@ -29,7 +29,8 @@ import {
   StyledCarouselContainer,
   StyledArrow,
   StyledFullScreenContainer, 
-  RequestBoxContainer,       
+  RequestBoxContainer,   
+  PropertyDetailRef    
 } from '../../styles/PropertyPageStyles';
 import CheckIcon from '../../styles/CheckIcon';
 import RequestBox from './RequestBox';
@@ -209,6 +210,7 @@ const PropertyPage = () => {
             )}
 
             <ContentWrapperBelowImage>
+              <PropertyDetailRef>Ref: {property["Ref"]}</PropertyDetailRef>
               <StyledTitle>{property["Título"]}</StyledTitle>
               <PropertyDetailsRow>
                 <PropertyDetailLocalidad>{property["Localidad"]}</PropertyDetailLocalidad>

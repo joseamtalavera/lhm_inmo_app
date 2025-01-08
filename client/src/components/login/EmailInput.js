@@ -11,7 +11,6 @@ const EmailInput = ({ email, handleEmailChange }) => {
             name="email"
             autoComplete="email"
             value={email}
-            //onChange={(e) => setEmail(e.target.value)}
             onChange={handleEmailChange}
             placeholder='Email address'
         />

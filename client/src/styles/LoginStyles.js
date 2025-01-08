@@ -1,7 +1,6 @@
-// src/styles/LoginStyles.js
 
 import styled from 'styled-components';
-import { Box, Button, Link, Grid, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Box, Button, Link, Grid, Typography, Dialog, DialogTitle, DialogContentText } from '@mui/material';
 
 export const FormContainer = styled(Box)`
   max-width: 500px;
@@ -26,18 +25,13 @@ export const LoginButton = styled(Button)`
 `;
 
 export const TitleTypography = styled(Typography)`
-    text-align: center;
-    margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 20px;
 `;
 
 export const BodyTypography = styled(Typography)`
   text-align: center;
   margin-bottom: 16px;
-`;
-
-export const TermsText = styled(Typography)`
-  color: black;
-  text-align: center;
 `;
 
 export const RecoveryLink = styled(Link)`

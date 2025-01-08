@@ -1,6 +1,5 @@
-// Login.js
 import React, { useState } from 'react';
-import { Grid, DialogContent,  DialogActions } from '@mui/material';
+import { Grid, DialogContent, DialogActions } from '@mui/material';
 import PasswordInput from './PasswordInput';
 import EmailInput from './EmailInput';
 import {
@@ -47,14 +46,13 @@ function Login() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setErrorMessage(errorData.message ||'Email or pass is incorrect'); 
+        setErrorMessage(errorData.message || 'Email or pass is incorrect'); 
         setOpen(true);
       } else {
         const data = await response.json();
         console.log('Login successful');
         localStorage.setItem('token', data.token); 
         console.log('Token:', data.token);
-        //window.location.href = '/dashboard';
         navigate('/dashboard');
       }
       

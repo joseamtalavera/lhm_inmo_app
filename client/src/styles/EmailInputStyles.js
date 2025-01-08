@@ -1,4 +1,3 @@
-// src/styles/EmailInputStyles.js
 import styled from 'styled-components';
 import { TextField } from '@mui/material';
 
@@ -15,8 +14,8 @@ export const StyledTextField = styled(TextField)`
   & .MuiInputLabel-outlined.Mui-focused {
     color: #808080;
   }
-    & .MuiOutlinedInput-input {
-        color: #808080;
-    }
-    margin-bottom: 20px;
+  & .MuiOutlinedInput-input {
+    color: #808080;
+  }
+  margin-bottom: 20px;
 `;

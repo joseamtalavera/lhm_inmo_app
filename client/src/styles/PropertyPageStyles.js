@@ -144,13 +144,19 @@ export const PropertyDetailsRow = styled.div`
 export const PropertyDetailLocalidad = styled.div`
   margin: 0 0 8px;
   color: #1E90FF;
-  font-size: 1.2em;
+  font-size: 1.7em;
+`;
+
+export const PropertyDetailRef = styled.div`
+   margin: 0 0 8px;
+  color: #1E90FF;
+  font-size: 1.7em;
 `;
 
 export const PropertyDetailPrecio = styled.div`
   font-size: 2em;
   color: #333;
-  font-weight: bold;
+  font-weight: 250;
   margin-top: 0.5em;
 `;
 

@@ -22,6 +22,8 @@ import Ayuda from './components/ayuda/Ayuda';
 import Comprar from './components/Menu/Comprar';
 import Vender from './components/Menu/Vender';
 import Valoracion from './components/Menu/Valoracion';
+import AvisoLegal from './components/home/AvisoLegal';
+import PoliticaPrivacidad from './components/home/PoliticaPrivacidad';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -37,6 +39,8 @@ root.render(
         <Route path="/vender" element={<Vender />} />
         <Route path="/valoracion" element={<Valoracion />} />
         <Route path="/somos" element={<QuienesSomos/>} />
+        <Route path="/aviso-legal" element={<AvisoLegal />} />
+        <Route path="/politica-de-privacidad" element={<PoliticaPrivacidad />} />
         <Route path="/allviviendas" element={<AllPropertiesPage />} /> 
         <Route path="/viviendas/:id" element={<PropertyPage />} />
         <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />

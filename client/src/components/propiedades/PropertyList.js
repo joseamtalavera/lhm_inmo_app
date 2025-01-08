@@ -12,7 +12,8 @@ import {
   PropertyPrice,
   PropertyLocation,
   PropertyDescription,
-  Divider
+  Divider,
+  PropertyRef
 } from '../../styles/PropertyListStyles';
 import BedIcon from '@mui/icons-material/Bed';
 import BathtubIcon from '@mui/icons-material/Bathtub';
@@ -33,6 +34,7 @@ const PropertyList = ({ properties }) => {
           <PropertyImage src={property.foto} alt={property.title} />
           <PropertyInfo>
             <PropertyTitle>{property.title}</PropertyTitle>
+            <PropertyRef>Ref: {property.ref}</PropertyRef>
             <PropertyDescription>{property.description}</PropertyDescription>
             <PropertyLocation>{property.localidad}</PropertyLocation>
             <PropertyPrice>{property.precio} €</PropertyPrice>

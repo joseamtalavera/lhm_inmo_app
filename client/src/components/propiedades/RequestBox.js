@@ -9,7 +9,9 @@ import {
   RequestForm,
   ErrorMessage,
   RequestInput,
-  CloseDash
+  CloseDash,
+  Title,
+  PropertyRefColor
 } from '../../styles/RequestBoxStyles';
 
 const RequestBox = ({ propertyRef }) => {
@@ -91,7 +93,7 @@ const RequestBox = ({ propertyRef }) => {
       ) : (
         <>
           <CloseDash onClick={handleCloseForm}></CloseDash>
-          <h3>Haznos tu consulta</h3>
+          <Title>HAZNOS TU CONSULTA</Title>
           <RequestForm onSubmit={handleSubmit}>
             <RequestTextarea
               name="message"
@@ -120,7 +122,7 @@ const RequestBox = ({ propertyRef }) => {
           <Divider />
           <ContactInfoContainer>
             <div>
-              <ContactLabel>Referencia del anuncio:</ContactLabel> {propertyRef}
+              <ContactLabel>Referencia del anuncio:</ContactLabel> <PropertyRefColor>{propertyRef}</PropertyRefColor> 
             </div>
           </ContactInfoContainer>
         </>

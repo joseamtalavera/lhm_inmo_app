@@ -15,6 +15,7 @@ services:
       - NODE_ENV=development
       - PORT=3010
       - REACT_APP_API_URL=http://localhost:5010
+      - REACT_APP_GOOGLE_MAPS_API_KEY=AIzaSyDymwX1nyKthJYnDpznwqPOPucnubXLYu4
     depends_on:
       - backend
 

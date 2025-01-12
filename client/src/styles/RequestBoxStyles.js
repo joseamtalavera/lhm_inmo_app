@@ -34,10 +34,17 @@ export const CloseDash = styled.div`
   }
 `;
 
+export const Title = styled.h2`
+  font-size: 20px;
+  color: #1E90FF;
+  font-weight: 200;
+  margin-bottom: 20px;
+`;
+
 export const RequestForm = styled.form`
     display: flex;
     flex-direction: column;
-    `;
+`;
 
 export const RequestTextarea = styled.textarea`
   width: 100%;
@@ -94,7 +101,7 @@ export const ContactInfoContainer = styled.div`
 
 export const ContactLabel = styled.span`
   font-weight: bold;
-  color: #333;
+  color: gray;
 `;
 
 export const ContactLink = styled.a`
@@ -115,4 +122,9 @@ export const ErrorMessage = styled.div`
   color: red;
   font-size: 12px;
   margin-top: 5px;
+`;
+
+export const PropertyRefColor = styled.span`
+  color: #1E90FF;
+  font-weight: bold;
 `;

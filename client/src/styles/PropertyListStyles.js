@@ -1,4 +1,4 @@
-// src/styles/PropiedadesDestacadasStyles.js
+
 
 import styled from 'styled-components';
 
@@ -57,7 +57,7 @@ export const PropertyTitle = styled.h3`
   margin: 0 0 8px;
   font-size: 20px;
   color: black;
-  font-weight: 250;
+  font-weight: 300;
   margin-bottom: 20px;
 `;
 

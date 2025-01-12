@@ -60,8 +60,8 @@ export const ContentWrapper = styled.div`
 export const MainContainer = styled.div`
   display: flex;
   width: 100%;
-  gap: 10px; /* Reduced gap */
-  align-items: stretch;
+  gap: 10px; 
+  align-items: flex-start;
   justify-content: flex-start;
   margin-top: 30px;
   flex-direction: row;

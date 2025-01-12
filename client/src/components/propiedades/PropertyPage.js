@@ -35,6 +35,7 @@ import {
 import CheckIcon from '../../styles/CheckIcon';
 import RequestBox from './RequestBox';
 import { CircularProgress, Box } from '@mui/material';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const CollapsibleSection = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -171,6 +172,16 @@ const PropertyPage = () => {
     setIsFullScreen(!isFullScreen);
   };
 
+  const mapContainerStyle = {
+    height: "400px",
+    width: "100%"
+  };
+
+  const center = {
+    lat: property.Longitud,
+    lng: property.Latitud
+  };
+
   const categorizedAmenities = {
     "Acceso adaptado a personas con movilidad reducida": amenities.filter(amenity => amenity.category === "Acceso adaptado a personas con movilidad reducida"),
     "Equipamiento edificio": amenities.filter(amenity => amenity.category === "Equipamiento edificio"),
@@ -210,8 +221,9 @@ const PropertyPage = () => {
             )}
 
             <ContentWrapperBelowImage>
-              <PropertyDetailRef>Ref: {property["Ref"]}</PropertyDetailRef>
+              
               <StyledTitle>{property["Título"]}</StyledTitle>
+              <PropertyDetailRef>Ref: {property["Ref"]}</PropertyDetailRef>
               <PropertyDetailsRow>
                 <PropertyDetailLocalidad>{property["Localidad"]}</PropertyDetailLocalidad>
                 <PropertyDetailPrecio>{property["Precio"]} €</PropertyDetailPrecio>
@@ -273,7 +285,15 @@ const PropertyPage = () => {
               </CollapsibleSection>
               <BlueDivider />
               <StyledSubtitle>Ubicación</StyledSubtitle>
-              
+              <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+                <GoogleMap
+                  mapContainerStyle={mapContainerStyle}
+                  center={center}
+                  zoom={13}
+                >
+                  <Marker position={center} />
+                </GoogleMap>
+              </LoadScript>
             </ContentWrapperBelowImage>
           </MainContainer>
         </ContentWrapper>

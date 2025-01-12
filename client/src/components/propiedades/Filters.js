@@ -22,6 +22,7 @@ const Filters = ({ onFilterChange }) => {
     bedrooms: '',
     bathrooms: '',
     location: '',
+    aseos: ''
   };
 
   const [filters, setFilters] = useState(initialFilters);
@@ -48,7 +49,7 @@ const Filters = ({ onFilterChange }) => {
     const updatedFilters = { ...filters, [name]: value };
     setFilters(updatedFilters);
 
-    console.log('Upadated filters:', updatedFilters);
+    console.log('Updated filters:', updatedFilters);
 
     if (name === 'location' || name === 'propertyType') {
       onFilterChange(updatedFilters); // Trigger live filtering for location and propertyType

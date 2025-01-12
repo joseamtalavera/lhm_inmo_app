@@ -12,6 +12,7 @@ import {
   PropertyLocation,
   PropertyRow,
   LoadingContainer, 
+  PropertyRef
 } from '../../styles/PropiedadesDestacadasStyles';
 import BedIcon from '@mui/icons-material/Bed';
 import BathIcon from '@mui/icons-material/Bathtub';
@@ -67,6 +68,7 @@ const PropiedadesDestacadas = () => {
           <PropertyImage src={property.foto} alt={property.title} />
           <PropertyInfo>
             <PropertyTitle>{property.title}</PropertyTitle>
+            <PropertyRef>{property.ref}</PropertyRef>
             <PropertyRow>
               <PropertyLocation>{property.localidad}</PropertyLocation>
               <PropertyPrice>{property.precio} €</PropertyPrice>

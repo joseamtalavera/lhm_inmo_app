@@ -29,17 +29,23 @@ export const PropertyInfo = styled.div`
 export const PropertyTitle = styled.h3`
   margin: 0 0 8px;
   font-size: 1.2em;
+  font-weight: 300;
 `;
 
 export const PropertyLocation = styled.p`
   margin: 0 0 8px;
-  color: #757575;
+  color: #1E90FF;
 `;
+
+export const PropertyRef = styled.p`
+  margin: 0 0 8px;
+  color: #1E90FF;
+  `;
 
 export const PropertyPrice = styled.p`
   margin: 0 0 16px;
   font-size: 1.2em;
-  font-weight: bold;
+  font-weight: 300;
   color: #424242;
 `;
 

@@ -1,5 +1,3 @@
-// src/components/FiltersStyles.js
-
 import styled from 'styled-components';
 
 export const FiltersContainer = styled.div`
@@ -10,28 +8,27 @@ export const FiltersContainer = styled.div`
   background-color: #fff;
   border: 0px solid #ddd;
   border-radius: 8px;
-  width: 100%; /* Makes the container take up the full width */
-  max-width: 400px; /* Increase the max-width to make it wider */
-  box-sizing: border-box; /* Ensure padding is included in the width */
-
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  height: auto;
   @media (max-width: 820px) {
-    max-width: 100%;  /* Override so it takes the full width below 820px */
+    max-width: 100%;
   }
 `;
 
 export const Title = styled.h2`
   font-size: 20px;
-  color: grey;
-  font-weight: 150;  /* Thin font weight */
+  color: #1E90FF;
+  font-weight: 250;
   margin-bottom: 20px;
 `;
 
-// A wrapper for grouping related filters (e.g., Property Type, Price, Size)
 export const FilterGroup = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 15px;
-  flex-wrap: nowrap; /* Ensures the group doesn't wrap to the next line */
+  flex-wrap: nowrap;
 `;
 
 export const FilterRow = styled.div`
@@ -42,7 +39,7 @@ export const FilterRow = styled.div`
 
 export const FilterLabel = styled.label`
   font-size: 14px;
-  color: #000; // Change color to black
+  color: #000;
   font-weight: bold;
   margin-bottom: 5px;
   display: block;
@@ -54,23 +51,23 @@ export const FilterInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
-  max-width: 100%; /* Ensure inputs take up the full width of the container */
-  color: #000; /* Explicitly set font color to black */
+  max-width: 100%;
+  color: #000;
 `;
 
 export const FilterButton = styled.button`
   padding: 10px;
-  background-color: transparent; /* Make the background transparent */
-  color: #1E90FF; /* Change text color to match the outline */
-  border: 1px solid #1E90FF; /* Add a border with the desired color */
+  background-color: transparent;
+  color: #1E90FF;
+  border: 1px solid #1E90FF;
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
-  width: 100%; /* Make the button take the full width */
+  width: 100%;
 
   &:hover {
-    background-color: #1E90FF; /* Change background color on hover */
-    color: white; /* Change text color on hover */
+    background-color: #1E90FF;
+    color: white;
   }
 `;
 
@@ -78,8 +75,8 @@ export const FilterButtonGroup = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 15px; /* Set the gap between buttons */
-  width: 100%; /* Ensure the group takes up the full width */
+  gap: 15px;
+  width: 100%;
 `;
 
 

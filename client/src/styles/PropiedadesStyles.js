@@ -1,4 +1,4 @@
-// StyledComponents.js
+// StyledCompon
 
 import styled from 'styled-components';
 import { Button, Box, Modal } from '@mui/material';

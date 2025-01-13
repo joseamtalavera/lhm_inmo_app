@@ -9,7 +9,6 @@ const Dashboard = () => {
     <MenuLayout>
        <Container>
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh">
-        {/* <ConstructionIcon style={{ fontSize: 100, color: '#f0ad4e' }} /> */}
           <Typography variant="h4" component="h1" gutterBottom>
             Dashboard Under Construction. Thanks for your patience.
           </Typography>

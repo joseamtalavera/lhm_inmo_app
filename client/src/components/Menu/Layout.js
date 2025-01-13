@@ -18,6 +18,8 @@ import { mainListItems, secondaryListItems } from '../dashboard/ListItems';
 import { useLocation, Link as RouterLink } from 'react-router-dom';
 import { listItems, moreItems } from '../dashboard/ListItems';
 import theme from '../../styles/theme';
+import { useMediaQuery } from '@mui/material';
+import { use } from 'react';
 
 function Copyright(props) {
     return (
@@ -94,7 +96,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 
 export default function Layout({ children }) {
-  const [open, setOpen] = React.useState(true);
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [open, setOpen] = React.useState(!isMobile);
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -106,6 +109,18 @@ export default function Layout({ children }) {
     const parentPath = location.pathname.split('/').slice(0, -1).join('/');
     currentPage = allItems.find((item) => item.path === parentPath)?.text;
   }
+
+  /* React.useEffect(() => {
+    if (isMobile) {
+      setOpen(false);
+    }
+  }, [location.pathname, isMobile]);
+
+  const handleItemClick = ()=> {
+    if (isMobile) {
+      setOpen(false);
+  }
+  } */
 
   return (
     <ThemeProvider theme={theme}>

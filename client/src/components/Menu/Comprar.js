@@ -120,7 +120,7 @@ const Comprar = () => {
               </ImageContainer>
               <OverlayText variant="h2" align="center" gutterBottom>
                 Gastos Como Comprador
-                <SectionContent variant="body1" align="center" gutterBottom>
+                <SectionContent variant="h5" align="center" gutterBottom>
                 Esta es la información detallada sobre los gastos asociados a la compra de una vivienda.
                 </SectionContent>
               </OverlayText>

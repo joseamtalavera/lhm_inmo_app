@@ -26,6 +26,12 @@ import theme from '../../styles/theme';
 import { ThemeProvider } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
+import {
+    StyledTableContainer,
+    StyledTable,
+    StyledTableHeaderCell,
+    StyledTableCell,
+} from '../../styles/BasicTablePropiedadesStyles';
 
 const generateNextReference = async () => {
     const prefix = 'LHA';
@@ -53,7 +59,7 @@ export default function DataTable({ filter: initialFilter }) {
     const [orderBy, setOrderBy] = useState('ref');
     const [filter, setFilter] = useState(initialFilter);
 
-    //useEffect(() => {
+   
     const fetchProperties = async () => {
         setIsLoading(true);
         try {
@@ -74,8 +80,6 @@ export default function DataTable({ filter: initialFilter }) {
             setIsLoading(false);
         }
     };
-    //fetchProperties();
-    //}, []);
 
     useEffect(() => {
         fetchProperties();
@@ -230,12 +234,12 @@ export default function DataTable({ filter: initialFilter }) {
                     <CircularProgress />
                 ) : (
                     <>
-                        <TableContainer component={Paper} sx={{ width: '100%' }}>
-                            <Table>
+                        <StyledTableContainer component={Paper}>
+                            <StyledTable>
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Foto Principal</TableCell>
-                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
+                                        <StyledTableHeaderCell >Foto Principal</StyledTableHeaderCell>
+                                        <StyledTableHeaderCell>
                                             <TableSortLabel
                                                 active={orderBy === 'ref'}
                                                 direction={orderBy === 'ref' ? order : 'asc'}
@@ -243,8 +247,8 @@ export default function DataTable({ filter: initialFilter }) {
                                             >
                                                 Refencia
                                             </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
+                                        </StyledTableHeaderCell>
+                                        <StyledTableHeaderCell>
                                             <TableSortLabel
                                                 active={orderBy === 'title'}
                                                 direction={orderBy === 'title' ? order : 'asc'}
@@ -252,8 +256,8 @@ export default function DataTable({ filter: initialFilter }) {
                                             >
                                                 Título
                                             </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
+                                        </StyledTableHeaderCell>
+                                        <StyledTableHeaderCell>
                                             <TableSortLabel
                                                 active={orderBy === 'localidad'}
                                                 direction={orderBy === 'localidad' ? order : 'asc'}
@@ -261,8 +265,8 @@ export default function DataTable({ filter: initialFilter }) {
                                             >
                                                 Localidad
                                             </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
+                                        </StyledTableHeaderCell>
+                                        <StyledTableHeaderCell>
                                             <TableSortLabel
                                                 active={orderBy === 'active'}
                                                 direction={orderBy === 'active' ? order : 'asc'}
@@ -270,28 +274,28 @@ export default function DataTable({ filter: initialFilter }) {
                                             >
                                                 Activa
                                             </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Acciones</TableCell>
+                                        </StyledTableHeaderCell>
+                                        <StyledTableHeaderCell >Acciones</StyledTableHeaderCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
                                     {sortedProperties.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((property) => (
                                         <TableRow key={property.id}>
-                                            <TableCell>
+                                            <StyledTableCell>
                                                 <img src={property.foto} alt="Foto Principal" style={{ width: '100px', height: 'auto' }} />
-                                            </TableCell>
-                                            <TableCell>{property.ref}</TableCell>
-                                            <TableCell>{property.title}</TableCell>
-                                            <TableCell>{property.localidad}</TableCell>
-                                            <TableCell>
+                                            </StyledTableCell>
+                                            <StyledTableCell>{property.ref}</StyledTableCell>
+                                            <StyledTableCell>{property.title}</StyledTableCell>
+                                            <StyledTableCell>{property.localidad}</StyledTableCell>
+                                            <StyledTableCell>
                                                 <Chip
                                                     label={property.active ? "Activa" : "Inactiva"}
                                                     icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
                                                     color={property.active ? "success" : "error"}
                                                     variant="outlined"
                                                 />
-                                            </TableCell>
-                                            <TableCell>
+                                            </StyledTableCell>
+                                            <StyledTableCell>
                                                 <IconButton 
                                                     color="primary" 
                                                     onClick={(e) => { 
@@ -304,12 +308,12 @@ export default function DataTable({ filter: initialFilter }) {
                                                 <IconButton color="red" onClick={(e) => { e.stopPropagation(); handleDelete(property.id); }}>
                                                     <DeleteIcon />
                                                 </IconButton>
-                                            </TableCell>
+                                            </StyledTableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
-                            </Table>
-                        </TableContainer>
+                            </StyledTable>
+                        </StyledTableContainer>
                         <TablePagination
                             rowsPerPageOptions={[10, 25, 50]}
                             component="div"

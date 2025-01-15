@@ -33,7 +33,7 @@ const LoginPage = () => {
                     Bienvenido a Lha Inmobiliaria
                     </OverlayText>
                     <SectionContent variant="h5" align="center" gutterBottom>
-                        Esta es el panel de control para la gestion de propiedades
+                        Este es tu panel de control para la gestión de propiedades
                     </SectionContent>
                 </OverlayContainer>
             </LeftGrid>

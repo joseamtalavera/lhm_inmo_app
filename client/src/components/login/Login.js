@@ -7,11 +7,11 @@ import {
   LoginGrid,
   LoginButton,
   TitleTypography,
-  BodyTypography,
   StyledDialog,
   StyledDialogTitle,
   BlueText,
   DialogButton,
+  CenteredBodyTypography,
 } from '../../styles/LoginStyles';
 import { useNavigate } from 'react-router-dom';
 
@@ -46,13 +46,11 @@ function Login() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setErrorMessage(errorData.message || 'Email or pass is incorrect'); 
+        setErrorMessage(errorData.message || 'Email o Contraseña incorrecto'); 
         setOpen(true);
       } else {
         const data = await response.json();
-        console.log('Login successful');
         localStorage.setItem('token', data.token); 
-        console.log('Token:', data.token);
         navigate('/dashboard');
       }
       
@@ -75,9 +73,9 @@ function Login() {
           <TitleTypography variant="h4">
             Login
           </TitleTypography>
-          <BodyTypography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+          <CenteredBodyTypography variant="body1">
             Introduce tu correo electrónico y contraseña
-          </BodyTypography>
+          </CenteredBodyTypography>
         </Grid>
 
         <Grid item>
@@ -112,12 +110,12 @@ function Login() {
         open={open}
         onClose={() => setOpen(false)}
       >
-        <StyledDialogTitle style={{ fontSize: errorMessage.includes('must') ? '12px' : 'default' }}>
+        <StyledDialogTitle isError={errorMessage.includes('must')}>
           {errorMessage}
         </StyledDialogTitle>
         <DialogContent>
           <BlueText>
-            Please try again
+            Intentalo de nuevo
           </BlueText>
         </DialogContent>
         <DialogActions>
@@ -126,7 +124,7 @@ function Login() {
             size='small'
             variant='outlined'
           >
-            Close
+            Cerrar
           </DialogButton>
         </DialogActions>
       </StyledDialog>

@@ -1,7 +1,7 @@
 // BasicTablePropiedadesStyles.js
 
 import styled from 'styled-components';
-import { Box, CircularProgress, Chip, TableContainer, Table, TableCell } from '@mui/material';
+import { Box, CircularProgress, Chip, TableContainer, Table, TableCell, Card, CardContent, Typography, Button, Dialog, DialogTitle, DialogContentText } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditOutlined  from '@mui/icons-material/EditOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -23,7 +23,7 @@ export const StyledCircularProgress = styled(CircularProgress)`
 `;
 
 export const StyledTableContainer = styled(TableContainer)`
-  with: 100%;
+  width: 100%;
   @media (max-width: 600px) {
     overflow-x: auto;
   }
@@ -41,6 +41,7 @@ export const StyledTableHeaderCell = styled(TableCell)`
   background-color: #f0f0f0;
   @media (max-width: 600px) {
     font-size: 0.8rem;
+  }
 `;
 
 export const StyledTableCell = styled(TableCell)`
@@ -73,6 +74,16 @@ export const Image = styled.img`
   object-fit: cover;
 `;
 
+export const PropertyImage = styled.img`
+  width: 100px;
+  height: auto;
+`;
+
+export const PropertyCardImage = styled.img`
+  width: 100%;
+  height: auto;
+`;
+
 export const IconContainer = styled.div`
   display: flex;
   align-items: center;
@@ -92,6 +103,7 @@ export const StyledChip = styled(Chip)`
   border-color: ${(props) => (props.active ? 'green' : 'red')};
   color: black;
   height: 24px;
+  margin-top: 8px;
 
   & .MuiChip-icon {
     color: ${(props) => (props.active ? 'green' : 'red')};
@@ -104,3 +116,56 @@ export const StyledCheckCircleIcon = styled(CheckCircleIcon)`
 export const StyledCancelIcon = styled(CancelIcon)`
   font-size: small; 
 `;
+
+export const StyledCard = styled(Card)`
+  display: none;
+  margin-bottom: 16px;
+  @media (max-width: 600px) {
+    display: block; // Show card on mobile
+  }
+`;
+
+export const StyledCardContent = styled(CardContent)`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const StyledCardTitle = styled(Typography)`
+  font-weight: bold;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  color: #1E90FF;
+`;
+
+export const StyledCardActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+`;
+
+export const StyledDialog = styled(Dialog)`
+  .MuiDialog-paper {
+    width: 60%;
+    max-height: 190px;
+    text-align: center;
+  }
+`;
+
+export const StyledDialogTitle = styled(DialogTitle)`
+  font-size: ${({ isError }) => (isError ? '12px' : 'default')};
+`;
+
+export const DialogButton = styled(Button)`
+  color: green;
+  border-color: green;
+`;
+
+export const RedDialogButton = styled(Button)`
+  color: red;
+  border-color: red;
+`;
+
+export const BlueText = styled(DialogContentText)`
+  color: #1E90FF;
+`;
+

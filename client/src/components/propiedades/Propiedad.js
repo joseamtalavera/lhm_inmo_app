@@ -1,7 +1,7 @@
 // Propiedad.js
 
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
     Button, 
     CircularProgress, 
@@ -12,34 +12,70 @@ import {
     DialogTitle, 
     DialogContent, 
     DialogContentText, 
-    DialogActions 
+    DialogActions,
+    IconButton,
+    Menu,
+    MenuItem
 } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import MenuIcon from '@mui/icons-material/Menu';
 import theme from '../../styles/theme';
 import MenuLayout from '../Menu/MenuLayout';
 import GeneralInfo from './GeneralInfo';
 import Amenities from './Amenities';
 import Images from './Images';
 import Documentation from './Documentation';
+import {
+    StyledCard,
+    StyledBox,
+    StyledButton,
+    StyledIconButton,
+    StyledMenuItem,
+    StyledDialogContentText,
+    StyledMenuBox,
+    StyledTabsBox,
+    StyledActionBox,
+    StyledAlignBox,
+    StyledDialogTitle,
+    StyledDialogActionsButton,
+    StyledDialogPaper,
+    StyledSaveDialogPaper
+} from '../../styles/PropiedadStyles';
 
 const Propiedad = () => {
     const { id } = useParams();
+    const location = useLocation();
     const [property, setProperty] = useState({});
     const [amenities, setAmenities ] = useState([]);
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [isEditingGeneralInfo, setIsEditingGeneralInfo] = useState(true);
-    const [isEditingAmenities, setIsEditingAmenities] = useState(true);
-    const [isEditingImages, setIsEditingImages] = useState(true);
-    const [isEditingDocumentation, setIsEditingDocumentation] = useState(true);
+    const [isEditingGeneralInfo, setIsEditingGeneralInfo] = useState(location.state?.edit ?? false);
+    const [isEditingAmenities, setIsEditingAmenities] = useState(location.state?.edit ?? false);
+    const [isEditingImages, setIsEditingImages] = useState(location.state?.edit ?? false);
+    const [isEditingDocumentation, setIsEditingDocumentation] = useState(location.state?.edit ?? false);
     const [activeTab, setActiveTab] = useState(0);
     const [open, setOpen] = useState(false);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
     const navigate = useNavigate();
     const [isSaving, setIsSaving] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const isMenuOpen = Boolean(anchorEl);
+
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleMenuItemClick = (index) => {
+        setActiveTab(index);
+        handleMenuClose();
+    };
 
     useEffect(() => {
         const fetchProperty = async () => {
@@ -258,81 +294,6 @@ const Propiedad = () => {
         }
     };
 
-     // We need to save the property before uploading images
-    /* const saveProperty = async () => {
-        setIsSaving(true);
-        try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(property),
-            });
-    
-            if (!response.ok) throw new Error('Failed to save property');
-    
-            const updatedProperty = await response.json();
-            setProperty((prevProperty) => ({
-                ...prevProperty,
-                ...updatedProperty,
-            }));
-    
-            console.log('Property saved successfully:', updatedProperty);
-            return updatedProperty;
-        } catch (error) {
-            console.error('Error saving property:', error);
-            throw error; // Re-throw error to handle in the calling function
-        } finally {
-            setIsSaving(false);
-        }
-    };
-    
-    const handleUpload = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            let updatedProperty = property;
-
-            if (!property || !property.ref) {
-                console.error('property or property.ref is undefined');
-                const updatedProperty = await saveProperty();
-            
-                // Ensure property is saved before uploading images
-                if (!updatedProperty.ref){
-                    console.error('Property ref is undefined');
-                    return;
-                }
-
-                // Update the property state with the updated property
-                setProperty(updatedProperty);
-            }
-
-            const formData = new FormData();
-            formData.append('image', file);
-            formData.append('ref', updatedProperty.ref);
-
-            console.log('Uploading file:', file);
-            try {
-                console.log('Property ref:', updatedProperty.ref); // Check if this is defined
-                const response = await fetch(
-                    `${process.env.REACT_APP_API_URL}/api/properties/${updatedProperty.ref}/images`, 
-                    {
-                    method: 'POST',
-                    body: formData,
-                }
-            );
-
-                if (!response.ok) throw new Error('Failed to upload image');
-                const newImage = await response.json();
-                console.log('Uploaded image response:', newImage);
-                
-                setImages((prevImages) => [...prevImages, newImage]);
-            } catch (error) {
-                console.error('Error uploading image:', error);
-            }
-        }
-    }; */
-
     const saveProperty = async () => {
         setIsSaving(true);
         try {
@@ -358,7 +319,7 @@ const Propiedad = () => {
             return updatedProperty;
         } catch (error) {
             console.error('Error saving property:', error);
-            throw error; // Re-throw the error for further handling
+            throw error; 
         } finally {
             setIsSaving(false);
         }
@@ -481,13 +442,44 @@ const Propiedad = () => {
     };
 
     if (isLoading) {
-        return <Box><CircularProgress /></Box>;
+        return (
+            <StyledBox>
+                <CircularProgress />
+            </StyledBox>
+        );
     }
 
     return (
         <MenuLayout>
             <ThemeProvider theme={theme}>
-                <Card sx={{ maxWidth: '90%', margin: 'auto', mt: 5, mb: 2 }}>
+                <StyledCard>
+                    <StyledMenuBox>
+                        <StyledIconButton
+                            aria-label="more"
+                            aria-controls="long-menu"
+                            aria-haspopup="true"
+                            onClick={handleMenuOpen}
+                        >
+                            <MenuIcon />
+                        </StyledIconButton>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={isMenuOpen}
+                            onClose={handleMenuClose}
+                            PaperProps={{
+                                style: {
+                                    maxHeight: 48 * 4.5,
+                                    width: '20ch',
+                                },
+                            }}
+                        >
+                            <StyledMenuItem onClick={() => handleMenuItemClick(0)}>Informacion</StyledMenuItem>
+                            <StyledMenuItem onClick={() => handleMenuItemClick(1)}>Amenities</StyledMenuItem>
+                            <StyledMenuItem onClick={() => handleMenuItemClick(2)}>Imagenes</StyledMenuItem>
+                            <StyledMenuItem onClick={() => handleMenuItemClick(3)}>Documentos</StyledMenuItem>
+                            <StyledMenuItem onClick={() => handleMenuItemClick(4)}>Preview</StyledMenuItem>
+                        </Menu>
+                    </StyledMenuBox>
                     <Tabs value={activeTab} onChange={handleTabChange} centered>
                         <Tab label="Informacion" />
                         <Tab label="Amenities" />
@@ -535,161 +527,143 @@ const Propiedad = () => {
                         )}
                     </Box>
                     
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', borderTop: '0px solid', borderColor: 'divider', mb: 2, mr: 2 }}>
-                        <Box sx={{ alignSelf: 'flex-end', pt: 2 }}>
+                    <StyledActionBox>
+                        <StyledAlignBox>
                             {activeTab === 0 && !isEditingGeneralInfo && (
-                                <Button
+                                <StyledButton
                                     startIcon={<EditIcon />}
                                     size="medium"
                                     variant="outlined"
                                     onClick={() => handleEditClick(0)}
-                                    sx={{ mr: 2, mb: 2 }}
                                 >
                                     Edit
-                                </Button>
+                                </StyledButton>
                             )}
                             {activeTab === 0 && isEditingGeneralInfo && (
                                 <>
-                                    <Button
+                                    <StyledButton
                                         size="medium"
                                         variant="outlined"
                                         onClick={() => handleCancelClick(0)}
-                                        sx={{ mr: 2, mb: 2 }}
                                     >
                                         Cancel
-                                    </Button>
-                                    <Button
+                                    </StyledButton>
+                                    <StyledButton
                                         size="medium"
                                         color="success"
                                         variant="outlined"
                                         onClick={handleSubmit}
-                                        sx={{ mr: 2, mb: 2 }}
                                     >
                                         Save
-                                    </Button>
+                                    </StyledButton>
                                 </>
                             )}
                             {activeTab === 1 && !isEditingAmenities && (
-                                <Button
+                                <StyledButton
                                     startIcon={<EditIcon />}
                                     size="medium"
                                     variant="outlined"
                                     onClick={() => handleEditClick(1)}
-                                    sx={{ mr: 2, mb: 2 }}
                                 >
                                     Edit
-                                </Button>
+                                </StyledButton>
                             )}
                             {activeTab === 1 && isEditingAmenities && (
                                 <>
-                                    <Button
+                                    <StyledButton
                                         size="medium"
                                         variant="outlined"
                                         onClick={() => handleCancelClick(1)}
-                                        sx={{ mr: 2, mb: 2 }}
                                     >
                                         Cancel
-                                    </Button>
-                                    <Button
+                                    </StyledButton>
+                                    <StyledButton
                                         size="medium"
                                         color="success"
                                         variant="outlined"
                                         onClick={handleSubmit}
-                                        sx={{ mr: 2, mb: 2 }}
                                     >
                                         Save
-                                    </Button>
+                                    </StyledButton>
                                 </>
                             )}
                             {activeTab === 2 && !isEditingImages && (
-                                <Button
+                                <StyledButton
                                     startIcon={<EditIcon />}
                                     size="medium"
                                     variant="outlined"
                                     onClick={() => handleEditClick(2)}
-                                    sx={{ mr: 2, mb: 2 }}
                                 >
                                     Edit
-                                </Button>
+                                </StyledButton>
                             )}
                             {activeTab === 2 && isEditingImages && (
                                 <>
-                                    <Button
+                                    <StyledButton
                                         size="medium"
                                         variant="outlined"
                                         onClick={() => handleCancelClick(2)}
-                                        sx={{ mr: 2, mb: 2 }}
                                     >
                                         Cancel
-                                    </Button>
-                                    <Button
+                                    </StyledButton>
+                                    <StyledButton
                                         size="medium"
                                         color="success"
                                         variant="outlined"
                                         onClick={handleSubmit}
-                                        sx={{ mr: 2, mb: 2 }}
                                     >
                                         Save
-                                    </Button>
+                                    </StyledButton>
                                 </>
                             )}
                             {activeTab === 3 && !isEditingDocumentation && (
-                                <Button
+                                <StyledButton
                                     startIcon={<EditIcon />}
                                     size="medium"
                                     variant="outlined"
                                     onClick={() => handleEditClick(3)}
-                                    sx={{ mr: 2, mb: 2 }}
                                 >
                                     Edit
-                                </Button>
+                                </StyledButton>
                             )}
                             {activeTab === 3 && isEditingDocumentation && (
                                 <>
-                                    <Button
+                                    <StyledButton
                                         size="medium"
                                         variant="outlined"
                                         onClick={() => handleCancelClick(3)}
-                                        sx={{ mr: 2, mb: 2 }}
                                     >
                                         Cancel
-                                    </Button>
-                                    <Button
+                                    </StyledButton>
+                                    <StyledButton
                                         size="medium"
                                         color="success"
                                         variant="outlined"
                                         onClick={handleSubmit}
-                                        sx={{ mr: 2, mb: 2 }}
                                     >
                                         Save
-                                    </Button>
+                                    </StyledButton>
                                 </>
                             )}
-                        </Box>
-                    </Box>
-                </Card>
+                        </StyledAlignBox>
+                    </StyledActionBox>
+                </StyledCard>
                 
                 <Dialog
                     open={open}
                     onClose={() => setOpen(false)}
-                    PaperProps={{
-                        style: {
-                            width: "60%",
-                            maxHeight: '150px',
-                            textAlign: 'center'
-                        },
-                    }}
+                    PaperProps={{ style: StyledDialogPaper }}
                 >
-                    <DialogTitle>{"Error"}</DialogTitle>
+                    <StyledDialogTitle>{"Error"}</StyledDialogTitle>
                     <DialogContent>
-                        <DialogContentText sx={{ color: 'orange' }}>
+                        <StyledDialogContentText>
                             {"Failed to update property"}
-                        </DialogContentText>
+                        </StyledDialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setOpen(false)} color="primary" variant="outlined" sx={{ color: 'green', borderColor: 'green' }}>
+                        <StyledDialogActionsButton onClick={() => setOpen(false)} color="primary" variant="outlined">
                             OK
-                        </Button>
+                        </StyledDialogActionsButton>
                     </DialogActions>
                 </Dialog>
                 <Dialog
@@ -697,18 +671,12 @@ const Propiedad = () => {
                     onClose={() => setIsSaveDialogOpen(false)}
                     fullWidth={true}
                     maxWidth={'xs'}
-                    PaperProps={{
-                        style: {
-                            color: 'orange',
-                            boxShadow: 'none',
-                            borderRadius: '5px'
-                        }
-                    }}
+                    PaperProps={{ style: StyledSaveDialogPaper }}
                 >
-                    <DialogTitle style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <StyledDialogTitle>
                         <CheckCircleOutlineIcon style={{ color: 'green', fontSize: '3rem' }} />
-                        Property updated successfully
-                    </DialogTitle>
+                        Propiedad actualizada correctamente
+                    </StyledDialogTitle>
                 </Dialog>
             </ThemeProvider>
         </MenuLayout>

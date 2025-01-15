@@ -1,21 +1,20 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { 
-    Box, 
-    Table, 
+    Box,
     TableBody, 
-    TableCell, 
-    TableContainer, 
     TableHead, 
     TableRow, 
     Paper, 
-    IconButton, 
-    CircularProgress, 
-    Chip, 
+    IconButton,  
     TablePagination, 
     InputAdornment, 
     TextField, 
     TableSortLabel,
     Button,
+    Typography, 
+    useMediaQuery, 
+    DialogContent, 
+    DialogActions
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -31,6 +30,19 @@ import {
     StyledTable,
     StyledTableHeaderCell,
     StyledTableCell,
+    StyledCard,
+    StyledCardContent,
+    StyledCardTitle,
+    StyledChip,
+    StyledCardActions,
+    StyledBox,
+    StyledCircularProgress,
+    StyledDialog,
+    StyledDialogTitle,
+    DialogButton,
+    RedDialogButton,
+    PropertyImage,
+    PropertyCardImage
 } from '../../styles/BasicTablePropiedadesStyles';
 
 const generateNextReference = async () => {
@@ -51,6 +63,7 @@ const generateNextReference = async () => {
 
 export default function DataTable({ filter: initialFilter }) {
     const navigate = useNavigate();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [properties, setProperties] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [page, setPage] = useState(0);
@@ -58,8 +71,26 @@ export default function DataTable({ filter: initialFilter }) {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('ref');
     const [filter, setFilter] = useState(initialFilter);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [propertyToDelete, setPropertyToDelete] = useState(null);
 
-   
+    const handleOpenDeleteDialog = (property) => {
+        setPropertyToDelete(property);
+        setOpenDeleteDialog(true);
+    };
+
+    const handleCloseDeleteDialog = () => {
+        setOpenDeleteDialog(false);
+        setPropertyToDelete(null);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (propertyToDelete) {
+            await handleDelete(propertyToDelete.id);
+            handleCloseDeleteDialog();
+        }
+    };
+
     const fetchProperties = async () => {
         setIsLoading(true);
         try {
@@ -85,10 +116,10 @@ export default function DataTable({ filter: initialFilter }) {
         fetchProperties();
     }, []);
 
-    /* const handleRowClick = (id) => {
+    const handleRowClick = (id) => {
         const property = properties.find(property => property.id === id);
         navigate(`/dashboard/propiedades/${id}`, { state: { property: property } });
-    }; */
+    };
 
     const handleDelete = async (id) => {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`, {
@@ -122,10 +153,6 @@ export default function DataTable({ filter: initialFilter }) {
         setFilter(event.target.value);
     };
 
-    /* const handleOpen = () => {
-        navigate('/dashboard/propiedades/add-propiedad');
-    }; */
-
     const handleOpen = async () => {
         try {
             const newRef = await generateNextReference();
@@ -134,7 +161,7 @@ export default function DataTable({ filter: initialFilter }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ ref: newRef, title: 'New Property' }) // Example data
+                body: JSON.stringify({ ref: newRef, title: 'New Property' }) 
             });
 
             if (!response.ok) throw new Error('Failed to create property');
@@ -202,13 +229,13 @@ export default function DataTable({ filter: initialFilter }) {
                             height: '56px',
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
-                                    borderColor: '#1E90FF', // Set border color to #1E90FF
+                                    borderColor: '#1E90FF', 
                                 },
                                 '&:hover fieldset': {
-                                    borderColor: '#1E90FF', // Set border color to #1E90FF on hover
+                                    borderColor: '#1E90FF', 
                                 },
                                 '&.Mui-focused fieldset': {
-                                    borderColor: '#1E90FF', // Set border color to #1E90FF when focused
+                                    borderColor: '#1E90FF', 
                                 },
                             },
                         }}
@@ -219,11 +246,11 @@ export default function DataTable({ filter: initialFilter }) {
                         onClick={handleOpen}
                         sx={{
                             height: '56px',
-                            borderColor: '#1E90FF', // Set border color to #1E90FF
-                            color: '#1E90FF', // Set text color to #1E90FF
+                            borderColor: '#1E90FF', 
+                            color: '#1E90FF', 
                             '&:hover': {
-                                borderColor: '#1E90FF', // Set border color to #1E90FF on hover
-                                backgroundColor: 'rgba(30, 144, 255, 0.04)', // Set background color on hover
+                                borderColor: '#1E90FF', 
+                                backgroundColor: 'rgba(30, 144, 255, 0.04)', 
                             },
                         }}
                     >
@@ -231,9 +258,12 @@ export default function DataTable({ filter: initialFilter }) {
                     </Button>
                 </Box>
                 {isLoading ? (
-                    <CircularProgress />
+                    <StyledBox>
+                        <StyledCircularProgress />
+                    </StyledBox>
                 ) : (
                     <>
+                        {!isMobile && (
                         <StyledTableContainer component={Paper}>
                             <StyledTable>
                                 <TableHead>
@@ -280,15 +310,19 @@ export default function DataTable({ filter: initialFilter }) {
                                 </TableHead>
                                 <TableBody>
                                     {sortedProperties.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((property) => (
-                                        <TableRow key={property.id}>
+                                        <TableRow 
+                                            key={property.id}
+                                            onClick={() => handleRowClick(property.id)}
+                                            sx={{ cursor: 'pointer' }} 
+                                        >
                                             <StyledTableCell>
-                                                <img src={property.foto} alt="Foto Principal" style={{ width: '100px', height: 'auto' }} />
+                                                <PropertyImage src={property.foto} alt="Foto Principal" />
                                             </StyledTableCell>
                                             <StyledTableCell>{property.ref}</StyledTableCell>
                                             <StyledTableCell>{property.title}</StyledTableCell>
                                             <StyledTableCell>{property.localidad}</StyledTableCell>
                                             <StyledTableCell>
-                                                <Chip
+                                                <StyledChip
                                                     label={property.active ? "Activa" : "Inactiva"}
                                                     icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
                                                     color={property.active ? "success" : "error"}
@@ -300,12 +334,12 @@ export default function DataTable({ filter: initialFilter }) {
                                                     color="primary" 
                                                     onClick={(e) => { 
                                                         e.stopPropagation(); 
-                                                        navigate(`/dashboard/propiedades/${property.id}`); 
+                                                        navigate(`/dashboard/propiedades/${property.id}`, { state: { edit: true } }); 
                                                     }}
                                                 >
                                                     <EditIcon />
                                                 </IconButton>
-                                                <IconButton color="red" onClick={(e) => { e.stopPropagation(); handleDelete(property.id); }}>
+                                                <IconButton color="red" onClick={(e) => { e.stopPropagation(); handleOpenDeleteDialog(property); }}>
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </StyledTableCell>
@@ -314,6 +348,43 @@ export default function DataTable({ filter: initialFilter }) {
                                 </TableBody>
                             </StyledTable>
                         </StyledTableContainer>
+                        )}
+
+                        {isMobile && sortedProperties.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((property) => (
+                            <StyledCard 
+                                key={property.id}
+                                onClick={() => handleRowClick(property.id)} 
+                                sx={{ cursor: 'pointer' }} 
+                            >
+                                <StyledCardContent>
+                                    <PropertyCardImage src={property.foto} alt="Foto Principal" />
+                                    <StyledCardTitle>{property.ref}</StyledCardTitle>
+                                    <Typography variant="body2">{property.title}</Typography>
+                                    <Typography variant="body2">{property.localidad}</Typography>
+                                    <StyledChip
+                                        label={property.active ? "Activa" : "Inactiva"}
+                                        icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
+                                        color={property.active ? "success" : "error"}
+                                        variant="outlined"
+                                    />
+                                    <StyledCardActions>
+                                        <IconButton 
+                                            color="primary" 
+                                            onClick={(e) => { 
+                                                e.stopPropagation(); 
+                                                navigate(`/dashboard/propiedades/${property.id}`, { state: { edit: true } }); 
+                                            }}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton color="red" onClick={(e) => { e.stopPropagation(); handleOpenDeleteDialog(property); }}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </StyledCardActions>
+                                </StyledCardContent>
+                            </StyledCard>
+                        ))}
+
                         <TablePagination
                             rowsPerPageOptions={[10, 25, 50]}
                             component="div"
@@ -325,6 +396,32 @@ export default function DataTable({ filter: initialFilter }) {
                         />
                     </>
                 )}
+                <StyledDialog
+                    open={openDeleteDialog}
+                    onClose={handleCloseDeleteDialog}
+                >
+                    <StyledDialogTitle>Borrar Propiedad</StyledDialogTitle>
+                    <DialogContent>
+                        Estas seguro que deseas borrar esta propiedad?
+                    </DialogContent>
+                    <DialogActions>
+                        <DialogButton 
+                            onClick={handleCloseDeleteDialog} 
+                            color="primary"
+                            size='small'
+                            variant='outlined'
+                        >
+                            Cancela
+                        </DialogButton>
+                        <RedDialogButton 
+                            onClick={handleConfirmDelete} 
+                            size='small'
+                            variant='outlined'
+                        >
+                            Confirma
+                        </RedDialogButton>
+                    </DialogActions>
+                </StyledDialog>
             </Box>
         </ThemeProvider>
     );

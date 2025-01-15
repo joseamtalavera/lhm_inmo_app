@@ -1,4 +1,3 @@
-
 import styled from 'styled-components';
 import { Box, Button, Link, Grid, Typography, Dialog, DialogTitle, DialogContentText } from '@mui/material';
 
@@ -29,9 +28,9 @@ export const TitleTypography = styled(Typography)`
   margin-bottom: 20px;
 `;
 
-export const BodyTypography = styled(Typography)`
-  text-align: center;
+export const CenteredBodyTypography = styled(Typography)`
   margin-bottom: 16px;
+  text-align: center;
 `;
 
 export const RecoveryLink = styled(Link)`

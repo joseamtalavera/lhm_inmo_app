@@ -14,7 +14,8 @@ import {
     Typography, 
     useMediaQuery, 
     DialogContent, 
-    DialogActions
+    DialogActions,
+    Chip,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -33,7 +34,7 @@ import {
     StyledCard,
     StyledCardContent,
     StyledCardTitle,
-    StyledChip,
+    //StyledChip,
     StyledCardActions,
     StyledBox,
     StyledCircularProgress,
@@ -104,6 +105,7 @@ export default function DataTable({ filter: initialFilter }) {
                 throw new Error('Failed to fetch properties');
             }
             const data = await response.json();
+            console.log('Fetched properties:', data);
             setProperties(data);
         } catch (error) {
             console.error('Error:', error);
@@ -322,12 +324,12 @@ export default function DataTable({ filter: initialFilter }) {
                                             <StyledTableCell>{property.title}</StyledTableCell>
                                             <StyledTableCell>{property.localidad}</StyledTableCell>
                                             <StyledTableCell>
-                                                <StyledChip
-                                                    label={property.active ? "Activa" : "Inactiva"}
-                                                    icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
-                                                    color={property.active ? "success" : "error"}
-                                                    variant="outlined"
-                                                />
+                                            <Chip
+                                                label={property.active ? "Activa" : "Inactiva"}
+                                                icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
+                                                color={property.active ? "success" : "error"}
+                                                variant="outlined"
+                                            />
                                             </StyledTableCell>
                                             <StyledTableCell>
                                                 <IconButton 
@@ -361,11 +363,12 @@ export default function DataTable({ filter: initialFilter }) {
                                     <StyledCardTitle>{property.ref}</StyledCardTitle>
                                     <Typography variant="body2">{property.title}</Typography>
                                     <Typography variant="body2">{property.localidad}</Typography>
-                                    <StyledChip
+                                    <Chip
                                         label={property.active ? "Activa" : "Inactiva"}
                                         icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
                                         color={property.active ? "success" : "error"}
                                         variant="outlined"
+                                        sx={{ mt: 2 }}
                                     />
                                     <StyledCardActions>
                                         <IconButton 

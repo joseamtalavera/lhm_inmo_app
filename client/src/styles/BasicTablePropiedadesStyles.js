@@ -99,16 +99,7 @@ export const DeleteIcon = styled(DeleteOutlineIcon)`
   color: #1E90FF;
   cursor: pointer;
 `;
-export const StyledChip = styled(Chip)`
-  border-color: ${(props) => (props.active ? 'green' : 'red')};
-  color: black;
-  height: 24px;
-  margin-top: 8px;
 
-  & .MuiChip-icon {
-    color: ${(props) => (props.active ? 'green' : 'red')};
-  }
-`;
 export const StyledCheckCircleIcon = styled(CheckCircleIcon)`
   font-size: small;
 `;

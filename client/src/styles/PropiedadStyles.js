@@ -30,7 +30,7 @@ export const StyledMenuItem = styled(MenuItem)`
 `;
 
 export const StyledDialogContentText = styled(DialogContentText)`
-  color: orange;
+  color: #1E90FF;
 `;
 
 export const StyledMenuBox = styled(Box)`
@@ -80,7 +80,7 @@ export const StyledDialogPaper = {
 };
 
 export const StyledSaveDialogPaper = {
-  color: 'orange',
+  color: '#1E90FF',
   boxShadow: 'none',
   borderRadius: '5px'
 };

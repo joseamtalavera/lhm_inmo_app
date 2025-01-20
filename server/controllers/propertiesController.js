@@ -95,8 +95,8 @@ exports.getPropertyDocuments = async (req, res, next) => {
 
 exports.updateProperty = async (req, res) => {
     try {
-        const id = req.params.id; // or however you retrieve the id
-        const property = req.body; // updated property data
+        const id = req.params.id; 
+        const property = req.body; 
         const updatedProperty = await updatePropertyDb(property, id);
         res.status(200).json(updatedProperty);
     } catch (error) {

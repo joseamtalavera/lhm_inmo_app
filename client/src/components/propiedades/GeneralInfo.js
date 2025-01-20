@@ -47,12 +47,11 @@ const selectOptions = {
         "Reforma completa",
         "Abandonado",
         "Estado inicial de en fecha de su adquisición"],
-    Calific:["Obra nueva",
-        "Segunda mano",
-        "En construcción",
-        "A reformar",
-        "Reformado",
-        "En ruinas"
+    Calific:["VPO",
+        "Subvencionada por administración",
+        "Descalificada",
+        "VPO  (Certificada como vivienda libre)",
+        "Vivienda libre",
     ],
     Cargas: [
         "Sin Cargas",

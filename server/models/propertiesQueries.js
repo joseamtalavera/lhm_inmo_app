@@ -308,7 +308,7 @@ const updatePropertyDb = async (property, id) => {
             certificadoenergetico, valorcertificadoenergetico, co2certificadoenergetico, kwcertificadoenergetico,
             tributoibi, tributovado, tributorustico, gastosvarios, tipogerencia, comunidadgastos, comunidadderrama,
             consumoelecticidad, consumoagua, tipointernet, tipogas, tipoite, tipotermoagua, tipoagua, active, idusuario,
-            description, destacada // Add description here
+            description, destacada 
         } = property;
 
         // Lookup foreign key IDs based on provided names
@@ -411,13 +411,17 @@ const updatePropertyDb = async (property, id) => {
         
         // Update the description in the vdescriptions table
         if (description) {
-            await pool.query(
-                `UPDATE lhainmobiliaria.vdescriptions SET description = $1 WHERE ref = $2 AND IdLenguaje = 3 RETURNING *`,
-                [description, ref]
+            const descriptionResult = await pool.query(
+              `INSERT INTO lhainmobiliaria.vdescriptions (ref, description, IdLenguaje)
+               VALUES ($1, $2, 3)
+               ON CONFLICT (ref, IdLenguaje)
+               DO UPDATE
+                  SET description = EXCLUDED.description
+               RETURNING *`,
+              [ref, description]
             );
-            
-        }     
-        
+          }
+          
         // Update the property as 'destacada' in the 'destacadas' table
         if (destacada) {
             await pool.query(

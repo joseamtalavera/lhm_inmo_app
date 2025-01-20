@@ -114,7 +114,22 @@ const interiorConditioningAmenities = [
     { id: 94, label: "Suelo estado inicial ANTIGUO" }
 ];
 
-const Amenities = ({ amenities = [], handleChange, isEditing }) => (
+const Amenities = ({ amenities = [], handleChange, isEditing }) => {
+
+    const handleAmenityChange = (event, id) => {
+        const { checked } = event.target;
+        
+        if (id === 2 || id === 3) {
+            const otherId = id === 2 ? 3 : 2;
+            handleChange(event, id, checked);
+            handleChange(event, otherId, false);
+        } else {
+            handleChange(event, id, checked);
+        }
+    }; 
+
+
+    return (
     <Box> 
         <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
             <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF'}}>
@@ -128,7 +143,7 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => (
                             control={
                                 <Checkbox
                                     checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)}
-                                    onChange={(e) => handleChange(e, amenity.id)}
+                                    onChange={(e) => handleAmenityChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
                                     sx={{
@@ -297,5 +312,5 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => (
         </Box>
     </Box>
 );
-
+};
 export default Amenities;

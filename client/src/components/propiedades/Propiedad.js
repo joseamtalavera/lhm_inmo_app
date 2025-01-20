@@ -177,12 +177,15 @@ const Propiedad = () => {
         fetchProperty();
     }, [id]);
 
-    const handleChange = (e, amenityId) => {
+    const handleChange = (e, amenityId, forcedChecked) => {
         const { name, value, type, checked } = e.target;
+
+        const finalChecked = forcedChecked !== undefined ? forcedChecked : checked;
+
         if (type === 'checkbox' && amenityId) {
             // Handle amenities
             setAmenities((prevAmenities) =>
-                checked
+                finalChecked
                     ? [...prevAmenities, amenityId] // Add the amenity ID if checked
                     : prevAmenities.filter((id) => id !== amenityId) // Remove the amenity ID if unchecked
             );

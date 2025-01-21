@@ -1,7 +1,8 @@
 // Amenities.js
 
 import React from 'react';
-import { Box, Typography, Grid, FormControlLabel, Checkbox, Divider } from '@mui/material';
+import { Box, Typography, Grid, FormControlLabel, Checkbox, Divider, useMediaQuery } from '@mui/material';
+import { ExteriorConditioningMobile, ExteriorConditioningDesktop, InteriorConditioningMobile, InteriorConditioningDesktop } from '../../styles/AmenitiesStyles';
 
 const accessAmenities = [
     { id: 2, label: "Sí" },
@@ -115,19 +116,35 @@ const interiorConditioningAmenities = [
 ];
 
 const Amenities = ({ amenities = [], handleChange, isEditing }) => {
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     const handleAmenityChange = (event, id) => {
         const { checked } = event.target;
-        
+        console.log(`Amenity ID: ${id}, Checked: ${checked}`);
+
+        // If the changed amenity is "Sí" or "No", ensure only one is checked
         if (id === 2 || id === 3) {
             const otherId = id === 2 ? 3 : 2;
             handleChange(event, id, checked);
-            handleChange(event, otherId, false);
+            if (checked) {
+                handleChange({ target: { name: event.target.name, checked: false, type: 'checkbox' } }, otherId, false);
+            }
+        } else if (id === 4 || id === 5) {
+            const otherId = id === 4 ? 5 : 4;
+            handleChange(event, id, checked);
+            if (checked) {
+                handleChange({ target: { name: event.target.name, checked: false, type: 'checkbox' } }, otherId, false);
+            }
+        } else if (id === 6 || id === 7) {
+            const otherId = id === 6 ? 7 : 6;
+            handleChange(event, id, checked);
+            if (checked) {
+                handleChange({ target: { name: event.target.name, checked: false, type: 'checkbox'} }, otherId, false);
+            }
         } else {
             handleChange(event, id, checked);
         }
     }; 
-
 
     return (
     <Box> 
@@ -138,11 +155,11 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => {
             <Divider sx={{ width: '100%', mx: 0, mb: 2 }} />
             <Grid container spacing={2}>
                 {accessAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
+                    <Grid item xs={12} key={amenity.id}>
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)}
+                                    checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)}  
                                     onChange={(e) => handleAmenityChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
@@ -168,12 +185,12 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => {
             <Divider sx={{ width: '100%', mx: 0, mb: 2 }} />
             <Grid container spacing={2}>
                 {buildingEquipmentAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
+                    <Grid item xs={12} key={amenity.id}>
                         <FormControlLabel
                             control={
                                 <Checkbox
                                     checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)}
-                                    onChange={(e) => handleChange(e, amenity.id)}
+                                    onChange={(e) => handleAmenityChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
                                     sx={{
@@ -198,12 +215,12 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => {
             <Divider sx={{ width: '100%', mx: 0, mb: 2 }} />
             <Grid container spacing={2}>
                 {viewsAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
+                    <Grid item xs={12} key={amenity.id}>
                         <FormControlLabel
                             control={
                                 <Checkbox
                                     checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)} 
-                                    onChange={(e) => handleChange(e, amenity.id)}
+                                    onChange={(e) => handleAmenityChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
                                     sx={{
@@ -228,12 +245,12 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => {
             <Divider sx={{ width: '100%', mx: 0, mb: 2 }} />
             <Grid container spacing={2}>
                 {exteriorConditioningAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
+                    <Grid item xs={12} key={amenity.id}>
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)} 
-                                    onChange={(e) => handleChange(e, amenity.id)}
+                                    checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)}
+                                    onChange={(e) => handleAmenityChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
                                     sx={{
@@ -258,12 +275,12 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => {
             <Divider sx={{ width: '100%', mx: 0, mb: 2 }} />
             <Grid container spacing={2}>
                 {additionalEquipmentAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
+                    <Grid item xs={12} key={amenity.id}>
                         <FormControlLabel
                             control={
                                 <Checkbox
                                     checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)} 
-                                    onChange={(e) => handleChange(e, amenity.id)}
+                                    onChange={(e) => handleAmenityChange(e, amenity.id)}
                                     name={amenity.label}
                                     disabled={!isEditing}
                                     sx={{
@@ -281,35 +298,67 @@ const Amenities = ({ amenities = [], handleChange, isEditing }) => {
             </Grid>
         </Box>
 
-        <Box sx={{ width: '100%', mb: 2, p: 2, border: '1px solid #ddd', borderRadius: '4px' }}>
-            <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
-                Características de acondicionamiento interior
-            </Typography>
-            <Divider sx={{ width: '100%', mx: 0, mb: 2 }} />
-            <Grid container spacing={2}>
-                {interiorConditioningAmenities.map((amenity) => (
-                    <Grid item xs={12} md={6} key={amenity.id}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)} 
-                                    onChange={(e) => handleChange(e, amenity.id)}
-                                    name={amenity.label}
-                                    disabled={!isEditing}
-                                    sx={{
-                                        color: isEditing ? 'primary.main' : 'text.secondary',
-                                        '&.Mui-checked': {
-                                            color: 'primary.main',
-                                        },
-                                    }}
-                                />
-                            }
-                            label={amenity.label}
-                        />
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
+        {isMobile ? (
+            <InteriorConditioningMobile>
+                <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
+                    Características de acondicionamiento interior
+                </Typography>
+                <Divider sx={{ width: '100%', mx: 0, mb: 2 }} />
+                <Grid container spacing={2}>
+                    {interiorConditioningAmenities.map((amenity) => (
+                        <Grid item xs={12} key={amenity.id}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)}
+                                        onChange={(e) => handleAmenityChange(e, amenity.id)}
+                                        name={amenity.label}
+                                        disabled={!isEditing}
+                                        sx={{
+                                            color: isEditing ? 'primary.main' : 'text.secondary',
+                                            '&.Mui-checked': {
+                                                color: 'primary.main',
+                                            },
+                                        }}
+                                    />
+                                }
+                                label={amenity.label}
+                            />
+                        </Grid>
+                    ))}
+                </Grid>
+            </InteriorConditioningMobile>
+        ) : (
+            <InteriorConditioningDesktop>
+                <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
+                    Características de acondicionamiento interior
+                </Typography>
+                <Divider sx={{ width: '100%', mx: 0, mb: 2 }} />
+                <Grid container spacing={2}>
+                    {interiorConditioningAmenities.map((amenity) => (
+                        <Grid item xs={12} md={6} key={amenity.id}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={amenities.includes(String(amenity.id)) || amenities.includes(amenity.id)}
+                                        onChange={(e) => handleAmenityChange(e, amenity.id)}
+                                        name={amenity.label}
+                                        disabled={!isEditing}
+                                        sx={{
+                                            color: isEditing ? 'primary.main' : 'text.secondary',
+                                            '&.Mui-checked': {
+                                                color: 'primary.main',
+                                            },
+                                        }}
+                                    />
+                                }
+                                label={amenity.label}
+                            />
+                        </Grid>
+                    ))}
+                </Grid>
+            </InteriorConditioningDesktop>
+        )}
     </Box>
 );
 };

@@ -179,21 +179,35 @@ const Propiedad = () => {
 
     const handleChange = (e, amenityId, forcedChecked) => {
         const { name, value, type, checked } = e.target;
-
+    
+        // Determine the final checked state
         const finalChecked = forcedChecked !== undefined ? forcedChecked : checked;
-
-        if (type === 'checkbox' && amenityId) {
+        
+       
+    
+        if (type === 'checkbox' && amenityId !== undefined) {
+            const amenityIdStr = String(amenityId);
             // Handle amenities
-            setAmenities((prevAmenities) =>
-                finalChecked
-                    ? [...prevAmenities, amenityId] // Add the amenity ID if checked
-                    : prevAmenities.filter((id) => id !== amenityId) // Remove the amenity ID if unchecked
-            );
+            setAmenities((prevAmenities) => {
+                // Avoid duplicates if checked is true
+                if (finalChecked && !prevAmenities.includes(amenityIdStr)) {
+                    console.log(`Adding Amenity ID: ${amenityIdStr}`);
+                    return [...prevAmenities, amenityIdStr];
+                }
+    
+                // Remove the amenity ID if unchecked
+                if (!finalChecked) {
+                    console.log(`Removing Amenity ID: ${amenityIdStr}`);
+                    return prevAmenities.filter((id) => id !== amenityIdStr);
+                }
+                console.log(`No changes for Amenity ID: ${amenityIdStr}`);
+                return prevAmenities; // No changes if the ID is already present
+            });
         } else if (type === 'checkbox') {
             // Handle property checkboxes
             setProperty((prevProperty) => ({
                 ...prevProperty,
-                [name]: checked,
+                [name]: finalChecked,
             }));
         } else {
             // Handle other property inputs
@@ -202,7 +216,8 @@ const Propiedad = () => {
                 [name]: value,
             }));
         }
-    };
+    }; 
+    
 
     const handleTabChange = (event, newValue) => {
         if (newValue === 4) {
@@ -456,40 +471,44 @@ const Propiedad = () => {
         <MenuLayout>
             <ThemeProvider theme={theme}>
                 <StyledCard>
-                    <StyledMenuBox>
-                        <StyledIconButton
-                            aria-label="more"
-                            aria-controls="long-menu"
-                            aria-haspopup="true"
-                            onClick={handleMenuOpen}
-                        >
-                            <MenuIcon />
-                        </StyledIconButton>
-                        <Menu
-                            anchorEl={anchorEl}
-                            open={isMenuOpen}
-                            onClose={handleMenuClose}
-                            PaperProps={{
-                                style: {
-                                    maxHeight: 48 * 4.5,
-                                    width: '20ch',
-                                },
-                            }}
-                        >
-                            <StyledMenuItem onClick={() => handleMenuItemClick(0)}>Informacion</StyledMenuItem>
-                            <StyledMenuItem onClick={() => handleMenuItemClick(1)}>Amenities</StyledMenuItem>
-                            <StyledMenuItem onClick={() => handleMenuItemClick(2)}>Imagenes</StyledMenuItem>
-                            <StyledMenuItem onClick={() => handleMenuItemClick(3)}>Documentos</StyledMenuItem>
-                            <StyledMenuItem onClick={() => handleMenuItemClick(4)}>Preview</StyledMenuItem>
-                        </Menu>
-                    </StyledMenuBox>
-                    <Tabs value={activeTab} onChange={handleTabChange} centered>
-                        <Tab label="Informacion" />
-                        <Tab label="Amenities" />
-                        <Tab label="Imagenes" />
-                        <Tab label="Documentos" />
-                        <Tab label="Preview" />
-                    </Tabs>
+                    <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+                        <StyledMenuBox>
+                            <StyledIconButton
+                                aria-label="more"
+                                aria-controls="long-menu"
+                                aria-haspopup="true"
+                                onClick={handleMenuOpen}
+                            >
+                                <MenuIcon />
+                            </StyledIconButton>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={isMenuOpen}
+                                onClose={handleMenuClose}
+                                PaperProps={{
+                                    style: {
+                                        maxHeight: 48 * 4.5,
+                                        width: '20ch',
+                                    },
+                                }}
+                            >
+                                <StyledMenuItem onClick={() => handleMenuItemClick(0)}>Informacion</StyledMenuItem>
+                                <StyledMenuItem onClick={() => handleMenuItemClick(1)}>Amenities</StyledMenuItem>
+                                <StyledMenuItem onClick={() => handleMenuItemClick(2)}>Imagenes</StyledMenuItem>
+                                <StyledMenuItem onClick={() => handleMenuItemClick(3)}>Documentos</StyledMenuItem>
+                                <StyledMenuItem onClick={() => handleMenuItemClick(4)}>Preview</StyledMenuItem>
+                            </Menu>
+                        </StyledMenuBox>
+                    </Box>
+                    <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+                        <Tabs value={activeTab} onChange={handleTabChange} centered>
+                            <Tab label="Informacion" />
+                            <Tab label="Amenities" />
+                            <Tab label="Imagenes" />
+                            <Tab label="Documentos" />
+                            <Tab label="Preview" />
+                        </Tabs>
+                    </Box>
                     <Divider />
                     <Box sx={{ p: 2 }}>
                         {activeTab === 0 && (

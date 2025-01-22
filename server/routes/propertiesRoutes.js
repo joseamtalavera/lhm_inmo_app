@@ -1,5 +1,6 @@
 //propertiesRoutes.js
 const express = require('express');
+const { body, validationResult } = require('express-validator');
 const propertiesController = require('../controllers/propertiesController');
 const router = express.Router();
 const multer = require('multer');
@@ -7,6 +8,31 @@ const multer = require('multer');
 const upload = multer({ dest: '/usr/share/nginx/uploads/' });
 //const uploadDocuments = multer({ dest: '/usr/share/nginx/uploads/documents/' });  
 const uploadDocuments = multer({ dest: 'documentos' });
+
+// Validation and sanitization middleware for contact form
+const validateContactForm = [
+  body('message')
+    .trim()
+    .escape()
+    .notEmpty()
+    .withMessage('Message is required'),
+  body('email')
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Invalid email address'),
+  body('telephone')
+    .trim()
+    .escape()
+    .isMobilePhone()
+    .withMessage('Invalid telephone number'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+]; 
 
 // get 
 router.get('/properties', propertiesController.getTableProperties);
@@ -29,7 +55,8 @@ router.post('/properties', propertiesController.addProperty);
 //router.post('/properties/:ref/amenities', propertiesController.addAmenity);
 router.post('/properties/:ref/images', upload.single('image'), propertiesController.uploadPropertyImage);
 router.post('/properties/:ref/documents', uploadDocuments.single('document'), propertiesController.uploadPropertyDocument);
-router.post('/contactar-email', propertiesController.sendEmail);
+//router.post('/contactar-email', propertiesController.sendEmail);
+router.post('/contactar-email', validateContactForm, propertiesController.sendEmail);
 
 
 // delete 

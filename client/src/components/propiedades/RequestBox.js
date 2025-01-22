@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import DOMPurify from 'dompurify';
 import {
   RequestBoxContainer,
   RequestTextarea,
@@ -39,9 +40,10 @@ const RequestBox = ({ propertyRef }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'message') setMessage(value);
-    if (name === 'email') setEmail(value);
-    if (name === 'telephone') setTelephone(value);
+    const sanitizedValue = DOMPurify.sanitize(value);
+    if (name === 'message') setMessage(sanitizedValue);
+    if (name === 'email') setEmail(sanitizedValue);
+    if (name === 'telephone') setTelephone(sanitizedValue);
   };
 
   const handleSubmit = async(e) => {

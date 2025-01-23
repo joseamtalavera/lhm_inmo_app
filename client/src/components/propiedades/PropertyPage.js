@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Carousel from './Carousel';
 import { GlobalStyle } from '../../styles/GlobalStyles';
 import ResponsiveDrawer from '../Menu/ResponsiveDrawer';
@@ -32,10 +32,12 @@ import {
   RequestBoxContainer,   
   PropertyDetailRef    
 } from '../../styles/PropertyPageStyles';
+import ArrowIconIosIcon from '@mui/icons-material/ArrowBackIos';
 import CheckIcon from '../../styles/CheckIcon';
 import RequestBox from './RequestBox';
-import { CircularProgress, Box } from '@mui/material';
+import { CircularProgress, Box, IconButton } from '@mui/material';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { ArrowIcon } from '../../styles/ResponsiveDrawerStyles';
 
 const CollapsibleSection = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,6 +69,7 @@ const PropertyPage = () => {
   const [amenities, setAmenities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -202,6 +205,12 @@ const PropertyPage = () => {
 
         <ContentWrapper>
           <MainContainer>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <IconButton onClick={() => navigate(-1)} aria-label="Volver"> {/* Correct usage */}
+            <ArrowIconIosIcon />
+          </IconButton>
+          <StyledTitle sx={{ ml: 1 }}>{property["Título"]}</StyledTitle>
+        </Box>
             <CarouselRequestContainer>
               <StyledCarouselContainer>
                 <Carousel images={images} />

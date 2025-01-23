@@ -3,19 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
-    Button, 
     CircularProgress, 
-    Box, Card, Divider, 
+    Box, 
+    Divider, 
     Tabs, 
     Tab, 
     Dialog, 
-    DialogTitle, 
     DialogContent, 
-    DialogContentText, 
     DialogActions,
-    IconButton,
-    Menu,
-    MenuItem
+    Menu
 } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
@@ -35,7 +31,6 @@ import {
     StyledMenuItem,
     StyledDialogContentText,
     StyledMenuBox,
-    StyledTabsBox,
     StyledActionBox,
     StyledAlignBox,
     StyledDialogTitle,
@@ -222,7 +217,7 @@ const Propiedad = () => {
     const handleTabChange = (event, newValue) => {
         if (newValue === 4) {
             // Navigate to preview page
-            navigate(`/dashboard/propiedades/${id}/preview`);
+            navigate(`/viviendas/${id}`);
         } else {
             setActiveTab(newValue);
         }

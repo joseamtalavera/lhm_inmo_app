@@ -1,10 +1,10 @@
 //GeneralInfo.js
 
-import React, { useEffect} from 'react';
-import { Box, Stack, Grid, Typography, FormControl, FormLabel, OutlinedInput, Select, MenuItem, Chip } from '@mui/material';
+import React from 'react';
+import { Box, Stack, Grid, Typography, FormControl, FormLabel, OutlinedInput, Select, MenuItem, Chip, FormHelperText } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import AddIcon from '@mui/icons-material/Add'; // Import AddIcon
+import AddIcon from '@mui/icons-material/Add'; 
 
 const primaryFields = [
     "Ref", "RefExt", "Precio", "Destacada", "Título", "Dirección", "Localidad", "Provincia", "Pais", "CP",
@@ -148,6 +148,9 @@ const selectOptions = {
 }
 
 const generateGridItem = (field, property, handleChange, isEditing) => {
+    const isTitulo = field === "Título";
+    const maxLength = isTitulo ? 35 : undefined;
+
     if (selectOptions[field]) {
         return (
             <Grid item xs={12} md={4} key={field}>
@@ -165,7 +168,7 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
                         disabled={!isEditing}
                         sx={{
                             '& .MuiSelect-select': {
-                                color: '#404040', // Darker gray color for the text in Select component
+                                color: '#404040', 
                             },
                         }}
                     >
@@ -193,15 +196,37 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
                     size="small"
                     name={field.replace(/\s/g, '')}
                     value={property[field.replace(/\s/g, '')] || ''}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                        const { value } = e.target;
+                        if (isTitulo && value.length > maxLength) {
+                            // Option 1: Prevent input beyond maxLength
+                            // return;
+
+                            // Option 2: Trim the input to maxLength
+                            // setProperty to trim the value
+                            // Assuming setProperty is available in scope
+                            // This requires passing setProperty to generateGridItem or handling differently
+                            
+                            // For simplicity, using handleChange but ensuring maxLength via inputProps
+                            handleChange(e);
+                        } else {
+                            handleChange(e);
+                        }
+                    }}
                     disabled={!isEditing}
-                    sx={{ color: '#404040' }} // Ensures the input field itself is targeted
+                    sx={{ color: '#404040' }} 
                     inputProps={{
+                        maxLength: maxLength,
                         style: {
-                            color: '#404040' // Directly sets the text color inside the input
+                            color: '#404040' 
                         }
                     }}
                 />
+                {isTitulo && (
+                    <FormHelperText>
+                        {property[field.replace(/\s/g, '')]?.length || 0}/{maxLength} caracteres
+                    </FormHelperText>
+                )}
             </FormControl>
         </Grid>
     );

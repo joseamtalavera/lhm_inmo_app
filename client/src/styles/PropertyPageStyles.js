@@ -171,6 +171,12 @@ export const AmenitiesContainer = styled.div`
   max-width: 100%; /* Ensures the container doesn't exceed the viewport */
   overflow-x: hidden;
   margin-bottom: 20px;
+
+  /* Responsive Adjustment for Mobile Devices */
+  @media (max-width: 600px) {
+    grid-template-columns: max-content auto; /* Single column layout */
+    row-gap: 15px; /* Increased space between amenities for touch targets */
+  }
 `;
 
 export const Tick = styled.div`

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import Divider from '@mui/material/Divider';
+import { IconButton } from '@mui/material';
 
 // Layout Containers
 export const AppContainer = styled.div`
@@ -21,10 +22,28 @@ export const DrawerContainer = styled.div`
   margin-bottom: 50px;
   padding: 10px;
 
-   @media (max-width: 780px) {
-        position: relative;
-        margin-bottom: 20px;
-    }
+  @media (max-width: 780px) {
+    position: relative;
+    margin-bottom: 20px;
+  }
+`;
+
+export const FloatingArrow = styled(IconButton)`
+  position: fixed;
+  top: 110px;       /* Adjust for your header height so it sits below the drawer */
+  left: 20px;      /* Move it where you want on the screen */
+  z-index: 2000;   /* Above content & typical drawers if needed */
+  background-color: transparent;
+  color: #1E90FF;
+
+  &:hover {
+    background-color: #1E90FF;
+    color: #fff;
+  }
+
+  /* Hide on screens ≤ 600px */
+  @media (max-width: 600px) {
+    display: none;
 `;
 
 export const ContentWrapper = styled.div`
@@ -118,7 +137,6 @@ export const RequestBoxContainer = styled.div`
   max-width: 300px;
 `;
 
-
 // Typography
 export const StyledTitle = styled.h1`
   font-size: 2.5rem;
@@ -148,7 +166,7 @@ export const PropertyDetailLocalidad = styled.div`
 `;
 
 export const PropertyDetailRef = styled.div`
-   margin: 0 0 8px;
+  margin: 0 0 8px;
   color: #1E90FF;
   font-size: 1.7em;
 `;
@@ -164,11 +182,11 @@ export const PropertyDetailPrecio = styled.div`
 export const AmenitiesContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, max-content auto); /* Two ticks + Two labels */
-  column-gap: 30px; /* Space between columns */
-  row-gap: 10px; /* Space between rows */
-  align-items: center; /* Aligns content vertically */
+  column-gap: 30px; 
+  row-gap: 10px; 
+  align-items: center; 
   width: 100%;
-  max-width: 100%; /* Ensures the container doesn't exceed the viewport */
+  max-width: 100%; 
   overflow-x: hidden;
   margin-bottom: 20px;
 
@@ -238,3 +256,6 @@ export const PropertyInfoItem = styled.div`
 export const BlueDivider = styled(Divider)`
   border-color: #1E90FF !important;
 `;
+
+
+

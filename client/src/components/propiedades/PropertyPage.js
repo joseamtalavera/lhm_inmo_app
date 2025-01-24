@@ -30,14 +30,14 @@ import {
   StyledArrow,
   StyledFullScreenContainer, 
   RequestBoxContainer,   
-  PropertyDetailRef    
+  PropertyDetailRef,
+  FloatingArrow
 } from '../../styles/PropertyPageStyles';
 import ArrowIconIosIcon from '@mui/icons-material/ArrowBackIos';
 import CheckIcon from '../../styles/CheckIcon';
 import RequestBox from './RequestBox';
-import { CircularProgress, Box, IconButton } from '@mui/material';
+import { CircularProgress, Box } from '@mui/material';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { ArrowIcon } from '../../styles/ResponsiveDrawerStyles';
 
 const CollapsibleSection = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,6 +70,7 @@ const PropertyPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -161,10 +162,10 @@ const PropertyPage = () => {
 
   if (isLoading) {
     return (
-          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-            <CircularProgress />
-          </Box>
-        );
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (!property) {
@@ -194,7 +195,6 @@ const PropertyPage = () => {
     "Características de acondicionamiento interior": amenities.filter(amenity => amenity.category === "Características de acondicionamiento interior"),
   };
 
-
   return (
     <>
       <GlobalStyle />
@@ -202,15 +202,13 @@ const PropertyPage = () => {
         <DrawerContainer>
           <ResponsiveDrawer />
         </DrawerContainer>
+        <FloatingArrow onClick={() => navigate(-1)} aria-label="Volver">
+          <ArrowIconIosIcon />
+        </FloatingArrow>
 
-        <ContentWrapper>
+        <ContentWrapper>  
           <MainContainer>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <IconButton onClick={() => navigate(-1)} aria-label="Volver"> {/* Correct usage */}
-            <ArrowIconIosIcon />
-          </IconButton>
-          <StyledTitle sx={{ ml: 1 }}>{property["Título"]}</StyledTitle>
-        </Box>
+            <StyledTitle>{property["Título"]}</StyledTitle>
             <CarouselRequestContainer>
               <StyledCarouselContainer>
                 <Carousel images={images} />
@@ -230,8 +228,6 @@ const PropertyPage = () => {
             )}
 
             <ContentWrapperBelowImage>
-              
-              <StyledTitle>{property["Título"]}</StyledTitle>
               <PropertyDetailRef>Ref: {property["Ref"]}</PropertyDetailRef>
               <PropertyDetailsRow>
                 <PropertyDetailLocalidad>{property["Localidad"]}</PropertyDetailLocalidad>

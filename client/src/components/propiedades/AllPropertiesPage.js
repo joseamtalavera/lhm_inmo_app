@@ -72,7 +72,7 @@ const AllPropertiesPage = () => {
         (!filters.maxSize || property.metrosconstruidos <= filters.maxSize) &&
         (!filters.bedrooms || property.habitaciones == filters.bedrooms) && 
         (!filters.bathrooms || property.banos == filters.bathrooms) &&
-        (!filters.location || property.aseos == filters.aseos)
+        (!filters.aseos || property.aseos == filters.aseos) // Corrected this line
       );
     });
 

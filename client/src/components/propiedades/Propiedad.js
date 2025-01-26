@@ -1,4 +1,3 @@
-// Propiedad.js
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
@@ -39,124 +38,136 @@ import {
     StyledSaveDialogPaper
 } from '../../styles/PropiedadStyles';
 
+// Define the transformedData object
+/* const transformData = (data) => ({
+    Ref: data.ref,
+    RefExt: data.refext,
+    Precio: data.precio,
+    Título: data.title,
+    Dirección: data.direccion,
+    Localidad: data.localidad,
+    Provincia: data.provincia,
+    Pais: data.pais,
+    CP: data.cp,
+    Longitud: data.longitud,
+    Latitud: data.latitud,
+    "M.Constr": data.metrosconstruidos,
+    "M.Utiles": data.metrosutiles,
+    "M.Parcela": data.metrosparcela,
+    Tipo: data.tipo_propiedad,
+    Habitaciones: data.habitaciones,
+    Baños: data.banos,
+    Aseos: data.aseos,
+    Estado: data.estado,
+    "Año.Const": data.anoconstruccion,
+    Calific: data.calificacion,
+    Cargas: data.cargas,
+    Planta: data.planta, // Ensure correct handling as string
+    "Ori.Entrada": data.orientacionentrada,
+    "Ori.Ventana": data.orientacionventana,
+    "Cert.Ener": data.certificadoenergetico,
+    "Valor.C.E": data.valorcertificadoenergetico,
+    "CO2/m2/Año": data.co2certificadoenergetico,
+    "Kw/Año": data.kwcertificadoenergetico,
+    "T.IBI": data.tributoibi,
+    "T.VADO": data.tributovado,
+    "T.Rústico": data.tributorustico,
+    Gastos: data.gastosvarios,
+    Gerencia: data.gerencia,
+    Comunidad: data.comunidadgastos,
+    Derrama: data.comunidadderrama,
+    "Cons.Elect": data.consumoelecticidad,
+    "Cons.Agua": data.consumoagua,
+    Internet: data.internet,
+    Gas: data.gas,
+    ITE: data.ite,
+    "Termo.Agua": data.termoagua,
+    "Sum.Agua": data.tipoagua,
+    Activa: data.active,
+    Foto: data.foto,
+    Destacada: data.destacada,
+    CreatedAt: data.created_at,
+    UpdatedAt: data.updated_at,
+   "Descripción": data.description
+}); */
+
 const Propiedad = () => {
     const { id } = useParams();
     const location = useLocation();
+    const navigate = useNavigate();
+
     const [property, setProperty] = useState({});
     const [amenities, setAmenities ] = useState([]);
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    // Edit states for each tab
     const [isEditingGeneralInfo, setIsEditingGeneralInfo] = useState(location.state?.edit ?? false);
     const [isEditingAmenities, setIsEditingAmenities] = useState(location.state?.edit ?? false);
     const [isEditingImages, setIsEditingImages] = useState(location.state?.edit ?? false);
     const [isEditingDocumentation, setIsEditingDocumentation] = useState(location.state?.edit ?? false);
+    
+    // UI states
     const [activeTab, setActiveTab] = useState(0);
     const [open, setOpen] = useState(false);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
-    const navigate = useNavigate();
     const [isSaving, setIsSaving] = useState(false);
+
+    // Mobile menu anchor state
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
 
+    // ------------------Menu handlers------------------
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
-
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
-
     const handleMenuItemClick = (index) => {
         setActiveTab(index);
         handleMenuClose();
     };
+
+    // ------------------fetchProperty logic------------------
 
     useEffect(() => {
         const fetchProperty = async () => {
             setIsLoading(true);
             console.log(`Fetching property with id: ${id}`);
             try {
+                // 1) Fetch property data
                 const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`);
                 if (!response.ok) throw new Error('Failed to fetch property');
                 const data = await response.json();
-
-                const transformedData = {
-                    Ref: data.ref,
-                    RefExt: data.refext,
-                    Precio: data.precio,
-                    Título: data.title,
-                    Dirección: data.direccion,
-                    Localidad: data.localidad,
-                    Provincia: data.provincia,
-                    Pais: data.pais,
-                    CP: data.cp,
-                    Longitud: data.longitud,
-                    Latitud: data.latitud,
-                    "M.Constr": data.metrosconstruidos,
-                    "M.Utiles": data.metrosutiles,
-                    "M.Parcela": data.metrosparcela,
-                    Tipo: data.tipo_propiedad,
-                    Habitaciones: data.habitaciones,
-                    Baños: data.banos,
-                    Aseos: data.aseos,
-                    Estado: data.estado,
-                    "Año.Const": data.anoconstruccion,
-                    Calific: data.calificacion,
-                    Cargas: data.cargas,
-                    Planta: data.planta, // Ensure correct handling as string
-                    "Ori.Entrada": data.orientacionentrada,
-                    "Ori.Ventana": data.orientacionventana,
-                    "Cert.Ener": data.certificadoenergetico,
-                    "Valor.C.E": data.valorcertificadoenergetico,
-                    "CO2/m2/Año": data.co2certificadoenergetico,
-                    "Kw/Año": data.kwcertificadoenergetico,
-                    "T.IBI": data.tributoibi,
-                    "T.VADO": data.tributovado,
-                    "T.Rústico": data.tributorustico,
-                    Gastos: data.gastosvarios,
-                    Gerencia: data.gerencia,
-                    Comunidad: data.comunidadgastos,
-                    Derrama: data.comunidadderrama,
-                    "Cons.Elect": data.consumoelecticidad,
-                    "Cons.Agua": data.consumoagua,
-                    Internet: data.internet,
-                    Gas: data.gas,
-                    ITE: data.ite,
-                    "Termo.Agua": data.termoagua,
-                    "Sum.Agua": data.tipoagua,
-                    Activa: data.active,
-                    Foto: data.foto,
-                    Destacada: data.destacada,
-                    CreatedAt: data.created_at,
-                    UpdatedAt: data.updated_at,
-                   "Descripción": data.description
-                };
                 console.log(`Property fetched: ${JSON.stringify(data)}`);
-                setProperty(transformedData);
 
-                // Fetch property amenities
+                // 2) Update state with server respons data
+                setProperty(data);
+
+                // 3) Fetch property amenities
                 const amenitiesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/amenities`);
                 if (!amenitiesResponse.ok) throw new Error('Failed to fetch property amenities');
                 const amenitiesData = await amenitiesResponse.json();
                 console.log(`Amenities fetched: ${JSON.stringify(amenitiesData)}`);
 
                 // Update state with fetched amenities
-                const updatedProperty = { ...transformedData };
+                const updatedProperty = { ...data };
                 amenitiesData.forEach(amenity => {
                     updatedProperty[amenity.label] = true;
                 });
                 setProperty(updatedProperty);
                 setAmenities(amenitiesData.map(amenity => String(amenity.id))); // Update amenities state
 
-                // Fetch property images
+                // 5) Fetch property images
                 const imagesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/images`);
                 if (!imagesResponse.ok) throw new Error('Failed to fetch property images');
                 const imagesData = await imagesResponse.json();
                 console.log(`Images fetched: ${JSON.stringify(imagesData)}`);
                 setImages(imagesData);
 
-                // Fetch property documents
+                // 6) Fetch property documents
                 const documentsResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/documents`);
                 if (!documentsResponse.ok) throw new Error('Failed to fetch property documents');
                 const documentsData = await documentsResponse.json();
@@ -170,27 +181,23 @@ const Propiedad = () => {
             }
         };
         fetchProperty();
-    }, [id]);
+    }, [id]);   
+
+    //------------------handleChange logic------------------
 
     const handleChange = (e, amenityId, forcedChecked) => {
         const { name, value, type, checked } = e.target;
-    
-        // Determine the final checked state
         const finalChecked = forcedChecked !== undefined ? forcedChecked : checked;
         
-       
-    
+        // If it's a checkbox, handle it differently
         if (type === 'checkbox' && amenityId !== undefined) {
+            // Amnity checkboxes
             const amenityIdStr = String(amenityId);
-            // Handle amenities
             setAmenities((prevAmenities) => {
-                // Avoid duplicates if checked is true
                 if (finalChecked && !prevAmenities.includes(amenityIdStr)) {
                     console.log(`Adding Amenity ID: ${amenityIdStr}`);
                     return [...prevAmenities, amenityIdStr];
                 }
-    
-                // Remove the amenity ID if unchecked
                 if (!finalChecked) {
                     console.log(`Removing Amenity ID: ${amenityIdStr}`);
                     return prevAmenities.filter((id) => id !== amenityIdStr);
@@ -198,14 +205,15 @@ const Propiedad = () => {
                 console.log(`No changes for Amenity ID: ${amenityIdStr}`);
                 return prevAmenities; // No changes if the ID is already present
             });
+        // If is a normal property checkbox
         } else if (type === 'checkbox') {
-            // Handle property checkboxes
+            // Property checkboxes
             setProperty((prevProperty) => ({
                 ...prevProperty,
                 [name]: finalChecked,
             }));
         } else {
-            // Handle other property inputs
+            // Other property inputs
             setProperty((prevProperty) => ({
                 ...prevProperty,
                 [name]: value,
@@ -213,7 +221,7 @@ const Propiedad = () => {
         }
     }; 
     
-
+    // ------------------Tab change logic------------------
     const handleTabChange = (event, newValue) => {
         if (newValue === 4) {
             // Navigate to preview page
@@ -261,6 +269,8 @@ const Propiedad = () => {
         }
     };
 
+    // ------------------handleSubmit logic (PUT)------------------
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -274,15 +284,15 @@ const Propiedad = () => {
             if (!response.ok) throw new Error('Failed to update property');
 
             const updatedProperty = await response.json();
+            // Store the updated property in state
             setProperty((prevProperty) => ({
                 ...prevProperty,
                 ...updatedProperty,
-                Ref: prevProperty.Ref, // Ensure Ref is preserved
             }));
 
             // Update amenities
             if(isEditingAmenities) {
-                const ref = property.Ref;
+                const ref = property.ref;
                 const amenitiesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${ref}/amenities`, {
                     method: 'PUT',
                     headers: {
@@ -307,6 +317,8 @@ const Propiedad = () => {
         }
     };
 
+    // ------------------saveProperty logic userd for image uploading------------------
+
     const saveProperty = async () => {
         setIsSaving(true);
         try {
@@ -323,6 +335,8 @@ const Propiedad = () => {
             }
     
             const updatedProperty = await response.json();
+
+            // Merge updated property with existing property state
             setProperty((prevProperty) => ({
                 ...prevProperty,
                 ...updatedProperty,
@@ -337,6 +351,8 @@ const Propiedad = () => {
             setIsSaving(false);
         }
     };
+
+    // ------------------uploadImage logic for Image Uploading------------------
     
     const uploadImage = async (file, ref) => {
         const formData = new FormData();
@@ -370,7 +386,6 @@ const Propiedad = () => {
             console.error('No file selected');
             return;
         }
-    
         try {
             // Ensure property is saved and ref is available
             const updatedProperty = property?.ref
@@ -381,14 +396,14 @@ const Propiedad = () => {
                 console.error('Property ref is undefined after saving');
                 return;
             }
-    
             setProperty(updatedProperty); // Update property state
             await uploadImage(file, updatedProperty.ref); // Upload the image
         } catch (error) {
             console.error('Error in handleUpload:', error);
         }
     };
-    
+
+    // ------------------deleteImage logic for Image Deletion------------------
 
     const handleDelete = async (imageId) => {
         try {
@@ -407,7 +422,8 @@ const Propiedad = () => {
             setOpen(true);
         }
     };
-    
+
+    // ------------------handleDocumentUpload logic for Document Uploading------------------
 
     const handleDocumentUpload = async (e) => {
         if (!property || !property.ref) {
@@ -437,6 +453,8 @@ const Propiedad = () => {
             }
         }
     };
+
+    // ------------------handleDeleteDocument logic for Document Deletion------------------
 
     const handleDeleteDocument = async (documentId) => {
         try {

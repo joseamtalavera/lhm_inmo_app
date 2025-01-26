@@ -318,7 +318,7 @@ export default function DataTable({ filter: initialFilter }) {
                                             sx={{ cursor: 'pointer' }} 
                                         >
                                             <StyledTableCell>
-                                                <PropertyImage src={property.foto} alt="Foto Principal" />
+                                                <PropertyImage src={property.url} alt="Foto Principal" />
                                             </StyledTableCell>
                                             <StyledTableCell>{property.ref}</StyledTableCell>
                                             <StyledTableCell>{property.title}</StyledTableCell>
@@ -359,7 +359,7 @@ export default function DataTable({ filter: initialFilter }) {
                                 sx={{ cursor: 'pointer' }} 
                             >
                                 <StyledCardContent>
-                                    <PropertyCardImage src={property.foto} alt="Foto Principal" />
+                                    <PropertyCardImage src={property.url} alt="Foto Principal" />
                                     <StyledCardTitle>{property.ref}</StyledCardTitle>
                                     <Typography variant="body2">{property.title}</Typography>
                                     <Typography variant="body2">{property.localidad}</Typography>

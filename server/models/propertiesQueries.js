@@ -5,50 +5,58 @@ const { uploadPropertyDocument } = require('../controllers/propertiesController'
 const pool = require('./db');
 
 // get Queries
-/* const getAllProperties = async () => {
-    try { 
-        const result = await pool.query(
-            `SELECT 
-                p.id, p.ref, p.refext, p.title, p.precio, p.direccion, p.localidad, 
-                p.provincia, p.pais, p.cp, p.longitud, p.latitud, p.metrosconstruidos, 
-                p.metrosutiles, p.metrosparcela, p.idtipopropiedad, p.idhabitaciones, 
-                p.idbanos, p.idaseos, p.idestado, p.anoconstruccion, p.idcalificacion, 
-                p.idcargas, p.idplanta, p.idorientacionentrada, p.idorientacionventana, 
-                p.idcertificadoenergetico, p.valorcertificadoenergetico, p.co2certificadoenergetico, 
-                p.kwcertificadoenergetico, p.tributoibi, p.tributovado, p.tributorustico, 
-                p.gastosvarios, p.idgerencia, p.comunidadgastos, p.comunidadderrama, 
-                p.consumoelecticidad, p.consumoagua, p.idinternet, p.idgas, p.idite, 
-                p.idtermoagua, p.idagua, p.active, p.created_at, p.updated_at, p.idusuario, 
-                v.url AS foto, 
-                destacada,
-                tc.calificacion AS calificacion
-            FROM lhainmobiliaria.vproperties p
-            LEFT JOIN lhainmobiliaria.vimages v ON p.ref = v.ref AND v.principal = 1
-            LEFT JOIN lhainmobiliaria.destacadas d ON p.ref = d.ref
-            LEFT JOIN lhainmobiliaria.tipocalificacion tc ON p.idcalificacion = tc.idcalificacion;`
-        );
-        return result.rows;
-    } catch (error) {
-        console.error('Error in getAllProperties:', error);
-        throw error;
-    }
-}; */
 
 const getAllProperties = async () => {
     try { 
         const result = await pool.query(
             `SELECT 
-                p.id, p.ref, p.refext, p.title, p.precio, p.direccion, p.localidad, 
-                p.provincia, p.pais, p.cp, p.longitud, p.latitud, p.metrosconstruidos, 
-                p.metrosutiles, p.metrosparcela, tp.tipopropiedad AS tipo_propiedad, ne.nestancias AS habitaciones, 
-                nb.nbanos AS banos, ns.naseos AS aseos, te.estado AS estado, p.anoconstruccion, 
-                tc.calificacion AS calificacion, tca.cargas AS cargas, tpl.planta AS planta, oe.orientacionentrada AS orientacionentrada, 
-                ov.orientacionventana AS orientacionventana, tce.certificadoenergetico AS certificadoenergetico, p.valorcertificadoenergetico, 
-                p.co2certificadoenergetico, p.kwcertificadoenergetico, p.tributoibi, p.tributovado, 
-                p.tributorustico, p.gastosvarios, tg.tipogerencia AS gerencia, p.comunidadgastos, p.comunidadderrama, 
-                p.consumoelecticidad, p.consumoagua, ti.tipointernet AS internet, tgs.tipogas AS gas, tte.tipoite AS ite, 
-                tta.tipotermoagua AS termoagua, tag.tipoagua, p.active, p.created_at, p.updated_at, p.idusuario, 
-                v.url AS foto, 
+                p.id, 
+                p.ref, 
+                p.refext, 
+                p.title, 
+                p.precio, 
+                p.direccion, 
+                p.localidad, 
+                p.provincia, 
+                p.pais, 
+                p.cp, 
+                p.longitud, 
+                p.latitud, 
+                p.metrosconstruidos, 
+                p.metrosutiles, 
+                p.metrosparcela, 
+                tp.tipopropiedad AS tipopropiedad, 
+                ne.nestancias AS nestancias, 
+                nb.nbanos AS nbanos, 
+                ns.naseos AS naseos, 
+                te.estado AS estado, 
+                p.anoconstruccion, 
+                tc.calificacion AS calificacion, 
+                tca.cargas AS cargas, 
+                tpl.planta AS planta, 
+                oe.orientacionentrada AS orientacionentrada, 
+                ov.orientacionventana AS orientacionventana, 
+                tce.certificadoenergetico AS certificadoenergetico, 
+                p.valorcertificadoenergetico, 
+                p.co2certificadoenergetico, 
+                p.kwcertificadoenergetico, 
+                p.tributoibi, p.tributovado, 
+                p.tributorustico, 
+                p.gastosvarios, 
+                tg.tipogerencia AS tipogerencia, 
+                p.comunidadgastos, 
+                p.comunidadderrama, 
+                p.consumoelecticidad, 
+                p.consumoagua, 
+                ti.tipointernet AS tipointernet, 
+                tgs.tipogas AS tipogas, 
+                tte.tipoite AS tipoite, 
+                tta.tipotermoagua AS tipotermoagua, 
+                tag.tipoagua AS tipoagua, 
+                p.active, p.created_at, 
+                p.updated_at, 
+                p.idusuario, 
+                v.url AS url, 
                 CASE 
                     WHEN d.destacada = 1 THEN 'Si'
                     ELSE 'No'
@@ -87,17 +95,55 @@ const getPropertyById = async (id) => {
     try {   
         const result = await pool.query(
             `SELECT 
-                p.id, p.ref, p.refext, p.title, p.precio, p.direccion, p.localidad, 
-                p.provincia, p.pais, p.cp, p.longitud, p.latitud, p.metrosconstruidos, 
-                p.metrosutiles, p.metrosparcela, tp.tipopropiedad AS tipo_propiedad, ne.nestancias AS habitaciones, 
-                nb.nbanos AS banos, ns.naseos AS aseos, te.estado AS estado, p.anoconstruccion, 
-                tc.calificacion AS calificacion, tca.cargas AS cargas, tpl.planta AS planta, oe.orientacionentrada AS orientacionentrada, 
-                ov.orientacionventana AS orientacionventana, tce.certificadoenergetico AS certificadoenergetico, p.valorcertificadoenergetico, 
-                p.co2certificadoenergetico, p.kwcertificadoenergetico, p.tributoibi, p.tributovado, 
-                p.tributorustico, p.gastosvarios, tg.tipogerencia AS gerencia, p.comunidadgastos, p.comunidadderrama, 
-               p.consumoelecticidad, p.consumoagua, ti.tipointernet AS internet, tgs.tipogas AS gas, tte.tipoite AS ite, 
-                tta.tipotermoagua AS termoagua, tag.tipoagua, p.active, p.created_at, p.updated_at, p.idusuario, 
-                v.url AS foto, 
+                p.id, 
+                p.ref, 
+                p.refext, 
+                p.title, 
+                p.precio, 
+                p.direccion, 
+                p.localidad, 
+                p.provincia, 
+                p.pais, 
+                p.cp, 
+                p.longitud, 
+                p.latitud, 
+                p.metrosconstruidos, 
+                p.metrosutiles, 
+                p.metrosparcela, 
+                tp.tipopropiedad AS tipopropiedad, 
+                ne.nestancias AS nestancias, 
+                nb.nbanos AS nbanos, 
+                ns.naseos AS naseos, 
+                te.estado AS estado, 
+                p.anoconstruccion, 
+                tc.calificacion AS calificacion, 
+                tca.cargas AS cargas, 
+                tpl.planta AS planta, 
+                oe.orientacionentrada AS orientacionentrada, 
+                ov.orientacionventana AS orientacionventana, 
+                tce.certificadoenergetico AS certificadoenergetico, 
+                p.valorcertificadoenergetico, 
+                p.co2certificadoenergetico, 
+                p.kwcertificadoenergetico, 
+                p.tributoibi, 
+                p.tributovado, 
+                p.tributorustico, 
+                p.gastosvarios, 
+                tg.tipogerencia AS tipogerencia, 
+                p.comunidadgastos, 
+                p.comunidadderrama, 
+                p.consumoelecticidad, 
+                p.consumoagua, 
+                ti.tipointernet AS tipointernet, 
+                tgs.tipogas AS tipogas, 
+                tte.tipoite AS ite, 
+                tta.tipotermoagua AS tipotermoagua, 
+                tag.tipoagua AS tipoagua, 
+                p.active, 
+                p.created_at, 
+                p.updated_at, 
+                p.idusuario, 
+                v.url AS url, 
                 CASE 
                     WHEN d.destacada = 1 THEN 'Si'
                     ELSE 'No'
@@ -300,7 +346,7 @@ const normalizeKeys = (obj) => {
 
 const updatePropertyDb = async (property, id) => {
     try {
-        property = normalizeKeys(property);
+        //property = normalizeKeys(property);
         const {
             ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
             metrosconstruidos, metrosutiles, metrosparcela, tipopropiedad, nestancias, nbanos, naseos,
@@ -536,7 +582,7 @@ const updateAllImagesDb = async (updatedImages) => {
 // post Queries
 const addPropertyDb = async (property) => {
     try {
-        property = normalizeKeys(property);
+        //property = normalizeKeys(property);
         const {
             ref, refext, title, precio, direccion, localidad, provincia, pais, cp, longitud, latitud,
             metrosconstruidos, metrosutiles, metrosparcela, tipopropiedad, nestancias, nbanos, naseos,

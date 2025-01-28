@@ -31,7 +31,7 @@ const PropertyList = ({ properties }) => {
       {properties.map((property) => (
         <Link to={`/viviendas/${property.id}`} key={property.id} style={{ textDecoration: 'none', color: 'inherit' }}>
         <PropertyCard key={property.id}>
-          <PropertyImage src={property.foto} alt={property.title} />
+          <PropertyImage src={property.url} alt={property.title} />
           <PropertyInfo>
             <PropertyTitle>{property.title}</PropertyTitle>
             <PropertyRef>Ref: {property.ref}</PropertyRef>
@@ -42,7 +42,7 @@ const PropertyList = ({ properties }) => {
             <PropertyDetails>
               <PropertyDetailItem>
                 <BedIcon />
-                <span>{property.habitaciones} habitaciones</span>
+                <span>{property.nestancias} habitaciones</span>
               </PropertyDetailItem>
               <PropertyDetailItem>
                 <SquareFootIcon />
@@ -50,11 +50,11 @@ const PropertyList = ({ properties }) => {
               </PropertyDetailItem>
               <PropertyDetailItem>
                 <BathtubIcon />
-                <span>{property.banos} baños</span>
+                <span>{property.nbanos} baños</span>
               </PropertyDetailItem>
               <PropertyDetailItem>
                 <WcIcon />
-                <span>{property.aseos} aseos</span>
+                <span>{property.naseos} aseos</span>
               </PropertyDetailItem>
             </PropertyDetails>
           </PropertyInfo>

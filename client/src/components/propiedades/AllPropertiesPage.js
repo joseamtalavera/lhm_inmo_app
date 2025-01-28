@@ -65,14 +65,14 @@ const AllPropertiesPage = () => {
   
       return (
         matchLocation && 
-        (!filters.propertyType || property.tipo_propiedad === filters.propertyType) &&
+        (!filters.propertyType || property.tipopropiedad === filters.propertyType) &&
         (!filters.minPrice || property.precio >= filters.minPrice) &&
         (!filters.maxPrice || property.precio <= filters.maxPrice) &&
         (!filters.minSize || property.metrosconstruidos >= filters.minSize) &&
         (!filters.maxSize || property.metrosconstruidos <= filters.maxSize) &&
-        (!filters.bedrooms || property.habitaciones == filters.bedrooms) && 
-        (!filters.bathrooms || property.banos == filters.bathrooms) &&
-        (!filters.aseos || property.aseos == filters.aseos) // Corrected this line
+        (!filters.bedrooms || property.nestancias == filters.bedrooms) && 
+        (!filters.bathrooms || property.nbanos == filters.bathrooms) &&
+        (!filters.aseos || property.naseos == filters.aseos) // Corrected this line
       );
     });
 

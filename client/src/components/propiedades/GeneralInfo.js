@@ -8,10 +8,10 @@ import AddIcon from '@mui/icons-material/Add';
 
 const primaryFields = [
     {label: "Ref", name: "ref"},
-    {label: "RefExt", name: "refExt"},
+    {label: "RefExt", name: "refext"},
     {label: "Precio", name: "precio"},
     {label: "Destacada", name: "destacada"},
-    {label: "Título", name: "titulo"},
+    {label: "Título", name: "title"},
     {label: "Dirección", name: "direccion"},
     {label: "Localidad", name: "localidad"},
     {label: "Provincia", name: "provincia"},
@@ -19,14 +19,10 @@ const primaryFields = [
     {label: "CP", name: "cp"},
     {label: "Longitud", name: "longitud"},
     {label: "Latitud", name: "latitud"}
-
-   /*  "RefExt", "Precio", "Destacada", "Título", "Dirección", "Localidad", "Provincia", "Pais", "CP",
-    "Longitud", "Latitud"
-   */
 ];
 
 const secondaryFields = [
-    {label: "M.Constr", name: "metrosconsturidos"},
+    {label: "M.Constr", name: "metrosconstruidos"},
     {label: "M.Utiles", name: "metrosutiles"},
     {label: "M.Parcela", name: "metrosparcela"},
     {label: "Tipo", name: "tipopropiedad"},
@@ -34,8 +30,6 @@ const secondaryFields = [
     {label: "Baños", name: "nbanos"},
     {label: "Aseos", name: "naseos"},
     {label: "Estado", name: "estado"}
-
-   /*  "M.Constr", "M.Utiles", "M.Parcela", "Tipo", "Habitaciones", "Baños", "Aseos", "Estado" */
 ];
 
 const extraFields = [
@@ -48,283 +42,173 @@ const extraFields = [
     {label: "Cert.Ener", name: "certificadoenergetico"},
     {label: "Valor.C.E", name: "valorcertificadoenergetico"},
     {label: "CO2/m2/Año", name: "co2certificadoenergetico"},
-    {label: "Kw/Año", name: "kwcercificadoenergetico"},
+    {label: "Kw/Año", name: "kwcertificadoenergetico"},
     {label: "T.IBI", name: "tributoibi"},
     {label: "T.VADO", name: "tributovado"},
     {label: "T.Rústico", name: "tributorustico"},
-    {label: "Gerencia", name: "gerencia"},
-    {label: "Gastos", name: "gastos"},
+    {label: "Gerencia", name: "tipogerencia"},
+    {label: "Gastos", name: "gastosvarios"},
     {label: "Comunidad", name: "comunidadgastos"},
     {label: "Derrama", name: "comunidadderrama"},
-    {label: "Cons.Elect", name: "consumoelectricidad"},
+    {label: "Cons.Elect", name: "consumoelecticidad"},
     {label: "Cons.Agua", name: "consumoagua"},
     {label: "Internet", name: "tipointernet"},
     {label: "Gas", name: "tipogas"},
     {label: "ITE", name: "tipoite"},
     {label: "Termo.Agua", name: "tipotermoagua"},
     {label: "Sum.Agua", name: "tipoagua"}
-
-   /*  "Año.Const", "Calific", "Cargas", "Planta", "Ori.Entrada", "Ori.Ventana", "Cert.Ener", "Valor.C.E", "CO2/m2/Año", 
-    "Kw/Año", "T.IBI", "T.VADO", "T.Rústico", "Gerencia", "Gastos", "Comunidad", "Derrama", "Cons.Elect", 
-    "Cons.Agua", "Internet", "Gas", "ITE", "Termo.Agua", "Sum.Agua" */
 ];
 
 const selectOptions = {
     Destacada: [
-        {id: "1", label: "Si"},
-        {id: "0", label: "No"}
+        {value: "1", label: "Si"},
+        {value: "0", label: "No"}
     ],
     Tipo: [
-        {id: "1", label: "Casa rustica o de campo"},
-        {id: "2", label: "Chalet/casa independiente"},
-        {id: "3", label: "Chalet/casa pareada"},
-        {id: "4", label: "Chalet/casa adosada"},
-        {id: "5", label: "Inmueble"},
-        {id: "6", label: "Piso"},
-        {id: "7", label: "Atico/Duplex"},
-        {id: "8", label: "Obra Nueva"},
-        {id: "9", label: "Oficina"},
-        {id: "10", label: "Local"},
-        {id: "11", label: "Garaje/parking"},
-        {id: "12", label: "Trastero"},
-        {id: "13", label: "Terrenos/parcela"},
-        {id: "14", label: "Edificio"}
-    
-       /*  "Casa rustica o de campo",
-        "Chalet/casa independiente",
-        "Chalet/casa pareada",
-        "Chalet/casa adosada",
-        "Inmueble",
-        "Piso",
-        "Atico/Duplex",
-        "Obra Nueva",
-        "Oficina",
-        "Local",
-        "Garaje/parking",
-        "Trastero",
-        "Terrenos/parcela",
-        "Edificio" */
+        {value: "Casa rustica o de campo", label: "Casa rustica o de campo"},
+        {value: "Chalet/casa independiente", label: "Chalet/casa independiente"},
+        {value: "Chalet/casa independiente", label: "Chalet/casa independiente"},
+        {value: "Chalet/casa adosada", label: "Chalet/casa adosada"},
+        {value: "Inmueble", label: "Inmueble"},
+        {value: "Piso", label: "Piso"},
+        {value: "Atico/Duplex", label: "Atico/Duplex"},
+        {value: "Obra Nueva", label: "Obra Nueva"},
+        {value: "Oficina", label: "Oficina"},
+        {value: "Local", label: "Local"},
+        {value: "Garaje/parking", label: "Garaje/parking"},
+        {value: "Trastero", label: "Trastero"},
+        {value: "Terrenos/parcela", label: "Terrenos/parcela"},
+        {value: "Edificio", label: "Edificio"}
     ],
     Habitaciones:[
-        {id: "1", label: "0"},
-        {id: "2", label: "1"},
-        {id: "3", label: "2"},
-        {id: "4", label: "3"},
-        {id: "5", label: "4"},
-        {id: "6", label: "5 o más"}
-    
-        /* "0", "1", "2", "3", "4", "5 o más" */
+        {value: "1", label: "0"},
+        {value: "2", label: "1"},
+        {value: "3", label: "2"},
+        {value: "4", label: "3"},
+        {value: "5", label: "4"},
+        {value: "6", label: "5 o más"}
     ],
     Baños:[
-        {id: "1", label: "0"},
-        {id: "2", label: "1"},
+        {value: "1", label: "0"},
+        {value: "2", label: "1"},
 
-        {id: "3", label: "2"},
-        {id: "4", label: "3"},
-        {id: "5", label: "4 o más"}
-
-       /*  "0", "1", "2", "3", "4 o más" */
+        {value: "3", label: "2"},
+        {value: "4", label: "3"},
+        {value: "5", label: "4 o más"}
     ],
     Aseos:[
-        {id: "1", label: "0"},
-        {id: "2", label: "1"},
-        {id: "3", label: "2"},
-        {id: "4", label: "3"},
-        {id: "5", label: "4 o más"}
-
-       /*  "0", "1", "2", "3", "4 o más" */
+        {value: "1", label: "0"},
+        {value: "2", label: "1"},
+        {value: "3", label: "2"},
+        {value: "4", label: "3"},
+        {value: "5", label: "4 o más"}
     ],
     Estado:[ 
-        {id: "1", label: "Buen estado"},
-        {id: "2", label: "Para entrar a vivir"},
-        {id: "3", label: "Reforma de mantenimiento (pintar, cambiar enchufes, etc.)"},
-        {id: "4", label: "Reforma completa"},
-        {id: "5", label: "Abandonado"},
-        {id: "6", label: "Estado inicial de en fecha de su adquisición"}
-
-       /*  "Buen estado",
-        "Para entrar a vivir",
-        "Reforma de mantenimiento (pintar, cambiar enchufes, etc.)",
-        "Reforma completa",
-        "Abandonado",
-        "Estado inicial de en fecha de su adquisición" */
+        {value: "Buen estado", label: "Buen estado"},
+        {value: "Para entrar a vivir", label: "Para entrar a vivir"},
+        {value: "Reforma de mantenimiento (pintar, cambiar enchufes, etc.)", label: "Reforma de mantenimiento (pintar, cambiar enchufes, etc.)"},
+        {value: "Reforma completa", label: "Reforma completa"},
+        {value: "Abandonado", label: "Abandonado"},
+        {value: "Estado inicial de en fecha de su adquisición", label: "Estado inicial de en fecha de su adquisición"}
     ],
     Calific:[
-        {id: "1", label: "VPO"},
-        {id: "2", label: "Subvencionada por administración"},
-        {id: "3", label: "Descalificada"},
-        {id: "4", label: "VPO  (Certificada como vivienda libre)"},
-        {id: "5", label: "Vivienda libre"}
-
-        /* "VPO",
-        "Subvencionada por administración",
-        "Descalificada",
-        "VPO  (Certificada como vivienda libre)",
-        "Vivienda libre", */
+        {value: "VPO", label: "VPO"},
+        {value: "Subvencionada por administración", label: "Subvencionada por administración"},
+        {value: "Descalificada", label: "Descalificada"},
+        {value: "VPO  (Certificada como vivienda libre)", label: "VPO  (Certificada como vivienda libre)"},
+        {value: "Vivienda libre", label: "Vivienda libre"}
     ],
     Cargas: [
-        {id: "1", label: "Sin Cargas"},
-        {id: "2", label: "Carga Hipotecaria se liquida en la venta"},
-        {id: "3", label: "Carga administrativa"},
-        {id: "4", label: "Carga Judicial"},
-        {id: "5", label: "Carga por embargo"},
-        {id: "6", label: "Proindivisa"},
-        {id: "7", label: "Se puede segregar"}
-
-       /*  "Sin Cargas",
-        "Carga Hipotecaria se liquida en la venta",
-        "Carga administrativa",
-        "Carga Judicial",
-        "Carga por embargo",
-        "Proindivisa",
-        "Se puede segregar" */
+        {value: "Sin Cargas", label: "Sin Cargas"},
+        {value: "Carga Hipotecaria se liquida en la venta", label: "Carga Hipotecaria se liquida en la venta"},
+        {value: "Carga administrativa", label: "Carga administrativa"},
+        {value: "Carga Judicial", label: "Carga Judicial"},
+        {value: "Carga por embargo", label: "Carga por embargo"},
+        {value: "Proindivisa", label: "Proindivisa"},
+        {value: "Se puede segregar", label: "Se puede segregar"}
     ],
     Planta: [
-        {id: "1", label: "Sótano"},
-        {id: "2", label: "Bajo"},
-        {id: "3", label: "Primera planta"},
-        {id: "4", label: "Segunda planta"},
-        {id: "5", label: "Tercera planta"},
-        {id: "6", label: "Cuarta planta"},
-        {id: "7", label: "Quinta planta"},
-        {id: "8", label: "Sexta planta"},
-        {id: "9", label: "Séptima planta o más"},
-        {id: "10", label: "Ático"},
-        {id: "11", label: "Ultima Planta"}
-
-        /* "Sótano",
-        "Bajo",
-        "Primera planta",
-        "Segunda planta",
-        "Tercera planta",
-        "Cuarta planta",
-        "Quinta planta",
-        "Sexta planta",
-        "Séptima planta o más",
-        "Ático",
-        "Ultima Planta" */
+        {value: "Sótano", label: "Sótano"},
+        {value: "Bajo", label: "Bajo"},
+        {value: "Primera planta", label: "Primera planta"},
+        {value: "Segunda planta", label: "Segunda planta"},
+        {value: "Tercera planta", label: "Tercera planta"},
+        {value: "Cuarta planta", label: "Cuarta planta"},
+        {value: "Quinta planta", label: "Quinta planta"},
+        {value: "Sexta planta", label: "Sexta planta"},
+        {value: "Séptima planta o más", label: "Séptima planta o más"},
+        {value: "Ático", label: "Ático"},
+        {value: "Ultima Planta", label: "Ultima Planta"}
     ],
     "Ori.Entrada": [
-        {id: "1", label: "Norte"},
-        {id: "2", label: "Sur"},
-        {id: "3", label: "Este"},
-        {id: "4", label: "Oeste"},
-        {id: "5", label: "Sureste"},
-        {id: "6", label: "Suroeste"},
-        {id: "7", label: "Noroeste"},
-        {id: "8", label: "Noreste"}
-
-       /*  "Norte",
-        "Sur",
-        "Este",
-        "Oeste",
-        "Sureste",
-        "Suroeste",
-        "Noroeste",
-        "Noreste" */
+        {value: "Norte", label: "Norte"},
+        {value: "Sur", label: "Sur"},
+        {value: "Este", label: "Este"},
+        {value: "Oeste", label: "Oeste"},
+        {value: "Sureste", label: "Sureste"},
+        {value: "Suroeste", label: "Suroeste"},
+        {value: "Noroeste", label: "Noroeste"},
+        {value: "Noreste", label: "Noreste"}
     ],
     "Ori.Ventana": [
-        {id: "1", label: "Norte"},
-        {id: "2", label: "Sur"},
-        {id: "3", label: "Este"},
-        {id: "4", label: "Oeste"},
-        {id: "5", label: "Sureste"},
-        {id: "6", label: "Suroeste"},
-        {id: "7", label: "Noroeste"},
-        {id: "8", label: "Noreste"}
-
-        /* "Norte",
-        "Sur",
-        "Este",
-        "Oeste",
-        "Sureste",
-        "Suroeste",
-        "Noroeste",
-        "Noreste" */
+        {value: "Norte", label: "Norte"},
+        {value: "Sur", label: "Sur"},
+        {value: "Este", label: "Este"},
+        {value: "Oeste", label: "Oeste"},
+        {value: "Sureste", label: "Sureste"},
+        {value: "Suroeste", label: "Suroeste"},
+        {value: "Noroeste", label: "Noroeste"},
+        {value: "Noreste", label: "Noreste"}
     ],
     "Cert.Ener": [
-        {id: "1", label: "En tramite"},
-        {id: "2", label: "Calificación"},
-        {id: "3", label: "Exento"},
-        {id: "4", label: "No necesita"}
-
-        /* "En tramite",
-        "Calificación",
-        "Exento",
-        "No necesita" */
+        {value: "En tramite", label: "En tramite"},
+        {value: "Calificació", label: "Calificación"},
+        {value: "Exento", label: "Exento"},
+        {value: "No necesita", label: "No necesita"}
     ],
-    "Valor.C.E": [ 
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G" 
-    ],
+  "Valor.C.E": [ 
+        {value: "A", label: "A"},
+        {value: "B", label: "B"},
+        {value: "C", label: "C"},
+        {value: "D", label: "D"},
+        {value: "E", label: "E"},
+        {value: "F", label: "F"},
+        {value: "G", label: "G"}
+    ], 
     Gerencia: [
-        {id: "1", label: "Presidencia"},
-        {id: "2", label: "Con administrador de fincas COLEGIADO"},
-        {id: "3", label: "Con administrador de fincas NO COLEGIADO"}
-
-        /* "Presidencia",
-        "Con administrador de fincas COLEGIADO",
-        "Con administrador de fincas NO COLEGIADO" */
+        {value: "Presidencia", label: "Presidencia"},
+        {value: "Con administrador de fincas COLEGIADO", label: "Con administrador de fincas COLEGIADO"},
+        {value: "Con administrador de fincas NO COLEGIADO", label: "Con administrador de fincas NO COLEGIADO"}
     ],
     Internet: [
-        {id: "1", label: "Fibra"},
-        {id: "2", label: "Normal"},
-        {id: "3", label: "Satélite"},
-        {id: "4", label: "Antena"},
-        {id: "5", label: "Telecable"}
-
-      /*   "Fibra",
-        "Normal",
-        "Satélite",
-        "Antena",
-        "Telecable" */
+        {vlaue: "Fibra", label: "Fibra"},
+        {value: "Normal", label: "Normal"},
+        {value: "Satélite", label: "Satélite"},
+        {value: "Antena", label: "Antena"},
+        {value: "Telecable", label: "Telecable"}
     ],
     Gas: [
-        {id: "1", label: "Ciudad"},
-        {id: "2", label: "Bombona propano"},
-        {id: "3", label: "Bombona"}
-
-       /*  "Ciudad",
-        "Bombona propano",
-        "Bombona" */
+        {value: "Ciudad", label: "Ciudad"},
+        {value: "Bombona propano", label: "Bombona propano"},
+        {value: "Bombona", label: "Bombona"}
     ],
     ITE: [
-        {id: "1", label: "No es necesaria aún"},
-        {id: "2", label: "Aprobada"},
-        {id: "3", label: "En curso"},
-        {id: "4", label: "Pendiente"},
-        {id: "5", label: "Exento"}
-
-       /*  "No es necesaria aún",
-        "Aprobada",
-        "En curso",
-        "Pendiente",
-        "Exento" */
+        {value: "No es necesaria aún", label: "No es necesaria aún"},
+        {value: "Aprobada", label: "Aprobada"},
+        {value: "En curso", label: "En curso"},
+        {value: "Pendiente", label: "Pendiente"},
+        {value: "Exento", label: "Exento"}
     ],
     "Termo.Agua": [
-        {id: "1", label: "Calentador eléctrico"},
-        {id: "2", label: "Termo gas butano"},
-        {id: "3", label: "Termo gas ciudad"},
-        {id: "4", label: "Calentador comunitario"},
-        {id: "5", label: "Calentador placa solar"}
-
-        /* "Calentador eléctrico",
-        "Termo gas butano",
-        "Termo gas ciudad",
-        "Calentador comunitario",
-        "Calentador placa solar" */
+        {value: "Calentador eléctrico", label: "Calentador eléctrico"},
+        {value: "Termo gas butano", label: "Termo gas butano"},
+        {value: "Termo gas ciudad", label: "Termo gas ciudad"},
+        {value: "Calentador comunitario", label: "Calentador comunitario"},
+        {value: "Calentador placa solar", label: "Calentador placa solar"}
     ],
     "Sum.Agua": [
-        {id: "1", label: "Individual"},
-        {id: "2", label: "Comunitaria"},
-
-       /*  "Comunitaria",
-        "Independiente" */
+        {value: "Individual", label: "Individual"},
+        {value: "Comunitaria", label: "Comunitaria"}
     ],
 }
 
@@ -334,7 +218,7 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
 
     if (selectOptions[field.label]) {
         return (
-            <Grid item xs={12} md={4} key={field}>
+            <Grid item xs={12} md={4} key={field.name}>
                 <FormControl variant="outlined" sx={{ width: '100%' }}>
                     <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
                         <Typography variant="body2" sx={{ color: 'black' }}>
@@ -355,7 +239,7 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
                     >
                         <MenuItem value=""><em>None</em></MenuItem>
                         {selectOptions[field.label].map(option => (
-                            <MenuItem key={option.id} value={option.id}>
+                            <MenuItem key={option.value} value={option.value}>
                                 {option.label}
                             </MenuItem>
                         ))}
@@ -366,7 +250,7 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
     }
 
     return (
-        <Grid item xs={12} md={4} key={field}>
+        <Grid item xs={12} md={4} key={field.name}>
             <FormControl variant="outlined" sx={{ width: '100%' }}>
                 <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
                     <Typography variant="body2" sx={{ color: 'black' }}>
@@ -380,15 +264,6 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
                     onChange={(e) => {
                         const { value } = e.target;
                         if (isTitulo && value.length > maxLength) {
-                            // Option 1: Prevent input beyond maxLength
-                            // return;
-
-                            // Option 2: Trim the input to maxLength
-                            // setProperty to trim the value
-                            // Assuming setProperty is available in scope
-                            // This requires passing setProperty to generateGridItem or handling differently
-                            
-                            // For simplicity, using handleChange but ensuring maxLength via inputProps
                             handleChange(e);
                         } else {
                             handleChange(e);
@@ -414,6 +289,7 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
 };
 
 const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActiveTab }) => {
+    console.log('Recived property data in GenarlInfo', property);
     
     const handleImageClick = () => {
         if (typeof setActiveTab === 'function') {
@@ -468,9 +344,9 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                                     Localidad: {property.localidad}
                                 </Typography>
                                 <Chip
-                                    label={property.activa ? "Activa" : "Inactiva"}
-                                    icon={property.activa ? <CheckCircleIcon /> : <CancelIcon />}
-                                    color={property.activa ? "success" : "error"}
+                                    label={property.active ? "Activa" : "Inactiva"}
+                                    icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
+                                    color={property.active ? "success" : "error"}
                                     variant="outlined"
                                     sx={{ mt: 2 }} // Add margin-top to create space
                                 />
@@ -486,7 +362,7 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                                 <Select
                                     size="small"
                                     name="Activa"
-                                    value={property.activa !== undefined ? String(property.activa) : ''}
+                                    value={property.active !== undefined ? String(property.active) : ''}
                                     onChange={handleChange}
                                     disabled={!isEditing}
                                     sx={{
@@ -508,7 +384,48 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                             Informacion General
                         </Typography>
                         <Grid container spacing={2}>
-                            {primaryFields.map(field => generateGridItem(field, property, handleChange, isEditing))}
+                            {primaryFields.map(field => {
+                                if (field.name === "destacada") {
+                                    return (
+                                        <Grid item xs={12} md={4} key={field.name}>
+                                            <FormControl variant="outlined" sx={{ width: '100%' }}>
+                                                <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
+                                                    <Typography variant="body2" sx={{ color: 'black' }}>
+                                                        {field.label}
+                                                    </Typography>
+                                                </FormLabel>
+                                                <Select
+                                                    size="small"
+                                                    name="destacada"
+                                                    value={property.destacada !== undefined ? String(property.destacada) : ''}
+                                                    onChange={(e) => {
+                                                        const updatedValue = e.target.value === '1' ? 1 : 0; // Ensure numeric values
+                                                        handleChange({
+                                                            target: { name: 'destacada', value: updatedValue },
+                                                        });
+                                                    }}
+                                                    disabled={!isEditing}
+                                                    sx={{
+                                                        '& .MuiSelect-select': {
+                                                            color: '#404040',
+                                                        },
+                                                    }}
+                                                >
+                                                    <MenuItem value=""><em>None</em></MenuItem>
+                                                    {selectOptions.Destacada.map((option) => (
+                                                        <MenuItem key={option.value} value={option.value}>
+                                                            {option.label}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                    );
+                                }
+
+                                // Default rendering for other fields
+                                return generateGridItem(field, property, handleChange, isEditing);
+                            })}
                             <Grid item xs={12} md={12}>
                                 <FormControl variant="outlined" sx={{ width: '100%' }}>
                                     <FormLabel sx={{ mb: 0.5, fontWeight: 'bold' }}>
@@ -519,7 +436,7 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                                     <OutlinedInput
                                         size="small"
                                         name="Descripción"
-                                        value={property.descripción || ''}
+                                        value={property.description || ''}
                                         onChange={handleChange}
                                         disabled={!isEditing}
                                         multiline

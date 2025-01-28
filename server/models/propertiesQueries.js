@@ -1,4 +1,3 @@
-// propertiesQueries.js
 
 const { request } = require('express');
 const { uploadPropertyDocument } = require('../controllers/propertiesController');
@@ -53,15 +52,13 @@ const getAllProperties = async () => {
                 tte.tipoite AS tipoite, 
                 tta.tipotermoagua AS tipotermoagua, 
                 tag.tipoagua AS tipoagua, 
-                p.active, p.created_at, 
+                p.active, 
+                p.created_at, 
                 p.updated_at, 
                 p.idusuario, 
                 v.url AS url, 
-                CASE 
-                    WHEN d.destacada = 1 THEN 'Si'
-                    ELSE 'No'
-                END AS destacada,
-                vd.Description AS description
+                d.destacada AS destacada,
+                vd.description AS description
             FROM lhainmobiliaria.vproperties p
             LEFT JOIN lhainmobiliaria.vimages v ON p.ref = v.ref AND v.principal = 1
             LEFT JOIN lhainmobiliaria.destacadas d ON p.ref = d.ref
@@ -136,7 +133,7 @@ const getPropertyById = async (id) => {
                 p.consumoagua, 
                 ti.tipointernet AS tipointernet, 
                 tgs.tipogas AS tipogas, 
-                tte.tipoite AS ite, 
+                tte.tipoite AS tipoite, 
                 tta.tipotermoagua AS tipotermoagua, 
                 tag.tipoagua AS tipoagua, 
                 p.active, 
@@ -144,11 +141,8 @@ const getPropertyById = async (id) => {
                 p.updated_at, 
                 p.idusuario, 
                 v.url AS url, 
-                CASE 
-                    WHEN d.destacada = 1 THEN 'Si'
-                    ELSE 'No'
-                END AS destacada,
-                vd.Description AS description
+                d.destacada AS destacada,
+                vd.description AS description
             FROM lhainmobiliaria.vproperties p
             LEFT JOIN lhainmobiliaria.vimages v ON p.ref = v.ref AND v.principal = 1
             LEFT JOIN lhainmobiliaria.destacadas d ON p.ref = d.ref
@@ -184,7 +178,7 @@ const getPropertyById = async (id) => {
 const getPropertyDescriptions = async (ref) => {
     try {
         const result = await pool.query(
-            `SELECT Id, Ref, Descripcion, Tipo, FechaHora
+            `SELECT Id, Ref, Description, Tipo, FechaHora
              FROM lhainmobiliaria.vdescriptions
              WHERE Ref = $1`,
             [ref]
@@ -232,7 +226,7 @@ const getPropertyImages = async (ref) => {
 const getPropertyDocuments = async (ref) => {
     try {
         const result = await pool.query(
-            `SELECT Id, Ref, Url, Descripcion, Tipo, FechaHora
+            `SELECT id, ref, url, descripcion, tipo, fechaHora
             FROM lhainmobiliaria.varchivos
             WHERE Ref = $1`,
            [ref]
@@ -264,7 +258,7 @@ const getIdFromTable = async (tableName, idColumnName, columnName, value) => {
 };
 
 // Helper function to normalize keys and convert empty strings to null for numeric fields
-const normalizeKeys = (obj) => {
+/* const normalizeKeys = (obj) => {
     const keyMap = {
         'Ref': 'ref',
         'RefExt': 'refext',
@@ -339,7 +333,7 @@ const normalizeKeys = (obj) => {
         return acc;
     }, {});
 };
-
+ */
 
 
 // put Queries
@@ -469,10 +463,10 @@ const updatePropertyDb = async (property, id) => {
           }
           
         // Update the property as 'destacada' in the 'destacadas' table
-        if (destacada) {
+        if (destacada !== undefined) {
             await pool.query(
                 `INSERT INTO lhainmobiliaria.destacadas (ref, destacada) VALUES ($1, $2) ON CONFLICT (ref) DO UPDATE SET destacada = $2 RETURNING *`,
-                [ref, destacada === 'Si' ? 1 : 0]
+                [ref, destacada]
             );
         }
 
@@ -747,7 +741,7 @@ const uploadPropertyDocumentDb = async (documentDetails) => {
         const result = await pool.query(
             `INSERT INTO lhainmobiliaria.varchivos (ref, url, descripcion, tipo, fechahora)
              VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-            [ref, url, descripcion, tipo, fechahora]
+            [ref, url, description, tipo, fechahora]
         );
         return result.rows[0];
     } catch (error) {

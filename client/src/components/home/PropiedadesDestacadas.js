@@ -54,7 +54,7 @@ const PropiedadesDestacadas = () => {
     return <LoadingContainer><CircularProgress /></LoadingContainer>;
   }
 
-  const featuredProperties = properties.filter(property => property.destacada === "Si");
+  const featuredProperties = properties.filter(property => property.destacada === "1");
 
   const handleCardClick = (id) => {
     console.log(`Navigating to property with id: ${id}`);
@@ -65,7 +65,7 @@ const PropiedadesDestacadas = () => {
     <FeaturedPropertiesContainer>
       {featuredProperties.map((property) => (
         <PropertyCard key={property.id} onClick={() => handleCardClick(property.id)}>
-          <PropertyImage src={property.foto} alt={property.title} />
+          <PropertyImage src={property.url} alt={property.title} />
           <PropertyInfo>
             <PropertyTitle>{property.title}</PropertyTitle>
             <PropertyRef>{property.ref}</PropertyRef>
@@ -76,7 +76,7 @@ const PropiedadesDestacadas = () => {
             <PropertyDetails>
               <PropertyDetailItem>
                 <BedIcon />
-                <span>{property.habitaciones} habitaciones</span>
+                <span>{property.nestancias} habitaciones</span>
               </PropertyDetailItem>
               <PropertyDetailItem>
                 <SquareFootIcon />
@@ -86,11 +86,11 @@ const PropiedadesDestacadas = () => {
             <PropertyDetails>
               <PropertyDetailItem>
                 <BathIcon />
-                <span>{property.banos} baños</span>
+                <span>{property.nbanos} baños</span>
               </PropertyDetailItem>
               <PropertyDetailItem>
                 <WcIcon />
-                <span>{property.aseos} aseos</span>
+                <span>{property.naseos} aseos</span>
               </PropertyDetailItem>
             </PropertyDetails>
           </PropertyInfo>

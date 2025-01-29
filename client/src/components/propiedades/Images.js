@@ -16,10 +16,10 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
 
         // Update the first image as the principal and cabecera image
         const updatedImages = reorderedImages.map((image, index) => ({
-                ...image, 
-                principal: index === 0 ? 1 : 0,
-                cabecera: index === 0 ? 1 : 0,
-            }));
+            ...image, 
+            principal: index === 0 ? 1 : 0,
+            cabecera: index === 0 ? 1 : 0,
+        }));
 
         setImages(reorderedImages);
 
@@ -59,7 +59,7 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
         <Box position={'relative'}>
             <DragDropContext 
                 onDragEnd={isEditing ? handleDragEnd : () => {}}    
-                >
+            >
                 <Droppable droppableId="images" direction="horizontal">
                     {(provided) => (
                         <Grid container spacing={2} ref={provided.innerRef} {...provided.droppableProps}>
@@ -69,7 +69,7 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
                                     draggableId={image.id.toString()} 
                                     index={index}
                                     isDragDisabled={!isEditing}
-                                    >
+                                >
                                     {(provided) => (
                                         <Grid item xs={12} sm={6} md={4} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                             <Card sx={{position: 'relative'}}>
@@ -95,7 +95,7 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
                                                                 handleDelete(image.id);
                                                             }}
                                                             disabled={!isEditing}
-                                                            >
+                                                        >
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </Box>

@@ -54,7 +54,7 @@ const PropiedadesDestacadas = () => {
     return <LoadingContainer><CircularProgress /></LoadingContainer>;
   }
 
-  const featuredProperties = properties.filter(property => property.destacada === "1");
+  const featuredProperties = properties.filter(property => property.destacada === "Si");
 
   const handleCardClick = (id) => {
     console.log(`Navigating to property with id: ${id}`);
@@ -76,7 +76,7 @@ const PropiedadesDestacadas = () => {
             <PropertyDetails>
               <PropertyDetailItem>
                 <BedIcon />
-                <span>{property.nestancias} habitaciones</span>
+                <span>{property.nstancias} habitaciones</span>
               </PropertyDetailItem>
               <PropertyDetailItem>
                 <SquareFootIcon />

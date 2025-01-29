@@ -741,7 +741,7 @@ const uploadPropertyDocumentDb = async (documentDetails) => {
         const result = await pool.query(
             `INSERT INTO lhainmobiliaria.varchivos (ref, url, descripcion, tipo, fechahora)
              VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-            [ref, url, description, tipo, fechahora]
+            [ref, url, descripcion, tipo, fechahora]
         );
         return result.rows[0];
     } catch (error) {

@@ -38,58 +38,6 @@ import {
     StyledSaveDialogPaper
 } from '../../styles/PropiedadStyles';
 
-// Define the transformedData object
-/* const transformData = (data) => ({
-    Ref: data.ref,
-    RefExt: data.refext,
-    Precio: data.precio,
-    Título: data.title,
-    Dirección: data.direccion,
-    Localidad: data.localidad,
-    Provincia: data.provincia,
-    Pais: data.pais,
-    CP: data.cp,
-    Longitud: data.longitud,
-    Latitud: data.latitud,
-    "M.Constr": data.metrosconstruidos,
-    "M.Utiles": data.metrosutiles,
-    "M.Parcela": data.metrosparcela,
-    Tipo: data.tipo_propiedad,
-    Habitaciones: data.habitaciones,
-    Baños: data.banos,
-    Aseos: data.aseos,
-    Estado: data.estado,
-    "Año.Const": data.anoconstruccion,
-    Calific: data.calificacion,
-    Cargas: data.cargas,
-    Planta: data.planta, // Ensure correct handling as string
-    "Ori.Entrada": data.orientacionentrada,
-    "Ori.Ventana": data.orientacionventana,
-    "Cert.Ener": data.certificadoenergetico,
-    "Valor.C.E": data.valorcertificadoenergetico,
-    "CO2/m2/Año": data.co2certificadoenergetico,
-    "Kw/Año": data.kwcertificadoenergetico,
-    "T.IBI": data.tributoibi,
-    "T.VADO": data.tributovado,
-    "T.Rústico": data.tributorustico,
-    Gastos: data.gastosvarios,
-    Gerencia: data.gerencia,
-    Comunidad: data.comunidadgastos,
-    Derrama: data.comunidadderrama,
-    "Cons.Elect": data.consumoelecticidad,
-    "Cons.Agua": data.consumoagua,
-    Internet: data.internet,
-    Gas: data.gas,
-    ITE: data.ite,
-    "Termo.Agua": data.termoagua,
-    "Sum.Agua": data.tipoagua,
-    Activa: data.active,
-    Foto: data.foto,
-    Destacada: data.destacada,
-    CreatedAt: data.created_at,
-    UpdatedAt: data.updated_at,
-   "Descripción": data.description
-}); */
 
 const Propiedad = () => {
     const { id } = useParams();

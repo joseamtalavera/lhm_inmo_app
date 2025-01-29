@@ -1,4 +1,3 @@
-// App.js
 
 require('dotenv').config();
 
@@ -12,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const authRoutes = require('./routes/authRoutes');
 const propertiesRoutes = require('./routes/propertiesRoutes');
+const { stat } = require('fs');
 
 const app = express();
 
@@ -43,6 +43,19 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from the React app
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  setHeaders: (res, path, stat) =>{
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin'); // Allow image loading from other origins
+    res.set('Access-Control-Allow-Origin', '*'); // Allows any domain to fetch the image
+  }
+}));
+
+// Check Image Serving in Dev
+app.get('/test-image', (req, res) => {
+  res.sendFile(path.join(__dirname, 'uploads', 'test.jpg'));
+});
 
 app.use('/api', authRoutes);
 app.use('/api', propertiesRoutes);

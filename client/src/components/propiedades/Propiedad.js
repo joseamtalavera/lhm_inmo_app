@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
@@ -10,7 +9,9 @@ import {
     Dialog, 
     DialogContent, 
     DialogActions,
-    Menu
+    Menu,
+    TextField,
+    DialogTitle,
 } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
@@ -35,7 +36,9 @@ import {
     StyledDialogTitle,
     StyledDialogActionsButton,
     StyledDialogPaper,
-    StyledSaveDialogPaper
+    StyledSaveDialogPaper,
+    StyledCancelButton,
+    StyledDialogSubir,
 } from '../../styles/PropiedadStyles';
 
 
@@ -65,6 +68,12 @@ const Propiedad = () => {
     // Mobile menu anchor state
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
+
+    // States for Document Upload Modal
+    const [openDocumentModal, setOpenDocumentModal] = useState(false);
+    const [selectedDocument, setSelectedDocument] = useState(null);
+    const [documentTipo, setDocumentTipo] = useState('');
+    const [documentDescripcion, setDocumentDescripcion] = useState('');
 
     // ------------------Menu handlers------------------
     const handleMenuOpen = (event) => {
@@ -170,6 +179,7 @@ const Propiedad = () => {
     }; 
     
     // ------------------Tab change logic------------------
+    
     const handleTabChange = (event, newValue) => {
         if (newValue === 4) {
             // Navigate to preview page
@@ -386,7 +396,6 @@ const Propiedad = () => {
 
             console.log('Uploading document:', file);
             try {
-                console.log('Property ref:', property.ref); // Check if this is defined
                 const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/documents`, {
                     method: 'POST',
                     body: formData,
@@ -420,6 +429,52 @@ const Propiedad = () => {
         }
     };
 
+    // ------------------handleOpenDocumentModal logic for opening the modal------------------
+
+    const handleOpenDocumentModal = () => {
+        setOpenDocumentModal(true);
+        setDocumentTipo('');
+        setDocumentDescripcion('');
+        setSelectedDocument(null);
+    };
+
+    // ------------------handleCloseDocumentModal (Close the Modal)------------------
+    const handleCloseDocumentModal = () => {
+        setOpenDocumentModal(false);
+    };
+
+    // ------------------handleDocumentSubmit logic for submitting the document------------------
+
+    const handleDocumentSubmit = async () => {
+        if (!selectedDocument || !documentTipo || !documentDescripcion) {
+            console.error('Todos los campos son requeridos');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('document', selectedDocument);
+        formData.append('tipo', documentTipo);
+        formData.append('descripcion', documentDescripcion);
+        formData.append('ref', property.ref);
+
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/documents`, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Fallo al subir el documento');
+            }
+
+            const newDocument = await response.json();
+            setDocuments((prevDocuments) => [...prevDocuments, newDocument]);
+            handleOpenDocumentModal();
+        } catch (error) {
+            console.error('Error subiendo el documento:', error);
+        }
+    };
+    
     if (isLoading) {
         return (
             <StyledBox>
@@ -461,6 +516,8 @@ const Propiedad = () => {
                             </Menu>
                         </StyledMenuBox>
                     </Box>
+
+                    {/* Desktop tabs */}
                     <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                         <Tabs value={activeTab} onChange={handleTabChange} centered>
                             <Tab label="Informacion" />
@@ -506,10 +563,12 @@ const Propiedad = () => {
                                 isEditing={isEditingDocumentation}
                                 handleDocumentUpload={handleDocumentUpload} 
                                 handleDeleteDocument={handleDeleteDocument}
+                                handleOpenDocumentModal={handleOpenDocumentModal} // Pass handleOpenDocumentModal as a prop to Anadir
                             />
                         )}
                     </Box>
-                    
+
+                    {/* Action buttons (Edit / Cancel / Save) */}
                     <StyledActionBox>
                         <StyledAlignBox>
                             {activeTab === 0 && !isEditingGeneralInfo && (
@@ -519,25 +578,25 @@ const Propiedad = () => {
                                     variant="outlined"
                                     onClick={() => handleEditClick(0)}
                                 >
-                                    Edit
+                                    Editar
                                 </StyledButton>
                             )}
                             {activeTab === 0 && isEditingGeneralInfo && (
                                 <>
-                                    <StyledButton
+                                    <StyledCancelButton
                                         size="medium"
                                         variant="outlined"
                                         onClick={() => handleCancelClick(0)}
                                     >
-                                        Cancel
-                                    </StyledButton>
+                                        Cancelar
+                                    </StyledCancelButton>
                                     <StyledButton
                                         size="medium"
                                         color="success"
                                         variant="outlined"
                                         onClick={handleSubmit}
                                     >
-                                        Save
+                                        Guardar
                                     </StyledButton>
                                 </>
                             )}
@@ -548,25 +607,25 @@ const Propiedad = () => {
                                     variant="outlined"
                                     onClick={() => handleEditClick(1)}
                                 >
-                                    Edit
+                                    Editar
                                 </StyledButton>
                             )}
                             {activeTab === 1 && isEditingAmenities && (
                                 <>
-                                    <StyledButton
+                                    <StyledCancelButton
                                         size="medium"
                                         variant="outlined"
                                         onClick={() => handleCancelClick(1)}
                                     >
-                                        Cancel
-                                    </StyledButton>
+                                        Cancelar
+                                    </StyledCancelButton>
                                     <StyledButton
                                         size="medium"
                                         color="success"
                                         variant="outlined"
                                         onClick={handleSubmit}
                                     >
-                                        Save
+                                        Guardar
                                     </StyledButton>
                                 </>
                             )}
@@ -577,25 +636,25 @@ const Propiedad = () => {
                                     variant="outlined"
                                     onClick={() => handleEditClick(2)}
                                 >
-                                    Edit
+                                    Editar
                                 </StyledButton>
                             )}
                             {activeTab === 2 && isEditingImages && (
                                 <>
-                                    <StyledButton
+                                    <StyledCancelButton
                                         size="medium"
                                         variant="outlined"
                                         onClick={() => handleCancelClick(2)}
                                     >
                                         Cancel
-                                    </StyledButton>
+                                    </StyledCancelButton>
                                     <StyledButton
                                         size="medium"
                                         color="success"
                                         variant="outlined"
                                         onClick={handleSubmit}
                                     >
-                                        Save
+                                        Guardar
                                     </StyledButton>
                                 </>
                             )}
@@ -606,32 +665,33 @@ const Propiedad = () => {
                                     variant="outlined"
                                     onClick={() => handleEditClick(3)}
                                 >
-                                    Edit
+                                    Editar
                                 </StyledButton>
                             )}
                             {activeTab === 3 && isEditingDocumentation && (
                                 <>
-                                    <StyledButton
+                                    <StyledCancelButton
                                         size="medium"
                                         variant="outlined"
                                         onClick={() => handleCancelClick(3)}
                                     >
-                                        Cancel
-                                    </StyledButton>
+                                        Cancelar
+                                    </StyledCancelButton>
                                     <StyledButton
                                         size="medium"
                                         color="success"
                                         variant="outlined"
                                         onClick={handleSubmit}
                                     >
-                                        Save
+                                        Guardar
                                     </StyledButton>
                                 </>
                             )}
                         </StyledAlignBox>
                     </StyledActionBox>
                 </StyledCard>
-                
+
+                {/* Error dialog */}
                 <Dialog
                     open={open}
                     onClose={() => setOpen(false)}
@@ -649,6 +709,8 @@ const Propiedad = () => {
                         </StyledDialogActionsButton>
                     </DialogActions>
                 </Dialog>
+
+                {/* Save dialog */}
                 <Dialog
                     open={isSaveDialogOpen}
                     onClose={() => setIsSaveDialogOpen(false)}
@@ -656,11 +718,67 @@ const Propiedad = () => {
                     maxWidth={'xs'}
                     PaperProps={{ style: StyledSaveDialogPaper }}
                 >
-                    <StyledDialogTitle>
+                    <StyledDialogSubir>
                         <CheckCircleOutlineIcon style={{ color: 'green', fontSize: '3rem' }} />
                         Propiedad actualizada correctamente
-                    </StyledDialogTitle>
+                    </StyledDialogSubir>
                 </Dialog>
+                {/* ------------------- ADD DOCUMENT MODAL ------------------- */}
+                <Dialog
+                    open={openDocumentModal}
+                    onClose={handleCloseDocumentModal}
+                    fullWidth
+                    maxWidth="sm"
+                >
+                    <StyledDialogSubir >
+                        Subir Documento
+                    </StyledDialogSubir>
+                    <DialogContent>
+
+                        {/* Tipo */}
+                        <TextField
+                            label="Tipo"
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            value={documentTipo}
+                            onChange={(e) => setDocumentTipo(e.target.value)}
+                        />
+
+                        {/* Descripción */}
+                        <TextField
+                            label="Descripción"
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            value={documentDescripcion}
+                            onChange={(e) => setDocumentDescripcion(e.target.value)}
+                        />
+
+                        {/* File Input */}
+                        <Box sx={{ mt: 2 }}>
+                            <input
+                                type="file"
+                                onChange={(e) => setSelectedDocument(e.target.files[0])}
+                            />
+                        </Box>
+                    </DialogContent>
+                    <DialogActions>
+                        <StyledCancelButton 
+                            variant="outlined"
+                            onClick={handleCloseDocumentModal}>
+                            Cancelar
+                        </StyledCancelButton>
+                        <StyledButton 
+                            size="medium"
+                            color="success"
+                            variant="outlined"
+                            onClick={handleDocumentSubmit}>
+                            Subir
+                        </StyledButton>
+                    </DialogActions>
+                </Dialog>
+
             </ThemeProvider>
         </MenuLayout>
     );

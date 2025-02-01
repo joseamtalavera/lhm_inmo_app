@@ -73,6 +73,13 @@ export const StyledDialogActionsButton = styled(Button)`
   border-color: green;
 `;
 
+export const StyledCancelButton = styled(Button)`
+  color: red;
+  border-color: red;
+  margin-right: 2rem;
+  margin-bottom: 2rem;
+`;
+
 export const StyledDialogPaper = {
   width: "60%",
   maxHeight: '150px',
@@ -84,3 +91,7 @@ export const StyledSaveDialogPaper = {
   boxShadow: 'none',
   borderRadius: '5px'
 };
+
+export const StyledDialogSubir = styled(DialogTitle)`
+color: #1E90FF; 
+`;

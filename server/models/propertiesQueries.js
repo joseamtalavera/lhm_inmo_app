@@ -257,84 +257,6 @@ const getIdFromTable = async (tableName, idColumnName, columnName, value) => {
     }
 };
 
-// Helper function to normalize keys and convert empty strings to null for numeric fields
-/* const normalizeKeys = (obj) => {
-    const keyMap = {
-        'Ref': 'ref',
-        'RefExt': 'refext',
-        'Título': 'title',
-        'Precio': 'precio',
-        'Dirección': 'direccion',
-        'Localidad': 'localidad',
-        'Provincia': 'provincia',
-        'Pais': 'pais',
-        'CP': 'cp',
-        'Longitud': 'longitud',
-        'Latitud': 'latitud',
-        'M.Constr': 'metrosconstruidos',
-        'M.Utiles': 'metrosutiles',
-        'M.Parcela': 'metrosparcela',
-        'Tipo': 'tipopropiedad',
-        'Habitaciones': 'nestancias', 
-        'Baños': 'nbanos',
-        'Aseos': 'naseos',
-        'Estado': 'estado',
-        'Año.Const': 'anoconstruccion',
-        'Calific': 'calificacion',
-        'Cargas': 'cargas',
-        'Planta': 'planta', 
-        'Ori.Entrada': 'orientacionentrada',
-        'Ori.Ventana': 'orientacionventana',
-        'Cert.Ener': 'certificadoenergetico',
-        'Valor.C.E': 'valorcertificadoenergetico',
-        'CO2/m2/Año': 'co2certificadoenergetico',
-        'Kw/Año': 'kwcertificadoenergetico',
-        'T.IBI': 'tributoibi',
-        'T.VADO': 'tributovado',
-        'T.Rústico': 'tributorustico',
-        'Gastos': 'gastosvarios',
-        'Gerencia': 'gerencia',
-        'Comunidad': 'comunidadgastos',
-        'Derrama': 'comunidadderrama',
-        'Cons.Elect': 'consumoelecticidad',
-        'Cons.Agua': 'consumoagua',
-        'Internet': 'tipointernet',
-        'Gas': 'tipogas',
-        'ITE': 'tipoite',
-        'Termo.Agua': 'tipotermoagua',
-        'Sum.Agua': 'tipoagua',
-        'Activa': 'active',
-        'Foto': 'foto',
-        'Destacada': 'destacada',
-        'CreatedAt': 'created_at',
-        'UpdatedAt': 'updated_at',
-        'Descripción': 'description'
-    };
-
-    const numericFields = [
-        'precio', 'longitud', 'latitud', 'metrosconstruidos', 'metrosutiles', 'metrosparcela',
-        'idhabitaciones', 'idbanos', 'idaseos', 'idestado', 'anoconstruccion', 'idcalificacion',
-        'idcargas', 'idorientacionentrada', 'idorientacionventana', 'idcertificadoenergetico',
-        'valorcertificadoenergetico', 'co2certificadoenergetico', 'kwcertificadoenergetico', 'tributoibi',
-        'tributovado', 'tributorustico', 'gastosvarios', 'idgerencia', 'comunidadgastos', 'comunidadderrama',
-        'consumoelecticidad', 'consumoagua', 'idinternet', 'idgas', 'idite', 'idtermoagua', 'idagua'
-    ];
-
-    return Object.keys(obj).reduce((acc, key) => {
-        const normalizedKey = keyMap[key] || key;
-        let value = obj[key];
-
-        // Convert empty strings to null for numeric fields
-        if (numericFields.includes(normalizedKey) && value === '') {
-            value = null;
-        }
-
-        acc[normalizedKey] = value;
-        return acc;
-    }, {});
-};
- */
-
 
 // put Queries
 
@@ -498,39 +420,6 @@ const updatePropertyAmenitiesDb = async (ref, amenities) => {
         throw error;
     }
 };
-
-/* const updateAllImagesDb = async (updatedImages) => {
-    try {
-        console.log('Starting transaction to update all images');
-        await pool.query('BEGIN');
-
-        // Map through each image and update the `principal` and `cabecera` fields
-        const updatePromises = updatedImages.map((image) => {
-            console.log('Updating image:', image);
-            return pool.query(
-                `UPDATE lhainmobiliaria.vimages
-                 SET principal = $1, cabecera = $2
-                 WHERE id = $3`,
-                [image.principal, image.cabecera, image.id]
-            );
-            
-        });
-
-        // Wait for all updates to complete
-        await Promise.all(updatePromises);
-
-        // Commit the transaction
-        await pool.query('COMMIT');
-
-        return { message: `${updatedImages.length} images updated successfully` };
-    } catch (error) {
-        // Rollback transaction in case of error
-        await pool.query('ROLLBACK');
-        console.error('Error in updateAllImagesDb:', error);
-        throw error;
-    }
-};  */
-
 
 const updateAllImagesDb = async (updatedImages) => {
     const client = await pool.connect(); // Get a client from the pool

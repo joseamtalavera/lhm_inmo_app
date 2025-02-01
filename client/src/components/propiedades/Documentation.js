@@ -1,43 +1,63 @@
 // Documentation.js
 
 import React from 'react';
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Button } from '@mui/material';
+import { 
+    Box, 
+    Table, 
+    TableBody, 
+    TableCell, 
+    TableContainer, 
+    TableHead, 
+    TableRow, 
+    Paper,
+} from '@mui/material';
+import {
+    StyledTypography, 
+    StyledTableCell, 
+    StyledButton,
+    StyledIconButton,
+    StyledBox
+} from '../../styles/DocumentationStyles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+import AddIcon from '@mui/icons-material/Add';
 
-const Documentation = ({ documents, setDocuments, isEditing, handleDocumentUpload, handleDeleteDocument }) => {
+const Documentation = ({ documents, setDocuments, isEditing, handleDocumentUpload, handleDeleteDocument, handleOpenDocumentModal }) => {
     return (
         <Box>
-            <Typography variant="h6" sx={{ mb: 2, color: '#1E90FF' }}>
+            <StyledTypography variant="h6">
                 Documentación
-            </Typography>
+            </StyledTypography>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Tipo</TableCell>
-                            <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Descripcion</TableCell>
-                            <TableCell sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>Acciones</TableCell>
+                            <StyledTableCell>Tipo</StyledTableCell>
+                            <StyledTableCell >Descripcion</StyledTableCell>
+                            <StyledTableCell >Acciones</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {documents.map((document, index) => {
                             return (
                                 <TableRow key={document.id}>
-                                    <TableCell>{document.tipo}</TableCell>
+                                    <TableCell>{document.tipo || 'Tipo no disponible'}</TableCell>
                                     <TableCell>{document.descripcion}</TableCell>
                                     <TableCell>
-                                        <IconButton component="a" href={document.url} target="_blank" rel="noopener noreferrer">
+                                        <StyledIconButton 
+                                            component="a" 
+                                            href={document.url} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer">
                                             <VisibilityIcon />
-                                        </IconButton>
-                                        <IconButton 
+                                        </StyledIconButton>
+                                        <StyledIconButton 
                                             color="primary" 
                                             onClick={() => handleDeleteDocument(document.id)}
                                             disabled={!isEditing}
                                         >
                                             <DeleteIcon />
-                                        </IconButton>
+                                        </StyledIconButton>
                                     </TableCell>
                                 </TableRow>
                             );
@@ -46,20 +66,16 @@ const Documentation = ({ documents, setDocuments, isEditing, handleDocumentUploa
                 </Table>
             </TableContainer>
             {isEditing && (
-                <Box sx={{ mt: 2 }}>
-                    <Button
-                        variant="contained"
+                <StyledBox sx={{ mt: 2 }}>
+                    <StyledButton
+                        variant="outlined"
                         component="label"
-                        startIcon={<UploadFileIcon />}
+                        startIcon={<AddIcon />}
+                        onClick={handleOpenDocumentModal}
                     >
-                        Subir
-                        <input
-                            type="file"
-                            hidden
-                            onChange={handleDocumentUpload}
-                        />
-                    </Button>
-                </Box>
+                        Añadir
+                    </StyledButton>
+                </StyledBox>
             )}
         </Box>
     );

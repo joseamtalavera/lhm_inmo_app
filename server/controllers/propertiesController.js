@@ -242,34 +242,33 @@ exports.uploadPropertyDocument = async (req, res, next) => {
             return res.status(400).json({ message: 'No document uploaded' });
         }
 
-        // Fetch the current highest sequence number for this property
+        // Determine upload directory basee on environment
+        const uploadDir =
+            process.env.NODE_ENV === 'production'
+                ? '/usr/share/nginx/uploads/documents' // Production directory
+                : path.join(__dirname, '..', 'documentos'); // Development directory
         const currentDocuments = await getPropertyDocuments(ref);
         const sequenceNumber = currentDocuments.length + 1;
 
         // Generate the new file name
         const fileExtension = document.originalname.split('.').pop();
-        const fileName = `${ref}-${sequenceNumber}.${fileExtension}`;
-
-        // Correct file handling to avoid EXDEV error
-        const fs = require('fs');
-        const path = require('path');
-
-        const uploadDir = 'documentos'; // Ensure this matches the uploads directory
+        const fileName = `${ref}-${sequenceNumber}.${fileExtension}`
         const uploadPath = path.join(uploadDir, fileName);
 
-        // Copy the file instead of renaming (to handle cross-device link issues)
+        // Move the file to the uploads directory
         fs.copyFileSync(document.path, uploadPath);
         fs.unlinkSync(document.path); // Delete the temporary file
 
          // Generate the URL
          const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-         const domain = process.env.APP_DOMAIN || 'localhost:3010';
+         const domain = process.env.APP_DOMAIN || 'localhost:5010';
          const imageUrl = `${protocol}://${domain}/documentos/${fileName}`;
 
         const documentDetails ={
             ref, 
             url: imageUrl,
             descripcion: req.body.descripcion || '',
+            tipo: req.body.tipo || '',
         }
 
         console.log('Document details:', documentDetails);

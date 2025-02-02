@@ -16,7 +16,8 @@ import {
     StyledTableCell, 
     StyledButton,
     StyledIconButton,
-    StyledBox
+    StyledBox,
+    StyledTableRow
 } from '../../styles/DocumentationStyles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -31,11 +32,11 @@ const Documentation = ({ documents, setDocuments, isEditing, handleDocumentUploa
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
-                        <TableRow>
+                        <StyledTableRow>
                             <StyledTableCell>Tipo</StyledTableCell>
                             <StyledTableCell >Descripcion</StyledTableCell>
                             <StyledTableCell >Acciones</StyledTableCell>
-                        </TableRow>
+                        </StyledTableRow>
                     </TableHead>
                     <TableBody>
                         {documents.map((document, index) => {

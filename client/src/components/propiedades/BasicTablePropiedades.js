@@ -43,7 +43,7 @@ import {
     DialogButton,
     RedDialogButton,
     PropertyImage,
-    PropertyCardImage
+    PropertyCardImage,
 } from '../../styles/BasicTablePropiedadesStyles';
 
 const generateNextReference = async () => {
@@ -277,7 +277,7 @@ export default function DataTable({ filter: initialFilter }) {
                                                 direction={orderBy === 'ref' ? order : 'asc'}
                                                 onClick={() => handleRequestSort('ref')}
                                             >
-                                                Refencia
+                                                Referencia
                                             </TableSortLabel>
                                         </StyledTableHeaderCell>
                                         <StyledTableHeaderCell>

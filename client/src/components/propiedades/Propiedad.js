@@ -432,7 +432,7 @@ const Propiedad = () => {
     // ------------------handleOpenDocumentModal logic for opening the modal------------------
 
     const handleOpenDocumentModal = () => {
-        setOpenDocumentModal(true);
+        setOpenDocumentModal(false);
         setDocumentTipo('');
         setDocumentDescripcion('');
         setSelectedDocument(null);

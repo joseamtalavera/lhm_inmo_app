@@ -245,7 +245,7 @@ exports.uploadPropertyDocument = async (req, res, next) => {
         // Determine upload directory basee on environment
         const uploadDir =
             process.env.NODE_ENV === 'production'
-                ? '/usr/share/nginx/uploads/documents' // Production directory
+                ? '/usr/share/nginx/documents' // Production directory
                 : path.join(__dirname, '..', 'documentos'); // Development directory
         const currentDocuments = await getPropertyDocuments(ref);
         const sequenceNumber = currentDocuments.length + 1;

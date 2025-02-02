@@ -4,7 +4,8 @@ import {
   Box, 
   IconButton, 
   TableCell,
-  Typography
+  Typography,
+  TableRow
 } from '@mui/material';
 
 export const StyledTypography = styled(Typography)`
@@ -29,6 +30,9 @@ export const StyledIconButton = styled(IconButton)`
 
 export const StyledTableCell = styled(TableCell)`
   font-weight: bold;
-  color: #1E90FF;
+`;
+
+export const StyledTableRow = styled(TableRow)`
+  background-color: #f0f0f0;
 `;
 

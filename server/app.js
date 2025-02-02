@@ -44,11 +44,19 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from the React app
+// Serve static files = images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
   setHeaders: (res, path, stat) =>{
     res.set('Cross-Origin-Resource-Policy', 'cross-origin'); // Allow image loading from other origins
     res.set('Access-Control-Allow-Origin', '*'); // Allows any domain to fetch the image
+  }
+}));
+
+// Serve static files = documents
+app.use('/documentos', express.static(path.join(__dirname, 'documentos'), {
+  setHeaders: (res, filePath, stat) => {
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+    res.set('Access-Control-Allow-Origin', '*');
   }
 }));
 

@@ -12,3 +12,14 @@ server/node_modules
 # Other optional ignores
 Dockerfile*
 docker-compose.yml
+
+# Exclude the uploads folder
+uploads/
+
+# Exclude the server/documentos folder
+server/documentos/
+
+# Ignore dump files
+*.dump
+*.sql
+

@@ -720,7 +720,7 @@ const Propiedad = () => {
                 >
                     <StyledDialogSubir>
                         <CheckCircleOutlineIcon style={{ color: 'green', fontSize: '3rem' }} />
-                        Propiedad actualizada correctamente
+                        La actualización realizada
                     </StyledDialogSubir>
                 </Dialog>
                 {/* ------------------- ADD DOCUMENT MODAL ------------------- */}

@@ -1,0 +1,45 @@
+# syntax=docker/dockerfile:1.3
+#############################
+# Stage 1: Builder - Install PM2 in memory and archive it
+#############################
+FROM node:14-alpine AS builder
+
+WORKDIR /app
+
+# Set a custom npm global prefix and update PATH so that PM2 is installed here.
+ENV NPM_CONFIG_PREFIX=/temp-npm-global
+ENV PATH=/temp-npm-global/bin:$PATH
+
+# Use a tmpfs mount for the installation directory with increased size (1GB)
+RUN --mount=type=tmpfs,target=/temp-npm-global,size=1073741824 \
+    sh -c "npm install -g pm2 --prefix /temp-npm-global && \
+           tar -C /temp-npm-global -czf /app/pm2.tar.gz ."
+
+#############################
+# Stage 2: Final Image
+#############################
+FROM node:14-alpine
+
+WORKDIR /app
+
+# Set the custom global prefix and update PATH for the final image
+ENV NPM_CONFIG_PREFIX=/app/npm-global
+ENV PATH=/app/npm-global/bin:$PATH
+
+# Copy the archived PM2 installation from the builder stage
+COPY --from=builder /app/pm2.tar.gz /app/pm2.tar.gz
+
+# Create the target directory and extract the PM2 installation there
+RUN mkdir -p /app/npm-global && tar -C /app/npm-global -xzf /app/pm2.tar.gz
+
+# Install production dependencies for your application.
+COPY package*.json ./
+RUN npm install --only=production
+
+# Copy the rest of the application code.
+COPY . .
+
+EXPOSE 5010
+
+# Start the application using PM2.
+CMD ["pm2-runtime", "npm", "--", "start"]

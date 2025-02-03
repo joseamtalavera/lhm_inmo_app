@@ -93,5 +93,9 @@ export const StyledSaveDialogPaper = {
 };
 
 export const StyledDialogSubir = styled(DialogTitle)`
-color: #1E90FF; 
+  color: #1E90FF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;

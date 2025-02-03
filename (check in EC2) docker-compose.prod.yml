@@ -8,6 +8,8 @@ services:
       - REACT_APP_API_URL=https://app.lhainmobiliaria.es
     volumes:
       - uploads:/usr/share/nginx/uploads
+      - documents:/usr/share/nginx/documents
+    restart: always
 
   backend:
     image: ghcr.io/josemolinatalavera/backend:latest
@@ -21,5 +23,10 @@ services:
       - PGOPTIONS=--search_path=lhainmobiliaria
       - APP_DOMAIN=app.lhainmobiliaria.es
     volumes:
-       - /usr/share/nginx/uploads:/usr/share/nginx/uploads 
+      - uploads:/usr/share/nginx/uploads
+      - documents:/usr/share/nginx/documents
     restart: always
+
+volumes:
+  uploads:
+  documents:

@@ -1,10 +1,8 @@
 
-# Dockerfile for backend with PM2
-
 FROM node:14-alpine
 
 # Install PM2 globally
-RUN npm install -g pm2
+# RUN npm install -g pm2
 
 # Set working directory
 WORKDIR /app
@@ -20,5 +18,7 @@ COPY . .
 EXPOSE 5010
 
 # Start the application using PM2
-CMD ["pm2-runtime", "npm", "--", "start"]
+# CMD ["pm2-runtime", "npm", "--", "start"]
+CMD ["npm", "start"]
+
 

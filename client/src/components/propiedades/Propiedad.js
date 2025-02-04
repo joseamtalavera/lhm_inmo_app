@@ -431,11 +431,15 @@ const Propiedad = () => {
 
     // ------------------handleOpenDocumentModal logic for opening the modal------------------
 
-    const handleOpenDocumentModal = () => {
-        setOpenDocumentModal(false);
-        setDocumentTipo('');
-        setDocumentDescripcion('');
-        setSelectedDocument(null);
+    const handleOpenDocumentModal = (shouldOpen = true) => {
+        if (shouldOpen) {
+            setOpenDocumentModal(true);
+            setDocumentTipo('');
+            setDocumentDescripcion('');
+            setSelectedDocument(null);
+        } else {
+            setOpenDocumentModal(false);
+        }
     };
 
     // ------------------handleCloseDocumentModal (Close the Modal)------------------
@@ -469,7 +473,7 @@ const Propiedad = () => {
 
             const newDocument = await response.json();
             setDocuments((prevDocuments) => [...prevDocuments, newDocument]);
-            handleOpenDocumentModal();
+            handleOpenDocumentModal(false); // Close the modal after successful submission
         } catch (error) {
             console.error('Error subiendo el documento:', error);
         }

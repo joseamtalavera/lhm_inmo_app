@@ -1,4 +1,3 @@
-// Documentation.js
 
 import React from 'react';
 import { 

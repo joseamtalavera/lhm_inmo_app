@@ -52,6 +52,7 @@ const Propiedad = () => {
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isUploading, setIsUploading] = useState(false);
 
     // Edit states for each tab
     const [isEditingGeneralInfo, setIsEditingGeneralInfo] = useState(location.state?.edit ?? false);
@@ -139,6 +140,22 @@ const Propiedad = () => {
         };
         fetchProperty();
     }, [id]);   
+
+    // ------------------fetchUpadatedImages logic------------------
+    const fetchUpdatedImages = async () => {
+        try {
+            console.log('Fetching updated images');
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/images?timestamp=${Date.now()}`);
+            if (!response.ok) throw new Error('Failed to fetch updated images');
+            const imagesData = await response.json();
+            console.log('Updated images fetched:', imagesData);
+            setImages(imagesData);
+        } catch (error) {
+            console.error('Error fetching updated images:', error);
+        }
+    };
+
+
 
     //------------------handleChange logic------------------
 
@@ -278,7 +295,13 @@ const Propiedad = () => {
     // ------------------saveProperty logic userd for image uploading------------------
 
     const saveProperty = async () => {
+        if (!property || !property.ref) {
+            console.error('Property state is undefined');
+            return null;
+        }
+
         setIsSaving(true);
+
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${id}`, {
                 method: 'PUT',
@@ -295,16 +318,17 @@ const Propiedad = () => {
             const updatedProperty = await response.json();
 
             // Merge updated property with existing property state
-            setProperty((prevProperty) => ({
+           /*  setProperty((prevProperty) => ({
                 ...prevProperty,
                 ...updatedProperty,
-            }));
+            })); */
     
             console.log('Property saved successfully:', updatedProperty);
-            return updatedProperty;
+            
+            return updatedProperty; // Return only the ref
         } catch (error) {
             console.error('Error saving property:', error);
-            throw error; 
+            return null; 
         } finally {
             setIsSaving(false);
         }
@@ -328,22 +352,27 @@ const Propiedad = () => {
             if (!response.ok) {
                 throw new Error('Failed to upload image');
             }
-    
-            const newImage = await response.json();
-            console.log('Uploaded image response:', newImage);
-    
-            setImages((prevImages) => [...prevImages, newImage]);
+
+            console.log('Image uploaded successfully');
+
+            // Wait briefly to allow the server to update the image
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            await fetchUpdatedImages(); // Fetch the updated images from the server
         } catch (error) {
             console.error('Error uploading image:', error);
         }
     };
+
+    // ------------------handleUpload logic for Image Uploading------------------
     
     const handleUpload = async (e) => {
         const file = e.target.files[0];
-        if (!file) {
-            console.error('No file selected');
+        if (!file || isUploading) {
             return;
         }
+        setIsUploading(true);
+
         try {
             // Ensure property is saved and ref is available
             const updatedProperty = property?.ref
@@ -356,8 +385,15 @@ const Propiedad = () => {
             }
             setProperty(updatedProperty); // Update property state
             await uploadImage(file, updatedProperty.ref); // Upload the image
+
+            await saveProperty(); // Save the property again to update the image count
+
+            e.target.value = null; // Clear the file input
+
         } catch (error) {
             console.error('Error in handleUpload:', error);
+        } finally {
+            setIsUploading(false); // Reset the uploading state
         }
     };
 
@@ -374,7 +410,11 @@ const Propiedad = () => {
             if (!response.ok) throw new Error('Failed to delete image');
     
             console.log(`Successfully deleted image with ID: ${imageId}`);
-            setImages((prevImages) => prevImages.filter((image) => image.id !== imageId));
+
+            // Immediately update state to remove the deleted image.
+            setImages(prevImages => prevImages.filter(image => image.id !== imageId));
+            // Optionally, fetch updated images from the server.
+            await fetchUpdatedImages();
         } catch (error) {
             console.error('Error deleting image:', error);
             setOpen(true);

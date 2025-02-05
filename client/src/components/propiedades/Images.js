@@ -76,7 +76,7 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
                                                 <CardMedia
                                                     component="img"
                                                     height="200"
-                                                    image={image.url}
+                                                    image={`${image.url}?timestamp=${Date.now()}`} 
                                                     alt={image.fototitle || 'Imagen de la Propiedad'}
                                                 />
                                                 <CardContent sx={{ display: 'flex', alignItems: 'center' }}>

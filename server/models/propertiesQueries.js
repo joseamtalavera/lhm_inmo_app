@@ -1,4 +1,3 @@
-
 const { request } = require('express');
 const { uploadPropertyDocument } = require('../controllers/propertiesController');
 const pool = require('./db');
@@ -212,7 +211,7 @@ const getPropertyImages = async (ref) => {
             `SELECT id, Ref, Url, FotoTitle, Principal, Cabecera
              FROM lhainmobiliaria.vimages
              WHERE Ref = $1
-             ORDER BY id ASC`,
+             ORDER BY image_order ASC`,
             [ref]
         );
         return result.rows;
@@ -422,39 +421,35 @@ const updatePropertyAmenitiesDb = async (ref, amenities) => {
 };
 
 const updateAllImagesDb = async (updatedImages) => {
-    const client = await pool.connect(); // Get a client from the pool
+    const client = await pool.connect();
     try {
         console.log('Starting transaction to update all images');
-        await client.query('BEGIN'); // Begin a transaction
+        await client.query('BEGIN');
 
-        // Map through each image and update the `principal` and `cabecera` fields
+        // Update each image by persisting principal, cabecera, and new order
         const updatePromises = updatedImages.map(async (image) => {
-            console.log('Updating image:', image);
-            const result = await client.query(
-                `UPDATE lhainmobiliaria.vimages
-                 SET principal = $1, cabecera = $2
-                 WHERE id = $3 RETURNING *`,
-                [image.principal, image.cabecera, image.id]
+            return client.query(
+                `UPDATE lhainmobiliaria.vimages 
+                 SET principal = $1, cabecera = $2, image_order = $3 
+                 WHERE id = $4`,
+                [image.principal, image.cabecera, image.order, image.id]
             );
-            console.log('Update result:', result.rows[0]);
-            return result;
         });
 
-        // Wait for all updates to complete
         await Promise.all(updatePromises);
 
         console.log('Committing transaction');
-        await client.query('COMMIT'); // Commit the transaction
+        await client.query('COMMIT');
         console.log('Transaction committed successfully');
 
         return { message: `${updatedImages.length} images updated successfully` };
     } catch (error) {
         console.error('Error in updateAllImagesDb:', error);
         console.log('Rolling back transaction');
-        await client.query('ROLLBACK'); // Roll back the transaction on error
+        await client.query('ROLLBACK');
         throw error;
     } finally {
-        client.release(); // Release the client back to the pool
+        client.release();
         console.log('Client released');
     }
 };

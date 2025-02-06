@@ -356,9 +356,10 @@ const Propiedad = () => {
             console.log('Image uploaded successfully');
 
             // Wait briefly to allow the server to update the image
-            await new Promise(resolve => setTimeout(resolve, 500));
-
+            const uploadedImage = await new Promise(resolve => setTimeout(resolve, 500));
             await fetchUpdatedImages(); // Fetch the updated images from the server
+
+            return uploadedImage;
         } catch (error) {
             console.error('Error uploading image:', error);
         }

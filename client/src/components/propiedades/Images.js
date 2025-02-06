@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) => {
     const fileInputRef = useRef(null);
-   
+
     const handleDragEnd = (result) => {
         if (!result.destination) return;
 
@@ -14,16 +14,18 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
         const [movedImage] = reorderedImages.splice(result.source.index, 1);
         reorderedImages.splice(result.destination.index, 0, movedImage);
 
-        // Update the first image as the principal and cabecera image
+        // Set new ordering by adding/updating an "order" property on each image
         const updatedImages = reorderedImages.map((image, index) => ({
             ...image, 
+            order: index,
             principal: index === 0 ? 1 : 0,
             cabecera: index === 0 ? 1 : 0,
         }));
 
-        setImages(reorderedImages);
+        // Update UI state immediately
+        setImages(updatedImages);
 
-        // Update the images in the database
+        // Call API to persist the new order
         updateAllImages(updatedImages);
     };
 
@@ -47,6 +49,20 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
             console.error('Error updating images:', error);
         }
     };
+
+    // Added useEffect: if only one image exists, mark it as principal and cabecera.
+    React.useEffect(() => {
+        if (images.length === 1 && images[0].principal !== 1) {
+            const updatedImages = images.map((image, index) => ({
+                ...image,
+                order: index,
+                principal: index === 0 ? 1 : 0,
+                cabecera: index === 0 ? 1 : 0,
+            }));
+            setImages(updatedImages);
+            updateAllImages(updatedImages);
+        }
+    }, [images, setImages]);
 
     const handleTitleChange = (index, newTitle) => {
         const updatedImages = images.map((image, i) => 
@@ -128,7 +144,6 @@ const Images = ({ images, setImages, isEditing, handleUpload, handleDelete }) =>
                                             ref={fileInputRef}
                                             hidden
                                             onChange={handleUpload}
-                                            //disabled={!propertyRef}
                                         />
                                     </Box>
                                 </Grid>

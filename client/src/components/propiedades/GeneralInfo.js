@@ -289,6 +289,7 @@ const generateGridItem = (field, property, handleChange, isEditing) => {
 };
 
 const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActiveTab }) => {
+
     console.log('Recived property data in GenarlInfo', property);
     
     const handleImageClick = () => {
@@ -315,7 +316,12 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                         <Grid item xs={12} md={3}>
                             <Box sx={{ width:'100%', mb: 2 }}>
                                 {property.url ? (
-                                    <img src={property.url} alt="Img" style={{ width: '100%', height: 'auto', borderRadius: '4px' }} />
+                                    <img 
+                                        key={property.url}
+                                        src={property.url} 
+                                        alt="Img" 
+                                        style={{ width: '100%', height: 'auto', borderRadius: '4px' }} 
+                                    />
                                 ) : (
                                     <Box
                                         sx={{

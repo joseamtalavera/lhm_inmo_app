@@ -22,7 +22,7 @@ FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Copy the Nginx configuration file
-COPY nginx.conf /etc/nginx/nginx.conf
+# COPY nginx.conf /etc/nginx/nginx.conf. Esta ya en EC2.
 
 EXPOSE 80
 

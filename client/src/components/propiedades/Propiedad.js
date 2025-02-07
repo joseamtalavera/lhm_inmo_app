@@ -141,15 +141,35 @@ const Propiedad = () => {
         fetchProperty();
     }, [id]);   
 
+    useEffect(() => {
+        if (images.length > 0) {
+          // Construct a new URL with a cache-busting query parameter
+          const updatedUrl = `${images[0].url}?t=${Date.now()}`;
+          setProperty(prev => ({ ...prev, url: updatedUrl }));
+        }
+      }, [images]);
+
     // ------------------fetchUpadatedImages logic------------------
     const fetchUpdatedImages = async () => {
         try {
             console.log('Fetching updated images');
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/images?timestamp=${Date.now()}`);
+            
             if (!response.ok) throw new Error('Failed to fetch updated images');
             const imagesData = await response.json();
             console.log('Updated images fetched:', imagesData);
+            
             setImages(imagesData);
+
+            // If there is at least one image, update property.url dynamically
+            if (imagesData.length > 0) {
+                const updatedUrl = `${imagesData[0].url}?t=${Date.now()}`;
+                setProperty(prev => ({
+                    ...prev,
+                    url: updatedUrl,
+                }));
+            }
+
         } catch (error) {
             console.error('Error fetching updated images:', error);
         }
@@ -388,6 +408,7 @@ const Propiedad = () => {
             await uploadImage(file, updatedProperty.ref); // Upload the image
 
             await saveProperty(); // Save the property again to update the image count
+            await fetchUpdatedImages(); // Fetch the updated images from the server
 
             e.target.value = null; // Clear the file input
 

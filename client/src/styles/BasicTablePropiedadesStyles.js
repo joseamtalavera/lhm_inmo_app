@@ -156,7 +156,7 @@ export const RedDialogButton = styled(Button)`
   border-color: red;
 `;
 
-export const BlueText = styled(DialogContentText)`
+export const StyledDeleteDialogText = styled(DialogContentText)`
   color: #1E90FF;
 `;
 

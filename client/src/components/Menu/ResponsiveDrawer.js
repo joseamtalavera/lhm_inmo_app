@@ -1,7 +1,6 @@
-// ResponsiveDrawer.js
 
 import React, { useState } from 'react';
-import { List, ListItem, ListItemText, useMediaQuery, useTheme, Box } from '@mui/material';
+import { List, ListItemText, useMediaQuery, useTheme, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';

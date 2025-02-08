@@ -110,18 +110,6 @@ export default function Layout({ children }) {
     currentPage = allItems.find((item) => item.path === parentPath)?.text;
   }
 
-  /* React.useEffect(() => {
-    if (isMobile) {
-      setOpen(false);
-    }
-  }, [location.pathname, isMobile]);
-
-  const handleItemClick = ()=> {
-    if (isMobile) {
-      setOpen(false);
-  }
-  } */
-
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>

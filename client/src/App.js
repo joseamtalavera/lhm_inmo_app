@@ -15,11 +15,13 @@ import {
   StyledParagraph
 } from './styles/AppStyles';
 import { Link } from 'react-router-dom';
+import CookieConsent from './components/Cookies/CookieConsent';
 
 const App = () => {
   return (
     <>
       <GlobalStyle />
+      <CookieConsent />
       <AppContainer>
         <DrawerContainer>
           <ResponsiveDrawer />

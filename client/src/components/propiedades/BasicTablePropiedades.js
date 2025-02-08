@@ -34,7 +34,6 @@ import {
     StyledCard,
     StyledCardContent,
     StyledCardTitle,
-    //StyledChip,
     StyledCardActions,
     StyledBox,
     StyledCircularProgress,
@@ -44,6 +43,7 @@ import {
     RedDialogButton,
     PropertyImage,
     PropertyCardImage,
+    StyledDeleteDialogText,
 } from '../../styles/BasicTablePropiedadesStyles';
 
 const generateNextReference = async () => {
@@ -405,7 +405,7 @@ export default function DataTable({ filter: initialFilter }) {
                 >
                     <StyledDialogTitle>Borrar Propiedad</StyledDialogTitle>
                     <DialogContent>
-                        Estas seguro que deseas borrar esta propiedad?
+                        <StyledDeleteDialogText>¿Estas seguro que deseas borrar esta propiedad?</StyledDeleteDialogText>
                     </DialogContent>
                     <DialogActions>
                         <DialogButton 

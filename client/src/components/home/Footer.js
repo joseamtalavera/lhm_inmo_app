@@ -11,6 +11,7 @@ import {
   FooterDetailItemCentered,
 } from '../../styles/FooterStyles';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import WhatsappButton from '../WhatsappButton';  // <- added import
 
 const Footer = () => {
   return (
@@ -85,6 +86,7 @@ const Footer = () => {
           Aviso Legal
         </FooterLink>
       </FooterDetailItemCentered>
+      <WhatsappButton />  {/* added WhatsappButton component */}
     </FooterContainer>
   );
 };

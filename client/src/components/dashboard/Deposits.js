@@ -2,24 +2,25 @@ import * as React from 'react';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Title from './Title';
-
-function preventDefault(event) {
-  event.preventDefault();
-}
+import { useProperties } from './PropertiesContext';
 
 export default function Deposits() {
+  
+  const { activeProperties } = useProperties();
+  const today = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+
   return (
     <React.Fragment>
-      <Title>Recent Payments</Title>
+      <Title>Propiedades Activas</Title>
       <Typography component="p" variant="h4">
-        $3,024.00
+        {activeProperties.length} 
       </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
-        on 15 March, 2019
+        {today} 
       </Typography>
       <div>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          View balance
+        <Link color="primary" href="/dashboard/propiedades">
+          Ver Propiedades 
         </Link>
       </div>
     </React.Fragment>

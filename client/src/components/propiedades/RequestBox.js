@@ -22,6 +22,7 @@ const RequestBox = ({ propertyRef }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isFormVisible, setIsFormVisible] = useState(true);
+  const [name, setName] = useState(''); // added state for Nombre
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,6 +42,7 @@ const RequestBox = ({ propertyRef }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     const sanitizedValue = DOMPurify.sanitize(value);
+    if (name === 'nombre') setName(sanitizedValue); 
     if (name === 'message') setMessage(sanitizedValue);
     if (name === 'email') setEmail(sanitizedValue);
     if (name === 'telephone') setTelephone(sanitizedValue);
@@ -48,13 +50,13 @@ const RequestBox = ({ propertyRef }) => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    if (!message || !email || !telephone) {
+    if (!name || !message || !email || !telephone) { // validate nombre
       setError('Todos los campos son obligatorios.');
       return;
     }
 
     // Add debugging logs
-    console.log('Sending request data:', { message, email, telephone, propertyRef });
+    console.log('Sending request data:', { name, message, email, telephone, propertyRef });
 
     try { 
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contactar-email`, {
@@ -62,11 +64,12 @@ const RequestBox = ({ propertyRef }) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message, email, telephone, propertyRef })
+        body: JSON.stringify({ name, message, email, telephone, propertyRef }) // include nombre
       });
 
       if(response.ok) {
         setSuccess('Mensaje enviado correctamente.');
+        setName(''); // clear nombre
         setMessage('');
         setEmail('');
         setTelephone('');
@@ -97,12 +100,12 @@ const RequestBox = ({ propertyRef }) => {
           <CloseDash onClick={handleCloseForm}></CloseDash>
           <Title>HAZNOS TU CONSULTA</Title>
           <RequestForm onSubmit={handleSubmit}>
-            <RequestTextarea
-              name="message"
-              placeholder="Escribe aquí tu mensaje..."
-              value={message}
+            <RequestInput
+              type="text"
+              name="nombre"
+              placeholder="Tu nombre..."
+              value={name}
               onChange={handleInputChange}
-              rows={4}
             />
             <RequestInput
               type="email"
@@ -117,6 +120,13 @@ const RequestBox = ({ propertyRef }) => {
               placeholder="Tu teléfono..."
               value={telephone}
               onChange={handleInputChange}
+            />
+            <RequestTextarea
+              name="message"
+              placeholder="Escribe aquí tu mensaje..."
+              value={message}
+              onChange={handleInputChange}
+              rows={4}
             />
             {error && <ErrorMessage>{error}</ErrorMessage>}
             <RequestButton type="submit">Enviar</RequestButton>

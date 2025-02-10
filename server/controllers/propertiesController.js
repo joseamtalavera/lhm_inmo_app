@@ -16,6 +16,7 @@ const {
     deleteDocumentDb,
     updateAllImagesDb,
     addRequestDb,
+    getRequestsDb,
 } = require('../models/propertiesQueries');
 const fs = require('fs');
 const path = require('path');
@@ -86,6 +87,16 @@ exports.getPropertyDocuments = async (req, res, next) => {
     } catch (error) {
         console.error('Error in getPropertyDocuments:', error);
         next(error);
+    }
+}
+
+exports.getRequests = async (req, res, next) => {
+    try {
+        const result = await getRequestsDb()
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error in getRequests:', error);
+        res.status(500).json({ message: 'Error fetching requests' });
     }
 }
 
@@ -285,14 +296,14 @@ exports.uploadPropertyDocument = async (req, res, next) => {
 };
 
 exports.sendEmail = async (req, res, next) => {
-    const { message, email, telephone, propertyRef } = req.body;
+    const { name, message, email, telephone, propertyRef } = req.body;
 
     // Add debugging logs
     console.log('Received request data:', { message, email, telephone, propertyRef });
 
     try {
         // save the request to the database
-        const newRequest = await addRequestDb({ message, email, telephone, propertyRef });
+        const newRequest = await addRequestDb({name, message, email, telephone, propertyRef });
 
         // send the confirmation email to the user
         const transporter = nodemailer.createTransport({
@@ -330,6 +341,8 @@ exports.sendEmail = async (req, res, next) => {
         res.status(500).json({ message: 'Error sending email' });
     }
 };
+
+
 
 // delete Controllers   
 

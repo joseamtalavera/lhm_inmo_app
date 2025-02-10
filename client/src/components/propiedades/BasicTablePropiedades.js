@@ -209,6 +209,31 @@ export default function DataTable({ filter: initialFilter }) {
         });
     }, [filteredProperties, order, orderBy]);
 
+    const renderStatusChip = (activeStatus) => {
+        return (
+            <Chip
+                label={
+                    activeStatus === 2 ? "Vendida" :
+                    activeStatus === 1 ? "Activa" : "Inactiva"
+                }
+                icon={
+                    activeStatus === 2 ? 
+                        <CheckCircleIcon sx={{ color: '#1E90FF !important' }} /> :
+                    activeStatus === 1 ? 
+                        <CheckCircleIcon sx={{ color: '#4caf50 !important' }} /> :
+                        <CancelIcon sx={{ color: '#f44336 !important' }} />
+                }
+                sx={{
+                    mt: 2,
+                    minWidth: '100px', // fixed chip width for equal border length
+                    borderColor: activeStatus === 2 ? '#1E90FF' : activeStatus === 1 ? 'success.main' : 'error.main',
+                    color: activeStatus === 2 ? '#1E90FF' : activeStatus === 1 ? 'success.main' : 'error.main'
+                }}
+                variant="outlined"
+            />
+        );
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', minHeight: '100vh', mt: 4 }}>
@@ -324,12 +349,13 @@ export default function DataTable({ filter: initialFilter }) {
                                             <StyledTableCell>{property.title}</StyledTableCell>
                                             <StyledTableCell>{property.localidad}</StyledTableCell>
                                             <StyledTableCell>
-                                            <Chip
+                                          {/*   <Chip
                                                 label={property.active ? "Activa" : "Inactiva"}
                                                 icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
                                                 color={property.active ? "success" : "error"}
                                                 variant="outlined"
-                                            />
+                                            /> */}
+                                            {renderStatusChip(property.active)}
                                             </StyledTableCell>
                                             <StyledTableCell>
                                                 <IconButton 
@@ -363,13 +389,14 @@ export default function DataTable({ filter: initialFilter }) {
                                     <StyledCardTitle>{property.ref}</StyledCardTitle>
                                     <Typography variant="body2">{property.title}</Typography>
                                     <Typography variant="body2">{property.localidad}</Typography>
-                                    <Chip
+                                   {/*  <Chip
                                         label={property.active ? "Activa" : "Inactiva"}
                                         icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
                                         color={property.active ? "success" : "error"}
                                         variant="outlined"
                                         sx={{ mt: 2 }}
-                                    />
+                                    /> */}
+                                     {renderStatusChip(property.active)}
                                     <StyledCardActions>
                                         <IconButton 
                                             color="primary" 

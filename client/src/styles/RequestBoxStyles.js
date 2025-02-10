@@ -56,6 +56,7 @@ export const RequestTextarea = styled.textarea`
   font-family: inherit;
   line-height: 1.4;
   color: #333;
+  margin-top: 10px; // added margin for extra gap
   &:focus {
     border-color: #5b197f;
     outline: none;

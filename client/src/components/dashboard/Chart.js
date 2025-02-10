@@ -1,158 +1,111 @@
-/* import * as React from 'react';
+import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { Line } from 'react-chartjs-2';
 import Title from './Title';
+import { useState, useEffect } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title as ChartTitle,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-// Generate Sales Data
-function createData(time, amount) {
-  return { time, amount: amount ?? null };
-}
-
-const data = [
-  createData('00:00', 0),
-  createData('03:00', 300),
-  createData('06:00', 600),
-  createData('09:00', 800),
-  createData('12:00', 1500),
-  createData('15:00', 2000),
-  createData('18:00', 2400),
-  createData('21:00', 2400),
-  createData('24:00'),
-];
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ChartTitle,
+  Tooltip,
+  Legend
+);
 
 export default function Chart() {
   const theme = useTheme();
+  const [chartData, setChartData] = useState({ labels: [], counts: [] });
+
+  useEffect(() => {
+    // Fetch all properties and select vendidas (with fallback timestamp)
+    fetch(`${process.env.REACT_APP_API_URL}/api/properties`)
+      .then(res => res.json())
+      .then(data => {
+        // Filter properties that are vendidas and assign fallback timestamp if missing
+        const vendidas = data
+          .filter(property => property.active === 2)
+          .map(property => ({
+            ...property,
+            vendidaTimestamp: property.vendidaTimestamp || property.createdAt
+          }));
+        const monthlyCounts = {};
+        vendidas.forEach(property => {
+          if (property.vendidaTimestamp) {
+            const date = new Date(property.vendidaTimestamp);
+            const month = date.toLocaleString('default', { month: 'long' });
+            monthlyCounts[month] = (monthlyCounts[month] || 0) + 1;
+          }
+        });
+        const labels = Object.keys(monthlyCounts);
+        const counts = labels.map(label => monthlyCounts[label]);
+        setChartData({ labels, counts });
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  const data = {
+    labels: chartData.labels,
+    datasets: [
+      {
+        label: 'Vendidas',
+        data: chartData.counts,
+        borderColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.light,
+        tension: 0.4,
+        fill: false,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+      tooltip: {
+        mode: 'index',
+        intersect: false,
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Mes',
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Cantidad Vendidas',
+        },
+        beginAtZero: true,
+      },
+    },
+  };
 
   return (
     <React.Fragment>
-      <Title>Monthly Production</Title>
-      <div style={{ width: '100%', flexGrow: 1, overflow: 'hidden' }}>
-        <LineChart
-          width={500}
-          height={300}
-          data={data}
-          margin={{
-            top: 16,
-            right: 20,
-            left: 70,
-            bottom: 30,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="time" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="amount" stroke={theme.palette.primary.light} activeDot={{ r: 8 }} />
-        </LineChart>
+      <Title>Vendidas Mensuales</Title>
+      <div style={{ width: '100%', height: 300, flexGrow: 1, overflow: 'hidden' }}>
+        <Line data={data} options={options} />
       </div>
     </React.Fragment>
   );
-} */
-
-  import * as React from 'react';
-  import { useTheme } from '@mui/material/styles';
-  import { Line } from 'react-chartjs-2';
-  import Title from './Title';
-  import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title as ChartTitle,
-    Tooltip,
-    Legend,
-  } from 'chart.js';
-  
-  // Register Chart.js components
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    ChartTitle,
-    Tooltip,
-    Legend
-  );
-  
-  // Generate Sales Data
-  function createData(time, amount) {
-    return { time, amount: amount ?? null };
-  }
-  
-  const rawData = [
-    createData('00:00', 0),
-    createData('03:00', 300),
-    createData('06:00', 600),
-    createData('09:00', 800),
-    createData('12:00', 1500),
-    createData('15:00', 2000),
-    createData('18:00', 2400),
-    createData('21:00', 2400),
-    createData('24:00'),
-  ];
-  
-  export default function Chart() {
-    const theme = useTheme();
-  
-    // Extract labels and amounts from rawData
-    const labels = rawData.map((item) => item.time);
-    const amounts = rawData.map((item) => item.amount);
-  
-    // Prepare the data object for Chart.js
-    const data = {
-      labels,
-      datasets: [
-        {
-          label: 'Ventas',
-          data: amounts,
-          borderColor: theme.palette.primary.light,
-          backgroundColor: theme.palette.primary.light,
-          tension: 0.4, // Smooth the line
-          fill: false,  // No fill under the line
-        },
-      ],
-    };
-  
-    // Define chart options
-    const options = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-        },
-        tooltip: {
-          mode: 'index',
-          intersect: false,
-        },
-      },
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Time',
-          },
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'Amount',
-          },
-          beginAtZero: true,
-        },
-      },
-    };
-  
-    return (
-      <React.Fragment>
-        <Title>Ventas Mensuales</Title>
-        <div style={{ width: '100%', height: 300, flexGrow: 1, overflow: 'hidden' }}>
-          <Line data={data} options={options} />
-        </div>
-      </React.Fragment>
-    );
-  }
-  
+}

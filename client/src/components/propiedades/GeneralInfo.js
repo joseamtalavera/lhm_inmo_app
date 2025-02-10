@@ -350,11 +350,31 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                                     Localidad: {property.localidad}
                                 </Typography>
                                 <Chip
-                                    label={property.active ? "Activa" : "Inactiva"}
-                                    icon={property.active ? <CheckCircleIcon /> : <CancelIcon />}
-                                    color={property.active ? "success" : "error"}
+                                    label={
+                                        property.active === 2 ? "Vendida" :
+                                        property.active === 1 ? "Activa" : "Inactiva"
+                                    }
+                                    icon={
+                                        property.active === 2 ? 
+                                            <CheckCircleIcon sx={{ color: '#1E90FF !important' }} /> :
+                                        property.active === 1 ?
+                                            <CheckCircleIcon sx={{ color: '#4caf50 !important' }} /> :
+                                            <CancelIcon sx={{ color: '#f44336 !important' }} />
+                                    }
+                                    sx={{ 
+                                        mt: 2, 
+                                        borderColor: property.active === 2 
+                                                        ? '#1E90FF' 
+                                                        : property.active === 1 
+                                                            ? 'success.main' 
+                                                            : 'error.main',
+                                        color: property.active === 2 
+                                                        ? '#1E90FF' 
+                                                        : property.active === 1 
+                                                            ? 'success.main' 
+                                                            : 'error.main'
+                                    }}
                                     variant="outlined"
-                                    sx={{ mt: 2 }} // Add margin-top to create space
                                 />
                             </Box>
                         </Grid>
@@ -367,7 +387,7 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                                 </FormLabel>
                                 <Select
                                     size="small"
-                                    name="Activa"
+                                    name="active" // changed from "Activa" to "active"
                                     value={property.active !== undefined ? String(property.active) : ''}
                                     onChange={handleChange}
                                     disabled={!isEditing}
@@ -380,6 +400,7 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                                     <MenuItem value=""><em>None</em></MenuItem>
                                     <MenuItem value="1" >Si</MenuItem>
                                     <MenuItem value="0" >No</MenuItem>
+                                    <MenuItem value="2" >Vendida</MenuItem> {/* changed value from "sold" to "2" */}
                                 </Select>
                             </FormControl>
                         </Grid>

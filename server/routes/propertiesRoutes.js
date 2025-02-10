@@ -58,6 +58,7 @@ router.get('/properties/:id', propertiesController.getPropertyById);
 router.get('/properties/:ref/amenities', propertiesController.getPropertyAmenities); 
 router.get('/properties/:ref/images', propertiesController.getPropertyImages);
 router.get('/properties/:ref/documents', propertiesController.getPropertyDocuments);
+router.get('/requests', propertiesController.getRequests);
 
 
 // put routes

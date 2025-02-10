@@ -256,6 +256,18 @@ const getIdFromTable = async (tableName, idColumnName, columnName, value) => {
     }
 };
 
+const getRequestsDb = async () => {
+    try {
+        const result = await pool.query(
+            `SELECT * FROM lhainmobiliaria.contactos ORDER BY created_at DESC`
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getRequestdDb:', error);
+        throw error;
+    }
+};
+
 
 // put Queries
 
@@ -636,11 +648,11 @@ const uploadPropertyDocumentDb = async (documentDetails) => {
 
 const addRequestDb = async (request) => {
     try {
-        const { message, email, telephone, propertyRef } = request;
+        // Destructure 'name' along with the other properties
+        const { name, message, email, telephone, propertyRef } = request;
         const result = await pool.query(
-            `INSERT INTO lhainmobiliaria.contactos (message, email, telephone, property_ref, created_at)
-                VALUES ($1, $2, $3, $4, NOW()) RETURNING *`,
-            [message, email, telephone, propertyRef]
+            `INSERT INTO lhainmobiliaria.contactos (name, message, email, telephone, property_ref, created_at) VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *`,
+            [name, message, email, telephone, propertyRef]
         );
         return result.rows[0];
     } catch (error) {
@@ -711,5 +723,6 @@ module.exports = {
     uploadPropertyDocumentDb,
     deleteDocumentDb,
     updateAllImagesDb,
-    addRequestDb
+    addRequestDb,
+    getRequestsDb
 };

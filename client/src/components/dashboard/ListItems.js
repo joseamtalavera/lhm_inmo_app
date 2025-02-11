@@ -14,7 +14,7 @@ import {
 
 export const listItems = [
   { text: 'Dashboard', icon: <DashboardIcon sx={{fontSize: 20}} />, path: '/dashboard' },
-  { text: 'Clientes', icon: <UsersIcon sx={{fontSize: 20}} />, path: '/dashboard/clientes' },
+  { text: 'Contactos', icon: <UsersIcon sx={{fontSize: 20}} />, path: '/dashboard/contactos' },
 ];
 
 const handleLogout = () => {
@@ -25,7 +25,7 @@ const handleLogout = () => {
 export const moreItems = [
   { text: 'Propiedades', icon: <CentresIcon sx={{fontSize: 20}} />, path: '/dashboard/propiedades' },
   { text: 'Settings', icon: <SettingsIcon sx={{fontSize: 20}} />, path: '/dashboard/settings' },
-  { text: 'Ayuda', icon: <HelpIcon sx={{fontSize: 20}} />, path: '/dashboard/ayuda' },
+ /*  { text: 'Ayuda', icon: <HelpIcon sx={{fontSize: 20}} />, path: '/dashboard/ayuda' }, */
   { text: 'Logout', icon: <LogoutIcon sx={{fontSize: 20}} />, onClick: handleLogout },
 ];
 

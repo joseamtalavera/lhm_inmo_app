@@ -14,7 +14,6 @@ import {
   Legend,
 } from 'chart.js';
 
-// Register Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -28,33 +27,54 @@ ChartJS.register(
 export default function Chart() {
   const theme = useTheme();
   const [chartData, setChartData] = useState({ labels: [], counts: [] });
+  const currentYear = new Date().getFullYear();
 
   useEffect(() => {
-    // Fetch all properties and select vendidas (with fallback timestamp)
-    fetch(`${process.env.REACT_APP_API_URL}/api/properties`)
-      .then(res => res.json())
-      .then(data => {
-        // Filter properties that are vendidas and assign fallback timestamp if missing
-        const vendidas = data
-          .filter(property => property.active === 2)
-          .map(property => ({
-            ...property,
-            vendidaTimestamp: property.vendidaTimestamp || property.createdAt
-          }));
+    const fetchChartData = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties`);
+        const data = await response.json();
+
+        const vendidas = data.filter(property => property.active == 2 && property.vendidaTimestamp);
+        const months = [
+          'enero',
+          'febrero',
+          'marzo',
+          'abril',
+          'mayo',
+          'junio',
+          'julio',
+          'agosto',
+          'septiembre',
+          'octubre',
+          'noviembre',
+          'diciembre'
+        ];
+          
         const monthlyCounts = {};
+        months.forEach(month => monthlyCounts[month] = 0);
+
         vendidas.forEach(property => {
-          if (property.vendidaTimestamp) {
+          const timestamp = property.vendidaTimestamp || property.upadated_at;
+          if (timestamp) {
             const date = new Date(property.vendidaTimestamp);
-            const month = date.toLocaleString('default', { month: 'long' });
-            monthlyCounts[month] = (monthlyCounts[month] || 0) + 1;
+      
+            if (date.getFullYear() === currentYear) {
+              const month = date.toLocaleString('es-ES', { month: 'long' });
+              monthlyCounts[month] = (monthlyCounts[month] || 0) + 1;
+            }
           }
         });
-        const labels = Object.keys(monthlyCounts);
+
+        const labels = months;
         const counts = labels.map(label => monthlyCounts[label]);
         setChartData({ labels, counts });
-      })
-      .catch(err => console.error(err));
-  }, []);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchChartData();
+  }, [currentYear]);
 
   const data = {
     labels: chartData.labels,
@@ -66,6 +86,7 @@ export default function Chart() {
         backgroundColor: theme.palette.primary.light,
         tension: 0.4,
         fill: false,
+        pointRadius: 3, 
       },
     ],
   };
@@ -96,13 +117,17 @@ export default function Chart() {
           text: 'Cantidad Vendidas',
         },
         beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          callback: (value) => Number.isInteger(value) ? value : null,
+        }
       },
     },
   };
 
   return (
     <React.Fragment>
-      <Title>Vendidas Mensuales</Title>
+      <Title>{`Propiedades Vendidas ${currentYear}`}</Title>
       <div style={{ width: '100%', height: 300, flexGrow: 1, overflow: 'hidden' }}>
         <Line data={data} options={options} />
       </div>

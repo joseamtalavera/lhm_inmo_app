@@ -16,7 +16,7 @@ import AllPropertiesPage from './components/propiedades/AllPropertiesPage';
 import PropertyPage from './components/propiedades/PropertyPage';
 import Partners from './components/Menu/Partners';
 import QuienesSomos from './components/Menu/QuienesSomos';
-import Clientes from './components/clientes/Clientes';
+import Contactos from './components/contactos/Contactos';
 import Settings from './components/settings/Settings';
 import Ayuda from './components/ayuda/Ayuda'; 
 import Comprar from './components/Menu/Comprar';
@@ -47,7 +47,7 @@ root.render(
         <Route path='/dashboard/propiedades' element={<PrivateRoute><Propiedades /></PrivateRoute>} />
         <Route path="/dashboard/propiedades/:id" element={<PrivateRoute><Propiedad /></PrivateRoute>} />
         <Route path="/dashboard/propiedades/add-propiedad" element={<PrivateRoute><AddPropiedad /></PrivateRoute>} />
-        <Route path="/dashboard/clientes" element={<PrivateRoute><Clientes /></PrivateRoute>} />
+        <Route path="/dashboard/contactos" element={<PrivateRoute><Contactos /></PrivateRoute>} />
         <Route path="/dashboard/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
         <Route path="/dashboard/ayuda" element={<PrivateRoute><Ayuda /></PrivateRoute>} />
       </Routes>

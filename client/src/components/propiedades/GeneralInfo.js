@@ -388,7 +388,7 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                                 <Select
                                     size="small"
                                     name="active" // changed from "Activa" to "active"
-                                    value={property.active !== undefined ? String(property.active) : ''}
+                                    value={property.active !== null ? String(property.active) : ''}
                                     onChange={handleChange}
                                     disabled={!isEditing}
                                     sx={{

@@ -76,7 +76,7 @@ const PropiedadesDestacadas = () => {
             <PropertyDetails>
               <PropertyDetailItem>
                 <BedIcon />
-                <span>{property.nstancias} habitaciones</span>
+                <span>{property.nestancias} habitaciones</span>
               </PropertyDetailItem>
               <PropertyDetailItem>
                 <SquareFootIcon />

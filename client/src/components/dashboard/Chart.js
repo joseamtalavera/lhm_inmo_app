@@ -35,7 +35,7 @@ export default function Chart() {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties`);
         const data = await response.json();
 
-        const vendidas = data.filter(property => property.active == 2 && property.vendidaTimestamp);
+        const vendidas = data.filter(property => property.active == 2 && property.vendidaTimestamp !== null);
         const months = [
           'enero',
           'febrero',
@@ -55,7 +55,7 @@ export default function Chart() {
         months.forEach(month => monthlyCounts[month] = 0);
 
         vendidas.forEach(property => {
-          const timestamp = property.vendidaTimestamp || property.upadated_at;
+          const timestamp = property.vendidaTimestamp || property.updated_at;
           if (timestamp) {
             const date = new Date(property.vendidaTimestamp);
       

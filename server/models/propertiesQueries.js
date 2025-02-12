@@ -139,6 +139,7 @@ const getPropertyById = async (id) => {
                 p.active, 
                 p.created_at, 
                 p.updated_at, 
+                p.vendida_timestamp AS "vendidaTimestamp",
                 p.idusuario, 
                 v.url AS url, 
                 d.destacada AS destacada,

@@ -119,7 +119,13 @@ export default function DataTable({ filter: initialFilter }) {
     }, []);
 
     const handleRowClick = (id) => {
+        console.log('Row clicked:', id);
         const property = properties.find(property => property.id === id);
+        if (!property) {
+            console.error('Property not found:', id);
+            return;
+        }
+        console.log('Property:', property);
         navigate(`/dashboard/propiedades/${id}`, { state: { property: property } });
     };
 
@@ -163,7 +169,7 @@ export default function DataTable({ filter: initialFilter }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ ref: newRef, title: 'New Property' }) 
+                body: JSON.stringify({ ref: newRef, title: 'New Property', active: 0 }) 
             });
 
             if (!response.ok) throw new Error('Failed to create property');
@@ -367,7 +373,10 @@ export default function DataTable({ filter: initialFilter }) {
                                                 >
                                                     <EditIcon />
                                                 </IconButton>
-                                                <IconButton color="red" onClick={(e) => { e.stopPropagation(); handleOpenDeleteDialog(property); }}>
+                                                <IconButton 
+                                                    color="error" // changed from "red" to valid MUI color "error"
+                                                    onClick={(e) => { e.stopPropagation(); handleOpenDeleteDialog(property); }}
+                                                >
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </StyledTableCell>
@@ -407,7 +416,10 @@ export default function DataTable({ filter: initialFilter }) {
                                         >
                                             <EditIcon />
                                         </IconButton>
-                                        <IconButton color="red" onClick={(e) => { e.stopPropagation(); handleOpenDeleteDialog(property); }}>
+                                        <IconButton 
+                                            color="error" // changed from "red" to valid MUI color "error"
+                                            onClick={(e) => { e.stopPropagation(); handleOpenDeleteDialog(property); }}
+                                        >
                                             <DeleteIcon />
                                         </IconButton>
                                     </StyledCardActions>

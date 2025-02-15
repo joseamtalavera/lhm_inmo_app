@@ -64,17 +64,17 @@ export const ContentWrapper = styled.div`
 export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 800px;
+  width: 65%; // previous value
   gap: 20px;
   align-items: center;
   justify-content: center;
   margin-top: 50px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   box-sizing: border-box;
 
   @media (max-width: 768px) {
-    margin-top: 10px; /* Adjust the value as needed */
+    margin-top: 10px;
+    width: 100%; // updated for full-width on mobile
   }
 `;
 
@@ -89,9 +89,8 @@ export const ContentWrapperBelowImage = styled.div`
 // Styled Carousel Container
 export const StyledCarouselContainer = styled.div`
   position: relative;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  width: 100%; // changed to fill the MainContainer
+  margin: 0 auto; // center the carousel
 `;
 
 // Styled Arrow
@@ -113,7 +112,7 @@ export const CarouselRequestContainer = styled.div`
   justify-content: space-between;
   width: 100%;
   margin-bottom: 20px;
-  margin-right: 20px;
+  /* Removed margin-right: 20px */
   gap: 15px;
 `;
 
@@ -133,8 +132,18 @@ export const StyledFullScreenContainer = styled.div`
 
 // Styled Request Box Container
 export const RequestBoxContainer = styled.div`
-  flex: 1;
+ flex: 1; 
   max-width: 300px;
+`;
+
+// Add new styled components for centering
+export const CenteredContentWrapper = styled(ContentWrapper)`
+  display: flex;
+  justify-content: center;
+`;
+
+export const CenteredRequestBoxContainer = styled(RequestBoxContainer)`
+  margin: 20px auto;
 `;
 
 // Typography
@@ -142,6 +151,8 @@ export const StyledTitle = styled.h1`
   font-size: 2.5rem;
   font-weight: 300; /* Thinner font weight */
   margin-bottom: 10px;
+  text-align: left !important; // enforce left alignment
+  align-self: flex-start; // ensure title aligns to the left in MainContainer
 `;
 
 export const StyledSubtitle = styled.h2`

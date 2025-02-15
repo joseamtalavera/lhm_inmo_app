@@ -3,10 +3,12 @@
 import styled from 'styled-components';
 import { AppBar, Toolbar, IconButton, Typography, Button, Drawer,ListItem } from '@mui/material';
 import { Link } from 'react-router-dom';
+import ButtonBase from '@mui/material/ButtonBase';
 
 // Styles for the AppBar component
 export const StyledAppBar = styled(AppBar)`
-    background: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important; // remove grey line shadow
 `;
 
 // Styles for the Toolbar component
@@ -61,7 +63,7 @@ export const MenuItem = styled(Typography)`
     margin-top: 10px !important;
     cursor: pointer;
     &:hover {
-        color: darkblue;
+        color: ${({ noHover }) => noHover ? '#1E90FF' : 'grey'};
     }
 `;
 
@@ -69,22 +71,37 @@ export const MenuItem = styled(Typography)`
 export const LoginButton = styled(Button)`
     margin-top: -5px;
     width: 100px;
-    background-color: #1E90FF;
+    background-color: transparent !important;
     text-transform: none;
     border-radius: 20px !important;
+    border: 2px solid #1E90FF !important;
 
     &:hover {
-        background-color: darkblue !important;
+        background-color: ${({ noHover }) => noHover ? 'transparent' : 'transparent'} !important;
     }
 
     &.MuiButton-root {
         text-transform: none;
+    } 
+`;
+
+// Add the custom login button to avoid the initial solid background:
+export const CustomLoginButton = styled(ButtonBase)`
+    margin-top: -6px;
+    padding: 6px 16px;
+    border: 1px solid #1E90FF;
+    border-radius: 20px;
+    color: #1E90FF;
+    background-color: transparent;
+    text-transform: none;
+    &:hover {
+        background-color: transparent;
     }
 `;
 
 // Styles for the text inside the login button
 export const LoginButtonText = styled(Typography)`
-    color: white;
+    color: #1E90FF;
 `;
 
 // Styles for the Drawer component

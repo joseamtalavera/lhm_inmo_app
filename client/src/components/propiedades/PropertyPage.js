@@ -31,13 +31,18 @@ import {
   StyledFullScreenContainer, 
   RequestBoxContainer,   
   PropertyDetailRef,
-  FloatingArrow
+  FloatingArrow,
+  CenteredContentWrapper,
+  CenteredRequestBoxContainer
 } from '../../styles/PropertyPageStyles';
 import ArrowIconIosIcon from '@mui/icons-material/ArrowBackIos';
 import CheckIcon from '../../styles/CheckIcon';
 import RequestBox from './RequestBox';
 import { CircularProgress, Box } from '@mui/material';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import styled from 'styled-components';
+
+// Remove inline declarations of CenteredContentWrapper and CenteredRequestBoxContainer and import them:
 
 const CollapsibleSection = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -195,6 +200,10 @@ const PropertyPage = () => {
     "Características de acondicionamiento interior": amenities.filter(amenity => amenity.category === "Características de acondicionamiento interior"),
   };
 
+  const displayedImages = images.length > 0 
+    ? images 
+    : [{ url: 'https://via.placeholder.com/800x400?text=No+Image+Available' }];
+
   return (
     <>
       <GlobalStyle />
@@ -206,24 +215,24 @@ const PropertyPage = () => {
           <ArrowIconIosIcon />
         </FloatingArrow>
 
-        <ContentWrapper>  
+        {/* Using the new styled component */}
+        <CenteredContentWrapper>
           <MainContainer>
             <StyledTitle>{property["Título"]}</StyledTitle>
-            <CarouselRequestContainer>
-              <StyledCarouselContainer>
-                <Carousel images={images} />
-                <StyledArrow onClick={handleFullScreenToggle}></StyledArrow>
-              </StyledCarouselContainer>
-
-              <RequestBoxContainer> 
-                <RequestBox propertyRef={property.Ref} />
-              </RequestBoxContainer>
-            </CarouselRequestContainer>
+            {/* New parent flex container to hold carousel and request box separately */}
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+              <CarouselRequestContainer style={{ flex: 3 }}>
+                <StyledCarouselContainer>
+                  <Carousel images={displayedImages} />
+                  <StyledArrow onClick={handleFullScreenToggle} />
+                </StyledCarouselContainer>
+              </CarouselRequestContainer>
+            </div>
 
             {isFullScreen && (
               <StyledFullScreenContainer>
-                <Carousel images={images} />
-                <StyledArrow onClick={handleFullScreenToggle}></StyledArrow>
+                <Carousel images={displayedImages} />
+                <StyledArrow onClick={handleFullScreenToggle} />
               </StyledFullScreenContainer>
             )}
 
@@ -234,17 +243,15 @@ const PropertyPage = () => {
                 <PropertyDetailPrecio>{property["Precio"]} €</PropertyDetailPrecio>
               </PropertyDetailsRow>
               <BlueDivider />
-              
               <StyledSubtitle>Descripción</StyledSubtitle>
               <p>{property["Descripción"]}</p>
               <BlueDivider />
-              
+
               <CollapsibleSection title="Informacion General">
                 <PropertyInfoContainer>
                   {primaryFields.map((field) => {
                     const value = property[field];
                     if (!value || value === 0) return null; // Excludes null, undefined, empty strings, and 0
-                    
                     return (
                       <PropertyInfoItem key={field}>
                         <strong>{field}:</strong> {value.toString()}
@@ -253,8 +260,8 @@ const PropertyPage = () => {
                   })}
                 </PropertyInfoContainer>
               </CollapsibleSection>
-              <BlueDivider /> 
-              
+              <BlueDivider />
+
               <CollapsibleSection title="Características Básicas">
                 {Object.keys(categorizedAmenities).map((category, index) => (
                   <AmenitySection key={index}>
@@ -262,7 +269,9 @@ const PropertyPage = () => {
                     <AmenitiesContainer>
                       {categorizedAmenities[category].map((amenity, i) => (
                         <React.Fragment key={i}>
-                          <Tick><CheckIcon size={20} /></Tick>
+                          <Tick>
+                            <CheckIcon size={20} />
+                          </Tick>
                           <AmenityLabel>{amenity.label}</AmenityLabel>
                         </React.Fragment>
                       ))}
@@ -271,37 +280,39 @@ const PropertyPage = () => {
                 ))}
               </CollapsibleSection>
               <BlueDivider />
-              
+
               <CollapsibleSection title="Video">
                 {/* Add video content here */}
                 <p>Video content goes here.</p>
               </CollapsibleSection>
               <BlueDivider />
-              
+
               <CollapsibleSection title="Plano">
                 {/* Add map or address details here */}
                 <p>Location details go here.</p>
               </CollapsibleSection>
               <BlueDivider />
-              
+
               <CollapsibleSection title="Certificado Energético">
                 {/* Add energy certificate info here */}
                 <p>Energy certificate details here.</p>
               </CollapsibleSection>
               <BlueDivider />
+
               <StyledSubtitle>Ubicación</StyledSubtitle>
               <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
-                <GoogleMap
-                  mapContainerStyle={mapContainerStyle}
-                  center={center}
-                  zoom={13}
-                >
+                <GoogleMap mapContainerStyle={mapContainerStyle} center={center} zoom={13}>
                   <Marker position={center} />
                 </GoogleMap>
               </LoadScript>
             </ContentWrapperBelowImage>
           </MainContainer>
-        </ContentWrapper>
+        </CenteredContentWrapper>
+
+        {/* Using the new styled RequestBox container */}
+        <CenteredRequestBoxContainer>
+          <RequestBox propertyRef={property.Ref} />
+        </CenteredRequestBoxContainer>
 
         <Footer />
       </AppContainer>

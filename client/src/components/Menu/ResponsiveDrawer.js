@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { List, ListItemText, useMediaQuery, useTheme, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -12,7 +11,6 @@ import {
     StyledIconButton,
     DesktopMenu,
     MenuItem,
-    LoginButton,
     LoginButtonText,
     StyledDrawer,
     CloseButton,
@@ -22,7 +20,8 @@ import {
     SelectorOption,
     ArrowIcon,
     IndentedListItem,
-    IndentedSelectorOption
+    IndentedSelectorOption,
+    CustomLoginButton
 } from '../../styles/ResponsiveDrawerStyles';
 
 const menuItems = [
@@ -38,6 +37,9 @@ const ResponsiveDrawer = () => {
     const [isSelectorOpen, setIsSelectorOpen] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const [mounted, setMounted] = useState(false);
+
+    useLayoutEffect(() => { setMounted(true); }, []);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -99,6 +101,7 @@ const ResponsiveDrawer = () => {
         </DrawerContent>
     );
 
+
     return (
         <div data-testid="responsive-drawer">
             <StyledAppBar position="static" elevation={0}>
@@ -119,10 +122,10 @@ const ResponsiveDrawer = () => {
                             <MenuIcon />
                         </StyledIconButton>
                     ) : (
-                        <DesktopMenu>
+                        <DesktopMenu key={mounted ? 'stable' : 'initial'}>
                             {menuItems.map((item, index) => (
                                 <div key={index} style={{ position: 'relative' }}>
-                                    <MenuItem component={Link} to={item.link} onClick={() => handleMenuItemClick(item)}>
+                                    <MenuItem component={Link} to={item.link} onClick={() => handleMenuItemClick(item)} noHover={!mounted}>
                                         {item.text}
                                         {item.text === 'Qué necesitas?' && (
                                             <ArrowIcon>
@@ -139,15 +142,11 @@ const ResponsiveDrawer = () => {
                                     )}
                                 </div>
                             ))}
-                            <LoginButton
-                                variant="contained"
-                                component={Link}
-                                to="/login"
-                            >
+                            <CustomLoginButton component={Link} to="/login">
                                 <LoginButtonText>
                                     Login
                                 </LoginButtonText>
-                            </LoginButton>
+                            </CustomLoginButton>
                         </DesktopMenu>
                     )}
                 </StyledToolbar>

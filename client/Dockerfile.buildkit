@@ -18,8 +18,11 @@ COPY package*.json ./
 RUN --mount=type=tmpfs,target=/app/npm-cache npm install
 
 COPY . .
-# Use the tmpfs mount during build as well if needed:
-RUN --mount=type=tmpfs,target=/app/npm-cache npm run build
+
+
+# Use the tmpfs mount during build with increased size:
+    RUN --mount=type=tmpfs,target=/app/npm-cache,tmpfs-size=1073741824 npm run build
+
 
 # Stage 2: Serve the app with Nginx
 FROM nginx:alpine

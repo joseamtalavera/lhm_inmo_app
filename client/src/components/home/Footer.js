@@ -1,4 +1,5 @@
 import React from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { 
   FooterContainer, 
   FooterContent, 
@@ -11,9 +12,11 @@ import {
   FooterDetailItemCentered,
 } from '../../styles/FooterStyles';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import WhatsappButton from '../WhatsappButton';  // <- added import
+import WhatsAppButton from '../WhatsAppButton';  
 
 const Footer = () => {
+  const isDesktop = useMediaQuery('(min-width:1024px)');
+
   return (
     <FooterContainer>
       <FooterContent>
@@ -86,7 +89,7 @@ const Footer = () => {
           Aviso Legal
         </FooterLink>
       </FooterDetailItemCentered>
-      <WhatsappButton />  {/* added WhatsappButton component */}
+      { isDesktop && <WhatsAppButton /> }  {/* render only on viewports >=1024px */}
     </FooterContainer>
   );
 };

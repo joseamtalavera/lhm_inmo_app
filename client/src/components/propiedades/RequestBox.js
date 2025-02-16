@@ -5,6 +5,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Fab, IconButton } fr
 import CloseIcon from '@mui/icons-material/Close';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import Button from '@mui/material/Button';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp'; // new import
 import {
   RequestForm,
   RequestInput,
@@ -16,8 +17,9 @@ import {
   Divider,
   Title,
   PropertyRefColor,
-  RequestBoxContainer, // added import
-  CloseDash // added import
+  RequestBoxContainer, 
+  CloseDash,
+  RequestButtonWhatsApp 
 } from '../../styles/RequestBoxStyles';
 
 const RequestBox = ({ propertyRef }) => {
@@ -157,7 +159,14 @@ const RequestBox = ({ propertyRef }) => {
         // Mobile view: fixed bottom form
         <RequestBoxContainer>
           {!isFormVisible ? (
-            <RequestButton onClick={handleButtonClick}>Contactar por email</RequestButton>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <RequestButton onClick={handleButtonClick}>
+                Contactar por email
+              </RequestButton>
+              <RequestButtonWhatsApp href="https://wa.me/34629901965" target="_blank">
+                <WhatsAppIcon style={{ fontSize: '30px' }} />
+              </RequestButtonWhatsApp>
+            </div>
           ) : (
             <>
               <CloseDash onClick={handleCloseForm} />

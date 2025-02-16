@@ -94,6 +94,25 @@ export const RequestButton = styled.button`
   }
 `;
 
+export const RequestButtonWhatsApp = styled.a`
+  display: block;
+  width: 100%;
+  background-color: #25d366;
+  color: #fff;
+  padding: 0px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  text-decoration: none;
+  text-align: center;
+  &:hover {
+    background-color: #25d366;
+  }
+`;
+
 export const ContactInfoContainer = styled.div`
   font-size: 14px;
   color: #666;

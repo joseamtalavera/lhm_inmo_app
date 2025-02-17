@@ -14,9 +14,9 @@ export const BigWhatsAppIcon = styled(WhatsAppIcon)`
     transform: scale(1.1);
   }
 
-  @media (max-width: 1024px) {
+  /* @media (max-width: 1024px) {
     left: auto;
     right: 20px;
     bottom: 100px;
-  }
+  } */
 `;

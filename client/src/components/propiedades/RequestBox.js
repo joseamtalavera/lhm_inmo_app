@@ -32,7 +32,7 @@ const RequestBox = ({ propertyRef }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const isMobile = useMediaQuery('(max-width:1024px)'); // added media query hook
+  const isMobile = useMediaQuery('(max-width:1025px)'); // added media query hook
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -97,12 +97,13 @@ const RequestBox = ({ propertyRef }) => {
             sx={{
               position: 'fixed',
               top: '180px',
+              borderRadius: '50px', // updated border radius
               right: '100px',
               zIndex: 1000,
               padding: '8px 16px',
             }}
           >
-            Contacta
+            Solicitar 
           </Button>
 
           <Dialog open={openModal} onClose={handleClose} fullWidth maxWidth="sm">

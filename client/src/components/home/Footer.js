@@ -1,5 +1,4 @@
 import React from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { 
   FooterContainer, 
   FooterContent, 
@@ -14,9 +13,7 @@ import {
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import WhatsAppButton from '../WhatsAppButton';  
 
-const Footer = () => {
-  const isDesktop = useMediaQuery('(min-width:1024px)');
-
+const Footer = ({ hideWhatsApp = false }) => {  // default hideWhatsApp = false
   return (
     <FooterContainer>
       <FooterContent>
@@ -89,7 +86,7 @@ const Footer = () => {
           Aviso Legal
         </FooterLink>
       </FooterDetailItemCentered>
-      { isDesktop && <WhatsAppButton /> }  {/* render only on viewports >=1024px */}
+      { !hideWhatsApp && <WhatsAppButton /> }  {/* rendered unless hideWhatsApp is true */}
     </FooterContainer>
   );
 };

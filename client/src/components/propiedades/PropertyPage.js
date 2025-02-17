@@ -74,6 +74,7 @@ const PropertyPage = () => {
   const [amenities, setAmenities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [hideWhatsApp, setHideWhatsApp] = useState(false);
   const navigate = useNavigate();
   
 
@@ -164,6 +165,13 @@ const PropertyPage = () => {
 
     fetchProperty();
   }, [id]);
+
+  useEffect(() => {
+    const handleResize = () => setHideWhatsApp(window.innerWidth < 1025);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (isLoading) {
     return (
@@ -314,7 +322,7 @@ const PropertyPage = () => {
           <RequestBox propertyRef={property.Ref} />
         </CenteredRequestBoxContainer>
 
-        <Footer />
+        <Footer hideWhatsApp={hideWhatsApp}/> 
       </AppContainer>
     </>
   );

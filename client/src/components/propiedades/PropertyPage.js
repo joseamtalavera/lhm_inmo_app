@@ -71,6 +71,7 @@ const PropertyPage = () => {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
   const [images, setImages] = useState([]);
+  const [videoUrl, setVideoUrl] = useState(null); // Added video state
   const [amenities, setAmenities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -156,6 +157,17 @@ const PropertyPage = () => {
         setProperty(transformedData);
         setImages(imagesData);
         setAmenities(amenitiesData);
+
+        // Fetch video similar to images
+        const videoResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/videos`);
+        if (videoResponse.ok) {
+          const videoData = await videoResponse.json();
+          
+          // If videoData is an array, extract the first URL
+          if (Array.isArray(videoData) && videoData.length > 0) {
+            setVideoUrl(videoData[0].url);
+          }
+        }
       } catch (error) {
         console.error('Error:', error);
       } finally {
@@ -290,8 +302,15 @@ const PropertyPage = () => {
               <BlueDivider />
 
               <CollapsibleSection title="Video">
-                {/* Add video content here */}
-                <p>Video content goes here.</p>
+                {/* Render the video only if videoUrl is available */}
+                { videoUrl ? (
+                  <video controls width="100%">
+                    <source src={videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <p>No video available</p>
+                )}
               </CollapsibleSection>
               <BlueDivider />
 

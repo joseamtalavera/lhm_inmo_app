@@ -224,6 +224,22 @@ const getPropertyImages = async (ref) => {
     }
 };
 
+const getPropertyVideos = async (ref) => {
+    try {
+        const result = await pool.query(
+            `SELECT id, ref, url 
+             FROM lhainmobiliaria.vvideos
+             WHERE ref = $1
+             ORDER BY id ASC`,
+            [ref]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getPropertyVideos:', error);
+        throw error;
+    }
+};
+
 const getPropertyDocuments = async (ref) => {
     try {
         const result = await pool.query(
@@ -667,6 +683,21 @@ const addRequestDb = async (request) => {
     }
 };
 
+const uploadPropertyVideoDb = async (videoDetails) => {
+    try {
+        const { ref, url } = videoDetails;
+        const result = await pool.query(
+            `INSERT INTO lhainmobiliaria.vvideos (ref, url)
+             VALUES ($1, $2)
+             RETURNING *`,
+            [ref, url]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in uploadPropertyVideoDb:', error);
+        throw error;
+    }
+};
 
 
 
@@ -712,6 +743,21 @@ const deleteDocumentDb = async (documentId) => {
     }
 };
 
+const deleteVideoDb = async (videoId) => {
+    try {
+        const result = await pool.query(
+            `DELETE FROM lhainmobiliaria.vvideos
+             WHERE id = $1
+             RETURNING *`,
+            [videoId]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in deleteVideoDb:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     getAllProperties,
     getPropertyById,
@@ -730,5 +776,8 @@ module.exports = {
     deleteDocumentDb,
     updateAllImagesDb,
     addRequestDb,
-    getRequestsDb
+    getRequestsDb,
+    getPropertyVideos,
+    uploadPropertyVideoDb,
+    deleteVideoDb
 };

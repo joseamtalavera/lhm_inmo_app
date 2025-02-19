@@ -50,6 +50,8 @@ const Propiedad = () => {
     const [amenities, setAmenities ] = useState([]);
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
+    // Add new state for videos
+    const [videos, setVideos] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
 
@@ -124,6 +126,13 @@ const Propiedad = () => {
                 console.log(`Images fetched: ${JSON.stringify(imagesData)}`);
                 setImages(imagesData);
 
+                // NEW: Fetch property videos
+                const videosResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/videos`);
+                if (!videosResponse.ok) throw new Error('Failed to fetch property videos');
+                const videosData = await videosResponse.json();
+                console.log(`Videos fetched: ${JSON.stringify(videosData)}`);
+                setVideos(videosData);
+
                 // 6) Fetch property documents
                 const documentsResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/documents`);
                 if (!documentsResponse.ok) throw new Error('Failed to fetch property documents');
@@ -174,7 +183,19 @@ const Propiedad = () => {
         }
     };
 
-
+    // NEW: Helper function to fetch updated videos
+    const fetchUpdatedVideos = async () => {
+        try {
+            console.log('Fetching updated videos');
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/videos?timestamp=${Date.now()}`);
+            if (!response.ok) throw new Error('Failed to fetch updated videos');
+            const videosData = await response.json();
+            console.log('Updated videos fetched:', videosData);
+            setVideos(videosData);
+        } catch (error) {
+            console.error('Error fetching updated videos:', error);
+        }
+    };
 
     //------------------handleChange logic------------------
 
@@ -418,6 +439,61 @@ const Propiedad = () => {
         }
     };
 
+    // NEW: Upload video helper
+    const uploadVideo = async (file, ref) => {
+        const formData = new FormData();
+        formData.append('video', file);
+        formData.append('ref', ref);
+        console.log('Uploading video:', file);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${ref}/videos`, {
+                method: 'POST',
+                body: formData,
+            });
+            if (!response.ok) {
+                throw new Error('Failed to upload video');
+            }
+            console.log('Video uploaded successfully');
+            // Wait briefly and fetch updated videos
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await fetchUpdatedVideos();
+        } catch (error) {
+            console.error('Error uploading video:', error);
+        }
+    };
+
+    // NEW: Handle video upload from file input
+    const handleUploadVideo = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        // Ensure property is saved and ref is available as done for images
+        const updatedProperty = property?.ref ? property : await saveProperty();
+        if (!updatedProperty.ref) {
+            console.error('Property ref is undefined after saving');
+            return;
+        }
+        setProperty(updatedProperty);
+        await uploadVideo(file, updatedProperty.ref);
+        e.target.value = null;
+    };
+
+    // NEW: Handle video deletion
+    const handleDeleteVideo = async (videoId) => {
+        try {
+            console.log(`Attempting to delete video with ID: ${videoId}`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/videos/${videoId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) throw new Error('Failed to delete video');
+            console.log(`Successfully deleted video with ID: ${videoId}`);
+            setVideos(prevVideos => prevVideos.filter(video => video.id !== videoId));
+            await fetchUpdatedVideos();
+        } catch (error) {
+            console.error('Error deleting video:', error);
+            setOpen(true);
+        }
+    };
+
     // ------------------deleteImage logic for Image Deletion------------------
 
     const handleDelete = async (imageId) => {
@@ -575,8 +651,8 @@ const Propiedad = () => {
                             >
                                 <StyledMenuItem onClick={() => handleMenuItemClick(0)}>Informacion</StyledMenuItem>
                                 <StyledMenuItem onClick={() => handleMenuItemClick(1)}>Amenities</StyledMenuItem>
-                                <StyledMenuItem onClick={() => handleMenuItemClick(2)}>Imagenes</StyledMenuItem>
-                                <StyledMenuItem onClick={() => handleMenuItemClick(3)}>Documentos</StyledMenuItem>
+                                <StyledMenuItem onClick={() => handleMenuItemClick(2)}>Media</StyledMenuItem>
+                                <StyledMenuItem onClick={() => handleMenuItemClick(3)}>Archivos</StyledMenuItem>
                                 <StyledMenuItem onClick={() => handleMenuItemClick(4)}>Preview</StyledMenuItem>
                             </Menu>
                         </StyledMenuBox>
@@ -587,8 +663,8 @@ const Propiedad = () => {
                         <Tabs value={activeTab} onChange={handleTabChange} centered>
                             <Tab label="Informacion" />
                             <Tab label="Amenities" />
-                            <Tab label="Imagenes" />
-                            <Tab label="Documentos" />
+                            <Tab label="Media" />
+                            <Tab label="Archivos" />
                             <Tab label="Preview" />
                         </Tabs>
                     </Box>
@@ -619,6 +695,10 @@ const Propiedad = () => {
                                 handleDelete={handleDelete}
                                 propertyRef={property?.ref}
                                 isSaving={isSaving}
+                                // NEW:
+                                videos={videos}
+                                handleVideoUpload={handleUploadVideo}
+                                handleVideoDelete={handleDeleteVideo}
                             />
                         )}
                         {activeTab === 3 && (

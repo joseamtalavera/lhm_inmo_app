@@ -5,7 +5,8 @@ import {
   IconButton, 
   TableCell,
   Typography,
-  TableRow
+  TableRow,
+  Tab
 } from '@mui/material';
 
 export const StyledTypography = styled(Typography)`
@@ -34,5 +35,16 @@ export const StyledTableCell = styled(TableCell)`
 
 export const StyledTableRow = styled(TableRow)`
   background-color: #f0f0f0;
+`;
+
+export const StyledTab = styled(Tab)`
+  color: inherit;
+  &:hover {
+    color: #1E90FF;
+  }
+  &.Mui-selected {
+    color: #1E90FF;
+    border-bottom: 2px solid #1E90FF;
+  }
 `;
 

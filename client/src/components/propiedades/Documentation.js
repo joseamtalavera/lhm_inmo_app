@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { 
     Box, 
     Table, 
@@ -9,25 +8,62 @@ import {
     TableHead, 
     TableRow, 
     Paper,
+    Tabs,
 } from '@mui/material';
 import {
-    StyledTypography, 
     StyledTableCell, 
     StyledButton,
     StyledIconButton,
     StyledBox,
-    StyledTableRow
+    StyledTableRow,
+    StyledTab  // newly added
 } from '../../styles/DocumentationStyles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AddIcon from '@mui/icons-material/Add';
 
-const Documentation = ({ documents, setDocuments, isEditing, handleDocumentUpload, handleDeleteDocument, handleOpenDocumentModal }) => {
+const Documentation = ({ 
+    documents, 
+    isEditing,  
+    handleDeleteDocument, 
+    handleOpenDocumentModal 
+}) => {
+    // New state for subtab selection with default "archivos"
+    const [docTab, setDocTab] = useState('archivos');
+
+    const handleDocTabChange = (event, newValue) => {
+        setDocTab(newValue);
+    };
+
+    // Filter documents based on the selected subtab.
+    const filteredDocuments = documents.filter(document => {
+        if (docTab === 'documentos') {
+            return document.tipo !== 'Planos' && document.tipo !== 'Certificado Electrico';
+        }
+        if (docTab === 'planos') {
+            return document.tipo === 'Planos';
+        }
+        if (docTab === 'certificado') {
+            return document.tipo === 'Certificado Electrico';
+        }
+        return true;
+    });
+
     return (
         <Box>
-            <StyledTypography variant="h6">
-                Documentación
-            </StyledTypography>
+            {/* New Tabs for subtabs */}
+            <Box mb={2}>
+                <Tabs
+                    value={docTab}
+                    onChange={handleDocTabChange}
+                    textColor="inherit"
+                    TabIndicatorProps={{ style: { backgroundColor: '#1E90FF' } }}
+                >
+                    <StyledTab label="Documentos" value="documentos" />
+                    <StyledTab label="Planos" value="planos" />
+                    <StyledTab label="Certificado Electrico" value="certificado" />
+                </Tabs>
+            </Box>
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -38,7 +74,7 @@ const Documentation = ({ documents, setDocuments, isEditing, handleDocumentUploa
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                        {documents.map((document, index) => {
+                        {filteredDocuments.map((document, index) => {
                             return (
                                 <TableRow key={document.id}>
                                     <TableCell>{document.tipo || 'Tipo no disponible'}</TableCell>

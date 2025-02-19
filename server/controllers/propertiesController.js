@@ -17,6 +17,9 @@ const {
     updateAllImagesDb,
     addRequestDb,
     getRequestsDb,
+    getPropertyVideos,
+    uploadPropertyVideoDb,
+    deleteVideoDb,
 } = require('../models/propertiesQueries');
 const fs = require('fs');
 const path = require('path');
@@ -100,7 +103,16 @@ exports.getRequests = async (req, res, next) => {
     }
 }
 
-
+exports.getPropertyVideos = async (req, res, next) => {
+    try {
+        const ref = req.params.ref;
+        const videos = await getPropertyVideos(ref);
+        res.json(videos);
+    } catch (error) {
+        console.error('Error in getPropertyVideos:', error);
+        next(error);
+    }
+}
 
 // put Controllers
 
@@ -295,6 +307,40 @@ exports.uploadPropertyDocument = async (req, res, next) => {
     }
 };
 
+exports.uploadPropertyVideo = async (req, res, next) => {
+    try {
+        const ref = req.params.ref;
+        const video = req.file;
+        if (!video) {
+            return res.status(400).json({ message: 'No video uploaded' });
+        }
+        // Determine upload directory based on environment
+        const uploadDir =
+            process.env.NODE_ENV === 'production'
+                ? '/usr/share/nginx/videos'
+                : path.join(__dirname, '..', 'videos');
+        const currentVideos = (await getPropertyVideos(ref)) || [];
+        const sequenceNumber = currentVideos.length + 1;
+        // Generate new file name
+        const fileExtension = video.originalname.split('.').pop();
+        const fileName = `${ref}-${sequenceNumber}.${fileExtension}`;
+        const uploadPath = path.join(uploadDir, fileName);
+        // Move the file from temp location to final destination
+        fs.copyFileSync(video.path, uploadPath);
+        fs.unlinkSync(video.path);
+        // Generate the URL for the video
+        const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+        const domain = process.env.APP_DOMAIN || 'localhost:5010';
+        const videoUrl = `${protocol}://${domain}/videos/${fileName}`;
+        const videoDetails = { ref, url: videoUrl };
+        const savedVideo = await uploadPropertyVideoDb(videoDetails);
+        res.status(201).json(savedVideo);
+    } catch (error) {
+        console.error('Error in uploadPropertyVideo:', error);
+        next(error);
+    }
+};
+
 exports.sendEmail = async (req, res, next) => {
     const { name, message, email, telephone, propertyRef } = req.body;
 
@@ -425,6 +471,29 @@ exports.deletePropertyDocument = async (req, res, next) => {
         res.status(200).json({ message: 'Document deleted successfully' });
     } catch (error) {
         console.error('Error in deletePropertyDocument:', error);
+        next(error);
+    }
+};
+
+exports.deletePropertyVideo = async (req, res, next) => {
+    try {
+        const { videoId } = req.params;
+        const deletedVideo = await deleteVideoDb(videoId);
+        if (!deletedVideo) {
+            return res.status(404).json({ message: 'Video not found' });
+        }
+        // Resolve file path and delete file if exists
+        const videoUrl = deletedVideo.url;
+        const filePath = path.join('videos', path.basename(videoUrl));
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            console.log(`File deleted: ${filePath}`);
+        } else {
+            console.warn(`File not found: ${filePath}`);
+        }
+        res.status(200).json({ message: 'Video deleted successfully' });
+    } catch (error) {
+        console.error('Error in deletePropertyVideo:', error);
         next(error);
     }
 };

@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 
 const express = require('express');
@@ -54,6 +53,14 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 
 // Serve static files = documents
 app.use('/documentos', express.static(path.join(__dirname, 'documentos'), {
+  setHeaders: (res, filePath, stat) => {
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+    res.set('Access-Control-Allow-Origin', '*');
+  }
+}));
+
+// Serve static files = videos
+app.use('/videos', express.static(path.join(__dirname, 'videos'), {
   setHeaders: (res, filePath, stat) => {
     res.set('Cross-Origin-Resource-Policy', 'cross-origin');
     res.set('Access-Control-Allow-Origin', '*');

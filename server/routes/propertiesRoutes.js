@@ -20,9 +20,17 @@ const documentDestination =
     ? '/usr/share/nginx/documents'       // Production folder (Nginx-managed)
     : path.join(__dirname, '..', 'documentos');   // Dev folder (served by Express)
 
+// ADD: Decide final videos destination based on environment
+const videoDestination =
+  process.env.NODE_ENV === 'production'
+    ? '/usr/share/nginx/videos'                // Production folder (Nginx-managed)
+    : path.join(__dirname, '..', 'videos');      // Dev folder (served by Express)
+
 ///3) Create multer instances for image and document uploads
 const upload = multer({ dest: imageDestination });
 const uploadDocuments = multer({ dest: documentDestination });
+// ADD: Create multer instance for video uploads
+const uploadVideo = multer({ dest: videoDestination });
 
  
 
@@ -58,6 +66,7 @@ router.get('/properties/:id', propertiesController.getPropertyById);
 router.get('/properties/:ref/amenities', propertiesController.getPropertyAmenities); 
 router.get('/properties/:ref/images', propertiesController.getPropertyImages);
 router.get('/properties/:ref/documents', propertiesController.getPropertyDocuments);
+router.get('/properties/:ref/videos', propertiesController.getPropertyVideos);
 router.get('/requests', propertiesController.getRequests);
 
 
@@ -74,6 +83,7 @@ router.put('/properties/images/update-all', propertiesController.updateAllImages
 router.post('/properties', propertiesController.addProperty);
 router.post('/properties/:ref/images', upload.single('image'), propertiesController.uploadPropertyImage);
 router.post('/properties/:ref/documents', uploadDocuments.single('document'), propertiesController.uploadPropertyDocument);
+router.post('/properties/:ref/videos', uploadVideo.single('video'), propertiesController.uploadPropertyVideo);
 router.post('/contactar-email', validateContactForm, propertiesController.sendEmail);
 
 
@@ -82,13 +92,6 @@ router.post('/contactar-email', validateContactForm, propertiesController.sendEm
 router.delete('/properties/:id', propertiesController.deleteProperty);
 router.delete('/properties/images/:imageId', propertiesController.deletePropertyImage);
 router.delete('/properties/documents/:documentId', propertiesController.deletePropertyDocument);
-
-
-
-
-
-
-
-
+router.delete('/properties/videos/:videoId', propertiesController.deletePropertyVideo);
 
 module.exports = router;

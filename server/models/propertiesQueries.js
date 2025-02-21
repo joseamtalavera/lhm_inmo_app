@@ -255,6 +255,26 @@ const getPropertyDocuments = async (ref) => {
     }   
 };
 
+// ADD: Updated Planos queries with descripcion, tipo, and fechahora
+
+const getPropertyPlanos = async (ref) => {
+    try {
+        const result = await pool.query(
+            `SELECT id, ref, url, descripcion, tipo, fechahora
+             FROM lhainmobiliaria.vplanos
+             WHERE ref = $1
+             ORDER BY id ASC`,
+            [ref]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getPropertyPlanos:', error);
+        throw error;
+    }
+};
+
+
+
 // Helper function to fetch ID from a table by matching column value
 const getIdFromTable = async (tableName, idColumnName, columnName, value) => {
     try {
@@ -668,6 +688,22 @@ const uploadPropertyDocumentDb = async (documentDetails) => {
     }
 };
 
+const uploadPropertyPlanoDb = async (planoDetails) => {
+    try {
+        const { ref, url, descripcion, tipo, fechahora } = planoDetails;
+        const result = await pool.query(
+            `INSERT INTO lhainmobiliaria.vplanos (ref, url, descripcion, tipo, fechahora)
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING *`,
+            [ref, url, descripcion, tipo, fechahora]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in uploadPropertyPlanoDb:', error);
+        throw error;
+    }
+};
+
 const addRequestDb = async (request) => {
     try {
         // Destructure 'name' along with the other properties
@@ -743,6 +779,21 @@ const deleteDocumentDb = async (documentId) => {
     }
 };
 
+const deletePropertyPlanoDb = async (planoId) => {
+    try {
+        const result = await pool.query(
+            `DELETE FROM lhainmobiliaria.vplanos
+             WHERE id = $1
+             RETURNING *`,
+            [planoId]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in deletePropertyPlanoDb:', error);
+        throw error;
+    }
+};
+
 const deleteVideoDb = async (videoId) => {
     try {
         const result = await pool.query(
@@ -779,5 +830,9 @@ module.exports = {
     getRequestsDb,
     getPropertyVideos,
     uploadPropertyVideoDb,
-    deleteVideoDb
+    deleteVideoDb,
+    // ADD: Export planos queries
+    getPropertyPlanos,
+    uploadPropertyPlanoDb,
+    deletePropertyPlanoDb
 };

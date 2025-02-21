@@ -16,7 +16,7 @@ import {
     StyledIconButton,
     StyledBox,
     StyledTableRow,
-    StyledTab  // newly added
+    StyledTab
 } from '../../styles/DocumentationStyles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -24,34 +24,33 @@ import AddIcon from '@mui/icons-material/Add';
 
 const Documentation = ({ 
     documents, 
+    planos,        
     isEditing,  
-    handleDeleteDocument, 
+    handleDocumentUpload, 
+    handleDeleteDocument,
+    handlePlanoUpload,   
+    handleDeletePlano,   
     handleOpenDocumentModal 
 }) => {
-    // New state for subtab selection with default "archivos"
-    const [docTab, setDocTab] = useState('archivos');
+    const [docTab, setDocTab] = useState('documentos');
 
     const handleDocTabChange = (event, newValue) => {
         setDocTab(newValue);
     };
 
-    // Filter documents based on the selected subtab.
-    const filteredDocuments = documents.filter(document => {
-        if (docTab === 'documentos') {
-            return document.tipo !== 'Planos' && document.tipo !== 'Certificado Electrico';
-        }
-        if (docTab === 'planos') {
-            return document.tipo === 'Planos';
-        }
-        if (docTab === 'certificado') {
-            return document.tipo === 'Certificado Electrico';
-        }
-        return true;
-    });
+    // Filter based on selected subtab. For 'planos', use the planos prop.
+    let filteredItems = [];
+    if (docTab === 'documentos') {
+        filteredItems = documents.filter(document => document.tipo !== 'Planos' && document.tipo !== 'Certificado Electrico');
+    } else if (docTab === 'planos') {
+        filteredItems = planos;
+    } else if (docTab === 'certificado') {
+        filteredItems = documents.filter(document => document.tipo === 'Certificado Electrico');
+    }
 
     return (
         <Box>
-            {/* New Tabs for subtabs */}
+            {/* Tabs for sub-categories */}
             <Box mb={2}>
                 <Tabs
                     value={docTab}
@@ -69,35 +68,40 @@ const Documentation = ({
                     <TableHead>
                         <StyledTableRow>
                             <StyledTableCell>Tipo</StyledTableCell>
-                            <StyledTableCell >Descripcion</StyledTableCell>
-                            <StyledTableCell >Acciones</StyledTableCell>
+                            <StyledTableCell>Descripcion</StyledTableCell>
+                            <StyledTableCell>Acciones</StyledTableCell>
                         </StyledTableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredDocuments.map((document, index) => {
-                            return (
-                                <TableRow key={document.id}>
-                                    <TableCell>{document.tipo || 'Tipo no disponible'}</TableCell>
-                                    <TableCell>{document.descripcion}</TableCell>
-                                    <TableCell>
-                                        <StyledIconButton 
-                                            component="a" 
-                                            href={document.url} 
-                                            target="_blank" 
-                                            rel="noopener noreferrer">
-                                            <VisibilityIcon />
-                                        </StyledIconButton>
-                                        <StyledIconButton 
-                                            color="primary" 
-                                            onClick={() => handleDeleteDocument(document.id)}
-                                            disabled={!isEditing}
-                                        >
-                                            <DeleteIcon />
-                                        </StyledIconButton>
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
+                        {filteredItems.map((item) => (
+                            <TableRow key={item.id}>
+                                <TableCell>{item.tipo || 'No disponible'}</TableCell>
+                                <TableCell>{item.descripcion}</TableCell>
+                                <TableCell>
+                                    <StyledIconButton 
+                                        component="a" 
+                                        href={item.url} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                    >
+                                        <VisibilityIcon />
+                                    </StyledIconButton>
+                                    <StyledIconButton 
+                                        color="primary" 
+                                        onClick={() => {
+                                            if (docTab === 'planos') {
+                                                handleDeletePlano(item.id);
+                                            } else {
+                                                handleDeleteDocument(item.id);
+                                            }
+                                        }}
+                                        disabled={!isEditing}
+                                    >
+                                        <DeleteIcon />
+                                    </StyledIconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -107,7 +111,8 @@ const Documentation = ({
                         variant="outlined"
                         component="label"
                         startIcon={<AddIcon />}
-                        onClick={handleOpenDocumentModal}
+                        // Update onClick to pass the current tab value as the upload category
+                        onClick={() => handleOpenDocumentModal(docTab)}
                     >
                         Añadir
                     </StyledButton>

@@ -50,8 +50,8 @@ const Propiedad = () => {
     const [amenities, setAmenities ] = useState([]);
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
-    // Add new state for videos
     const [videos, setVideos] = useState([]);
+    const [planos, setPlanos] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
 
@@ -74,10 +74,11 @@ const Propiedad = () => {
     // States for Document Upload Modal
     const [openDocumentModal, setOpenDocumentModal] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState(null);
-    const [documentTipo, setDocumentTipo] = useState('');
     const [documentDescripcion, setDocumentDescripcion] = useState('');
+    const [uploadCategory, setUploadCategory] = useState('documentos');
 
     // ------------------Menu handlers------------------
+
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -140,6 +141,13 @@ const Propiedad = () => {
                 console.log(`Documents fetched: ${JSON.stringify(documentsData)}`);
                 setDocuments(documentsData);
 
+                // NEW: Fetch property planos
+                const planosResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/planos`);
+                if (!planosResponse.ok) throw new Error('Failed to fetch property planos');
+                const planosData = await planosResponse.json();
+                console.log(`Planos fetched: ${JSON.stringify(planosData)}`);
+                setPlanos(planosData);
+
             } catch (error) {
                 console.error('Error fetching property data:', error);
             } finally {
@@ -162,11 +170,9 @@ const Propiedad = () => {
         try {
             console.log('Fetching updated images');
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/images?timestamp=${Date.now()}`);
-            
             if (!response.ok) throw new Error('Failed to fetch updated images');
             const imagesData = await response.json();
             console.log('Updated images fetched:', imagesData);
-            
             setImages(imagesData);
 
             // If there is at least one image, update property.url dynamically
@@ -477,23 +483,6 @@ const Propiedad = () => {
         e.target.value = null;
     };
 
-    // NEW: Handle video deletion
-    const handleDeleteVideo = async (videoId) => {
-        try {
-            console.log(`Attempting to delete video with ID: ${videoId}`);
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/videos/${videoId}`, {
-                method: 'DELETE',
-            });
-            if (!response.ok) throw new Error('Failed to delete video');
-            console.log(`Successfully deleted video with ID: ${videoId}`);
-            setVideos(prevVideos => prevVideos.filter(video => video.id !== videoId));
-            await fetchUpdatedVideos();
-        } catch (error) {
-            console.error('Error deleting video:', error);
-            setOpen(true);
-        }
-    };
-
     // ------------------deleteImage logic for Image Deletion------------------
 
     const handleDelete = async (imageId) => {
@@ -514,6 +503,23 @@ const Propiedad = () => {
             await fetchUpdatedImages();
         } catch (error) {
             console.error('Error deleting image:', error);
+            setOpen(true);
+        }
+    };
+
+     // NEW: Handle video deletion
+     const handleDeleteVideo = async (videoId) => {
+        try {
+            console.log(`Attempting to delete video with ID: ${videoId}`);
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/videos/${videoId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) throw new Error('Failed to delete video');
+            console.log(`Successfully deleted video with ID: ${videoId}`);
+            setVideos(prevVideos => prevVideos.filter(video => video.id !== videoId));
+            await fetchUpdatedVideos();
+        } catch (error) {
+            console.error('Error deleting video:', error);
             setOpen(true);
         }
     };
@@ -548,6 +554,26 @@ const Propiedad = () => {
         }
     };
 
+    // NEW: Function to handle plano upload
+    const handlePlanoUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file || !property?.ref) return;
+        const formData = new FormData();
+        formData.append('plano', file);
+        formData.append('ref', property.ref);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/planos`, {
+                method: 'POST',
+                body: formData,
+            });
+            if (!response.ok) throw new Error('Failed to upload plano');
+            const newPlano = await response.json();
+            setPlanos(prev => [...prev, newPlano]);
+        } catch (error) {
+            console.error('Error uploading plano:', error);
+        }
+    };
+
     // ------------------handleDeleteDocument logic for Document Deletion------------------
 
     const handleDeleteDocument = async (documentId) => {
@@ -566,12 +592,28 @@ const Propiedad = () => {
         }
     };
 
+
+    // NEW: Function to handle plano deletion
+    const handleDeletePlano = async (planoId) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/planos/${planoId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) throw new Error('Failed to delete plano');
+            console.log(`Successfully deleted plano with ID: ${planoId}`);
+            setPlanos(prev => prev.filter(plano => plano.id !== planoId));
+        } catch (error) {
+            console.error('Error deleting plano:', error);
+            setOpen(true);
+        }
+    };
+
     // ------------------handleOpenDocumentModal logic for opening the modal------------------
 
-    const handleOpenDocumentModal = (shouldOpen = true) => {
+    const handleOpenDocumentModal = (category = 'documentos', shouldOpen = true) => {
+        setUploadCategory(category);
         if (shouldOpen) {
             setOpenDocumentModal(true);
-            setDocumentTipo('');
             setDocumentDescripcion('');
             setSelectedDocument(null);
         } else {
@@ -584,37 +626,53 @@ const Propiedad = () => {
         setOpenDocumentModal(false);
     };
 
-    // ------------------handleDocumentSubmit logic for submitting the document------------------
-
+    // MODIFY: handleDocumentSubmit to handle both documentos and planos with uniform indentation
     const handleDocumentSubmit = async () => {
-        if (!selectedDocument || !documentTipo || !documentDescripcion) {
+        if (!selectedDocument || !documentDescripcion) {
             console.error('Todos los campos son requeridos');
             return;
         }
-
         const formData = new FormData();
-        formData.append('document', selectedDocument);
-        formData.append('tipo', documentTipo);
+        const normalizedCategory = String(uploadCategory).trim().toLowerCase();
+        const fieldName = normalizedCategory === 'planos' ? 'plano' : 'document';
+        const tipoValue = normalizedCategory === 'planos' ? 'Planos' : 'Document';
+
+        formData.append(fieldName, selectedDocument);
+        formData.append('tipo', tipoValue);
         formData.append('descripcion', documentDescripcion);
         formData.append('ref', property.ref);
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/documents`, {
+            const endpoint =
+                normalizedCategory === 'planos'
+                    ? `/api/properties/${property.ref}/planos`
+                    : `/api/properties/${property.ref}/documents`;
+
+            const response = await fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, {
                 method: 'POST',
                 body: formData,
             });
 
             if (!response.ok) {
-                throw new Error('Fallo al subir el documento');
+                throw new Error(
+                    normalizedCategory === 'planos'
+                        ? 'Fallo al subir el plano'
+                        : 'Fallo al subir el documento'
+                );
             }
 
-            const newDocument = await response.json();
-            setDocuments((prevDocuments) => [...prevDocuments, newDocument]);
-            handleOpenDocumentModal(false); // Close the modal after successful submission
+            const newItem = await response.json();
+            if (normalizedCategory === 'planos') {
+                setPlanos(prev => [...prev, newItem]);
+            } else {
+                setDocuments(prev => [...prev, newItem]);
+            }
+            handleOpenDocumentModal(uploadCategory, false); // Close modal
         } catch (error) {
-            console.error('Error subiendo el documento:', error);
+            console.error('Error subiendo el documento/plano:', error);
         }
     };
+
     
     if (isLoading) {
         return (
@@ -704,10 +762,12 @@ const Propiedad = () => {
                         {activeTab === 3 && (
                             <Documentation
                                 documents={documents}
-                                setDocuments={setDocuments}
+                                planos={planos}              // NEW: Pass planos state
                                 isEditing={isEditingDocumentation}
-                                handleDocumentUpload={handleDocumentUpload} 
+                                handleDocumentUpload={handleDocumentUpload}
                                 handleDeleteDocument={handleDeleteDocument}
+                                handlePlanoUpload={handlePlanoUpload}   // NEW: Pass plano upload handler
+                                handleDeletePlano={handleDeletePlano}     // NEW: Pass plano deletion handler
                                 handleOpenDocumentModal={handleOpenDocumentModal} // Pass handleOpenDocumentModal as a prop to Anadir
                             />
                         )}
@@ -879,16 +939,6 @@ const Propiedad = () => {
                         Subir Documento
                     </StyledDialogSubir>
                     <DialogContent>
-
-                        {/* Tipo */}
-                        <TextField
-                            label="Tipo"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={documentTipo}
-                            onChange={(e) => setDocumentTipo(e.target.value)}
-                        />
 
                         {/* Descripción */}
                         <TextField

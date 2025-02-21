@@ -1,4 +1,4 @@
-//propertiesRoutes.js
+
 const express = require('express');
 const { body, validationResult } = require('express-validator');
 const propertiesController = require('../controllers/propertiesController');
@@ -7,34 +7,46 @@ const multer = require('multer');
 const path = require('path');
 
 
-//1) Decide final image destination based on environment
+//Decide final item destination based on environment
+
 const imageDestination =
   process.env.NODE_ENV === 'production'
-    ? '/usr/share/nginx/uploads'                // Production folder (Nginx-managed)
-    : path.join(__dirname, '..', 'uploads');     // Dev folder (served by Express)
+    ? '/usr/share/nginx/uploads'                
+    : path.join(__dirname, '..', 'uploads');     
 
-
-//2) Decide final documents destination based on environment
 const documentDestination =
   process.env.NODE_ENV === 'production'
-    ? '/usr/share/nginx/documents'       // Production folder (Nginx-managed)
-    : path.join(__dirname, '..', 'documentos');   // Dev folder (served by Express)
+    ? '/usr/share/nginx/documents'       
+    : path.join(__dirname, '..', 'documentos');   
 
-// ADD: Decide final videos destination based on environment
 const videoDestination =
   process.env.NODE_ENV === 'production'
-    ? '/usr/share/nginx/videos'                // Production folder (Nginx-managed)
-    : path.join(__dirname, '..', 'videos');      // Dev folder (served by Express)
+    ? '/usr/share/nginx/videos'                
+    : path.join(__dirname, '..', 'videos');      
 
-///3) Create multer instances for image and document uploads
+const planosDestination =
+  process.env.NODE_ENV === 'production'
+    ? '/usr/share/nginx/planos'                
+    : path.join(__dirname, '..', 'planos');      
+
+const certificadoDestination =
+  process.env.NODE_ENV === 'production'
+    ? '/usr/share/nginx/certificados'
+    : path.join(__dirname, '..', 'certificados');
+
+
+// Create multer instances for items uploads
+
 const upload = multer({ dest: imageDestination });
 const uploadDocuments = multer({ dest: documentDestination });
-// ADD: Create multer instance for video uploads
 const uploadVideo = multer({ dest: videoDestination });
+const uploadPlano = multer({ dest: planosDestination });
+const uploadCertificado = multer({ dest: certificadoDestination });
 
  
 
 // Validation and sanitization middleware for contact form
+
 const validateContactForm = [
   body('message')
     .trim()
@@ -67,6 +79,8 @@ router.get('/properties/:ref/amenities', propertiesController.getPropertyAmeniti
 router.get('/properties/:ref/images', propertiesController.getPropertyImages);
 router.get('/properties/:ref/documents', propertiesController.getPropertyDocuments);
 router.get('/properties/:ref/videos', propertiesController.getPropertyVideos);
+router.get('/properties/:ref/planos', propertiesController.getPropertyPlanos);
+router.get('/properties/:ref/certificados', propertiesController.getPropertyCertificados);
 router.get('/requests', propertiesController.getRequests);
 
 
@@ -84,6 +98,8 @@ router.post('/properties', propertiesController.addProperty);
 router.post('/properties/:ref/images', upload.single('image'), propertiesController.uploadPropertyImage);
 router.post('/properties/:ref/documents', uploadDocuments.single('document'), propertiesController.uploadPropertyDocument);
 router.post('/properties/:ref/videos', uploadVideo.single('video'), propertiesController.uploadPropertyVideo);
+router.post('/properties/:ref/planos', uploadPlano.single('plano'), propertiesController.uploadPropertyPlano);
+router.post('/properties/:ref/certificados', uploadCertificado.single('certificado'), propertiesController.uploadPropertyCertificado);
 router.post('/contactar-email', validateContactForm, propertiesController.sendEmail);
 
 
@@ -93,5 +109,7 @@ router.delete('/properties/:id', propertiesController.deleteProperty);
 router.delete('/properties/images/:imageId', propertiesController.deletePropertyImage);
 router.delete('/properties/documents/:documentId', propertiesController.deletePropertyDocument);
 router.delete('/properties/videos/:videoId', propertiesController.deletePropertyVideo);
+router.delete('/properties/planos/:planoId', propertiesController.deletePropertyPlano);
+router.delete('/properties/certificados/:certificadoId', propertiesController.deletePropertyCertificado);
 
 module.exports = router;

@@ -72,6 +72,7 @@ const PropertyPage = () => {
   const [property, setProperty] = useState(null);
   const [images, setImages] = useState([]);
   const [videoUrl, setVideoUrl] = useState(null); // Added video state
+  const [planosUrl, setPlanosUrl] = useState(null); // New planos state
   const [amenities, setAmenities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -166,6 +167,15 @@ const PropertyPage = () => {
           // If videoData is an array, extract the first URL
           if (Array.isArray(videoData) && videoData.length > 0) {
             setVideoUrl(videoData[0].url);
+          }
+        }
+
+        // New fetch for planos
+        const planosResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/planos`);
+        if (planosResponse.ok) {
+          const planosData = await planosResponse.json();
+          if (Array.isArray(planosData) && planosData.length > 0) {
+            setPlanosUrl(planosData[0].url);
           }
         }
       } catch (error) {
@@ -315,8 +325,11 @@ const PropertyPage = () => {
               <BlueDivider />
 
               <CollapsibleSection title="Plano">
-                {/* Add map or address details here */}
-                <p>Location details go here.</p>
+                { planosUrl ? (
+                  <img src={planosUrl} alt="Plano" style={{ width: "100%" }} />
+                ) : (
+                  <p>No plano available</p>
+                )}
               </CollapsibleSection>
               <BlueDivider />
 

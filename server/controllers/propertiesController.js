@@ -20,6 +20,9 @@ const {
     getPropertyVideos,
     uploadPropertyVideoDb,
     deleteVideoDb,
+    getPropertyPlanos,
+    uploadPropertyPlanoDb,
+    deletePropertyPlanoDb,
 } = require('../models/propertiesQueries');
 const fs = require('fs');
 const path = require('path');
@@ -114,6 +117,29 @@ exports.getPropertyVideos = async (req, res, next) => {
     }
 }
 
+exports.getPropertyPlanos = async (req, res, next) => {
+    try {
+        const ref = req.params.ref;
+        const planos = await getPropertyPlanos(ref);
+        res.json(planos);
+    } catch (error) {
+        console.error('Error in getPropertyPlanos:', error);
+        next(error);
+    }
+}
+
+exports.getPropertyCertificados = async (req, res, next) => {
+    try {
+        const ref = req.params.ref;
+        const certificados  = await getPropertyCertificados(ref);
+        res.json(certificados);
+    } catch (error) {
+        console.error('Error in getPropertyCertificados:', error);
+        next(error);
+    }
+}
+
+
 // put Controllers
 
 exports.updateProperty = async (req, res) => {
@@ -152,9 +178,6 @@ exports.updateAllImages = async (req, res, next) => {
         next(error);
     }
 }
-
-
-
 
 
 // post Controllers
@@ -341,6 +364,79 @@ exports.uploadPropertyVideo = async (req, res, next) => {
     }
 };
 
+exports.uploadPropertyPlano = async (req, res, next) => {
+    try {
+        const ref = req.params.ref;
+        const plano = req.file;
+        if (!plano) {
+            return res.status(400).json({ message: 'No plano uploaded' });
+        }
+        const uploadDir =
+            process.env.NODE_ENV === 'production'
+                ? '/usr/share/nginx/planos'
+                : path.join(__dirname, '..', 'planos');
+        const currentPlanos = (await getPropertyPlanos(ref)) || [];
+        const sequenceNumber = currentPlanos.length + 1;
+        const fileExtension = plano.originalname.split('.').pop();
+        const fileName = `${ref}-${sequenceNumber}.${fileExtension}`;
+        const uploadPath = path.join(uploadDir, fileName);
+        fs.copyFileSync(plano.path, uploadPath);
+        fs.unlinkSync(plano.path);
+        const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+        const domain = process.env.APP_DOMAIN || 'localhost:5010';
+        const planoUrl = `${protocol}://${domain}/planos/${fileName}`;
+        // Ensure the tipo is set to 'Planos'
+        const planoDetails = { 
+            ref, 
+            url: planoUrl, 
+            descripcion: req.body.descripcion || '', 
+            tipo: req.body.tipo || 'Planos',
+            fechahora: req.body.fechahora || new Date() 
+        };
+        const savedPlano = await uploadPropertyPlanoDb(planoDetails);
+        res.status(201).json(savedPlano);
+    } catch (error) {
+        console.error('Error in uploadPropertyPlano:', error);
+        next(error);
+    }
+};
+
+exports.uploadPropertyCertificado = async (req, res, next) => {
+    try { 
+        const ref = req.params.ref;
+        const certificado = req.file;
+        if (!certificado) {
+            return res.status(400).json({ message: 'No certificado uploaded' });
+    }
+    const uploadDir = 
+        process.env.NODE_ENV === 'production'
+            ? '/usr/share/nginx/certificados'
+            : path.join(__dirname, '..', 'certificados');
+    const currentCertificados = (await getPropertyCertificados(ref)) || []; 
+    const sequenceNumber = currentCertificados.length + 1;
+    const fileExtension = certificado.originalname.split('.').pop();
+    const fileName = `${ref}-${sequenceNumber}.${fileExtension}`;
+    const uploadPath = path.join(uploadDir, fileName);
+    fs.copyFilsSync(certificado.path, uploadPath);
+    fs.unlinkSync(certificado.path);
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    const domain = process.env.APP_DOMAIN || 'localhost:5010';
+    const certificadoUrl = `${protocol}://${domain}/certificados/${fileName}`;
+    const certificadoDetails = { 
+        ref, 
+        url: certificadoUrl,
+        descripcion: req.body.descripcion || '',
+        tipo: req.body.tipo || 'Certificados',
+        fechahora: req.body.fechahora || new Date()
+    };
+    const savedCertificado = await this.uploadPropertyCertificadoDb(certificadoDetails);
+    res.status(201).json(savedCertificado);
+    } catch (error) {
+        console.error('Error in uploadPropertyCertificado:', error);
+        next(error);
+    }
+};
+
 exports.sendEmail = async (req, res, next) => {
     const { name, message, email, telephone, propertyRef } = req.body;
 
@@ -494,6 +590,52 @@ exports.deletePropertyVideo = async (req, res, next) => {
         res.status(200).json({ message: 'Video deleted successfully' });
     } catch (error) {
         console.error('Error in deletePropertyVideo:', error);
+        next(error);
+    }
+};
+
+exports.deletePropertyPlano = async (req, res, next) => {
+    try {
+        const { planoId } = req.params;
+        const deletedPlano = await deletePropertyPlanoDb(planoId);
+        if (!deletedPlano) {
+            return res.status(404).json({ message: 'Plano not found' });
+        }
+        // Resolve file path to delete file from storage
+        const planoUrl = deletedPlano.url;
+        const filePath = path.join('planos', path.basename(planoUrl));
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            console.log(`File deleted: ${filePath}`);
+        } else {
+            console.warn(`File not found: ${filePath}`);
+        }
+        res.status(200).json({ message: 'Plano deleted successfully' });
+    } catch (error) {
+        console.error('Error in deletePropertyPlano:', error);
+        next(error);
+    }
+};
+
+exports.deletePropertyCertificado = async (req, res, next) => {
+    try { 
+        const { certificadoId} = req.params;
+        const deletedCertificado = await this.deletePropertyCertificadoDb(certificadoId);
+        if (!deletedCertificado) {
+            return res.status(404).json({ message: 'Certificado not found' });
+        }
+        const certificadoUrl = deletedCertificado.url;
+        const filePath = path.join('certificados', path.basename(certificadoUrl));
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            console.log(`File deleted: ${filePath}`);
+        }
+        else {
+            console.warn(`File not found: ${filePath}`);
+        }
+        res.status(200).json({ message: 'Certificado deleted successfully' });
+    } catch (error) {
+        console.error('Error in deletePropertyCertificado:', error);
         next(error);
     }
 };

@@ -23,6 +23,9 @@ const {
     getPropertyPlanos,
     uploadPropertyPlanoDb,
     deletePropertyPlanoDb,
+    getPropertyCertificados,
+    uploadPropertyCertificadoDb,
+    deletePropertyCertificadoDb
 } = require('../models/propertiesQueries');
 const fs = require('fs');
 const path = require('path');
@@ -407,30 +410,31 @@ exports.uploadPropertyCertificado = async (req, res, next) => {
         const certificado = req.file;
         if (!certificado) {
             return res.status(400).json({ message: 'No certificado uploaded' });
-    }
-    const uploadDir = 
-        process.env.NODE_ENV === 'production'
-            ? '/usr/share/nginx/certificados'
-            : path.join(__dirname, '..', 'certificados');
-    const currentCertificados = (await getPropertyCertificados(ref)) || []; 
-    const sequenceNumber = currentCertificados.length + 1;
-    const fileExtension = certificado.originalname.split('.').pop();
-    const fileName = `${ref}-${sequenceNumber}.${fileExtension}`;
-    const uploadPath = path.join(uploadDir, fileName);
-    fs.copyFilsSync(certificado.path, uploadPath);
-    fs.unlinkSync(certificado.path);
-    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-    const domain = process.env.APP_DOMAIN || 'localhost:5010';
-    const certificadoUrl = `${protocol}://${domain}/certificados/${fileName}`;
-    const certificadoDetails = { 
-        ref, 
-        url: certificadoUrl,
-        descripcion: req.body.descripcion || '',
-        tipo: req.body.tipo || 'Certificados',
-        fechahora: req.body.fechahora || new Date()
-    };
-    const savedCertificado = await this.uploadPropertyCertificadoDb(certificadoDetails);
-    res.status(201).json(savedCertificado);
+        }
+        const uploadDir = 
+            process.env.NODE_ENV === 'production'
+                ? '/usr/share/nginx/certificados'
+                : path.join(__dirname, '..', 'certificados');
+        const currentCertificados = (await getPropertyCertificados(ref)) || []; 
+        const sequenceNumber = currentCertificados.length + 1;
+        const fileExtension = certificado.originalname.split('.').pop();
+        const fileName = `${ref}-${sequenceNumber}.${fileExtension}`;
+        const uploadPath = path.join(uploadDir, fileName);
+        fs.copyFileSync(certificado.path, uploadPath);
+        fs.unlinkSync(certificado.path);
+        const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+        const domain = process.env.APP_DOMAIN || 'localhost:5010';
+        const certificadoUrl = `${protocol}://${domain}/certificados/${fileName}`;
+        const certificadoDetails = { 
+            ref, 
+            url: certificadoUrl,
+            descripcion: req.body.descripcion || '',
+            tipo: req.body.tipo || 'Certificados',
+            fechahora: req.body.fechahora || new Date()
+        };
+        // Removed "this." to call the imported function directly
+        const savedCertificado = await uploadPropertyCertificadoDb(certificadoDetails);
+        res.status(201).json(savedCertificado);
     } catch (error) {
         console.error('Error in uploadPropertyCertificado:', error);
         next(error);
@@ -620,7 +624,8 @@ exports.deletePropertyPlano = async (req, res, next) => {
 exports.deletePropertyCertificado = async (req, res, next) => {
     try { 
         const { certificadoId} = req.params;
-        const deletedCertificado = await this.deletePropertyCertificadoDb(certificadoId);
+        // Removed "this." to call the imported function directly
+        const deletedCertificado = await deletePropertyCertificadoDb(certificadoId);
         if (!deletedCertificado) {
             return res.status(404).json({ message: 'Certificado not found' });
         }

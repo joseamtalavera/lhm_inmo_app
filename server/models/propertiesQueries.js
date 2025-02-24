@@ -255,8 +255,6 @@ const getPropertyDocuments = async (ref) => {
     }   
 };
 
-// ADD: Updated Planos queries with descripcion, tipo, and fechahora
-
 const getPropertyPlanos = async (ref) => {
     try {
         const result = await pool.query(
@@ -269,6 +267,22 @@ const getPropertyPlanos = async (ref) => {
         return result.rows;
     } catch (error) {
         console.error('Error in getPropertyPlanos:', error);
+        throw error;
+    }
+};
+
+const getPropertyCertificados = async (ref) => {
+    try {
+        const result = await pool.query(
+            `SELECT id, ref, url, descripcion, tipo, fechahora
+                FROM lhainmobiliaria.vcertificados
+                WHERE ref = $1
+                ORDER BY id ASC`,
+            [ref]
+        );
+        return result.rows;
+    } catch (error) {
+        console.error('Error in getPropertyCertificados:', error);
         throw error;
     }
 };
@@ -305,6 +319,7 @@ const getRequestsDb = async () => {
         throw error;
     }
 };
+
 
 
 // put Queries
@@ -704,6 +719,22 @@ const uploadPropertyPlanoDb = async (planoDetails) => {
     }
 };
 
+const uploadPropertyCertificadoDb = async (certificadoDetails) => {
+    try {
+        const { ref, url, descripcion, tipo, fechahora } = certificadoDetails;
+        const result = await pool.query(
+            `INSERT INTO lhainmobiliaria.vcertificados (ref, url, descripcion, tipo, fechahora)
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING *`,
+            [ref, url, descripcion, tipo, fechahora]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in uploadPropertyCertificadoDb:', error);
+        throw error;
+    }
+};
+
 const addRequestDb = async (request) => {
     try {
         // Destructure 'name' along with the other properties
@@ -794,6 +825,21 @@ const deletePropertyPlanoDb = async (planoId) => {
     }
 };
 
+const deletePropertyCertificadoDb = async (certificadoId) => {
+    try {
+        const result = await pool.query(
+            `DELETE FROM lhainmobiliaria.vcertificados
+             WHERE id = $1
+             RETURNING *`,
+            [certificadoId]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error in deletePropertyCertificadoDb:', error);
+        throw error;
+    }
+};
+
 const deleteVideoDb = async (videoId) => {
     try {
         const result = await pool.query(
@@ -834,5 +880,9 @@ module.exports = {
     // ADD: Export planos queries
     getPropertyPlanos,
     uploadPropertyPlanoDb,
-    deletePropertyPlanoDb
+    deletePropertyPlanoDb,
+    // ADD: Export certificados queries
+    getPropertyCertificados,
+    uploadPropertyCertificadoDb,
+    deletePropertyCertificadoDb
 };

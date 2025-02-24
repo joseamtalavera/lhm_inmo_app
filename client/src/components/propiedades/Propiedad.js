@@ -40,23 +40,22 @@ import {
     StyledDialogSubir,
 } from '../../styles/PropiedadStyles';
 
-
 const Propiedad = () => {
     const { id } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
 
     const [property, setProperty] = useState({});
-    const [amenities, setAmenities ] = useState([]);
+    const [amenities, setAmenities] = useState([]);
     const [images, setImages] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [videos, setVideos] = useState([]);
     const [planos, setPlanos] = useState([]);
+    const [certificados, setCertificados] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
 
-    // Edit states for each tab
-    const [isEditingGeneralInfo, setIsEditingGeneralInfo] = useState(location.state?.edit ?? false);
+        const [isEditingGeneralInfo, setIsEditingGeneralInfo] = useState(location.state?.edit ?? false);
     const [isEditingAmenities, setIsEditingAmenities] = useState(location.state?.edit ?? false);
     const [isEditingImages, setIsEditingImages] = useState(location.state?.edit ?? false);
     const [isEditingDocumentation, setIsEditingDocumentation] = useState(location.state?.edit ?? false);
@@ -147,6 +146,13 @@ const Propiedad = () => {
                 const planosData = await planosResponse.json();
                 console.log(`Planos fetched: ${JSON.stringify(planosData)}`);
                 setPlanos(planosData);
+
+                // NEW: Fetch property certificados
+                const certificadosResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/certificados`);
+                if (!certificadosResponse.ok) throw new Error('Failed to fetch property certificados');
+                const certificadosData = await certificadosResponse.json();
+                console.log(`Certificados fetched: ${JSON.stringify(certificadosData)}`);
+                setCertificados(certificadosData);
 
             } catch (error) {
                 console.error('Error fetching property data:', error);
@@ -362,12 +368,6 @@ const Propiedad = () => {
             }
     
             const updatedProperty = await response.json();
-
-            // Merge updated property with existing property state
-           /*  setProperty((prevProperty) => ({
-                ...prevProperty,
-                ...updatedProperty,
-            })); */
     
             console.log('Property saved successfully:', updatedProperty);
             
@@ -403,7 +403,7 @@ const Propiedad = () => {
 
             // Wait briefly to allow the server to update the image
             const uploadedImage = await new Promise(resolve => setTimeout(resolve, 500));
-            await fetchUpdatedImages(); // Fetch the updated images from the server
+            await fetchUpdatedImages(); 
 
             return uploadedImage;
         } catch (error) {
@@ -574,6 +574,26 @@ const Propiedad = () => {
         }
     };
 
+    // NEW: Function to handle certificado upload
+    const handleCertificadoUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file || !property?.ref) return;
+        const formData = new FormData();
+        formData.append('certificado', file);
+        formData.append('ref', property.ref);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/certificados`, {
+                method: 'POST',
+                body: formData,
+            });
+            if (!response.ok) throw new Error('Failed to upload certificado');
+            const newCertificado = await response.json();
+            setCertificados(prev => [...prev, newCertificado]);
+        } catch (error) {
+            console.error('Error uploading certificado:', error);
+        }
+    };
+
     // ------------------handleDeleteDocument logic for Document Deletion------------------
 
     const handleDeleteDocument = async (documentId) => {
@@ -608,6 +628,21 @@ const Propiedad = () => {
         }
     };
 
+    // NEW: Function to handle certificado deletion
+    const handleDeleteCertificado = async (certificadoId) => {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/certificados/${certificadoId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) throw new Error('Failed to delete certificado');
+            console.log(`Successfully deleted certificado with ID: ${certificadoId}`);
+            setCertificados(prev => prev.filter(certificado => certificado.id !== certificadoId));
+        } catch (error) {
+            console.error('Error deleting certificado:', error);
+            setOpen(true);
+        }
+    };
+
     // ------------------handleOpenDocumentModal logic for opening the modal------------------
 
     const handleOpenDocumentModal = (category = 'documentos', shouldOpen = true) => {
@@ -626,28 +661,35 @@ const Propiedad = () => {
         setOpenDocumentModal(false);
     };
 
-    // MODIFY: handleDocumentSubmit to handle both documentos and planos with uniform indentation
+    // ------------------handleDocumentSubmit logic for Document Submission------------------
     const handleDocumentSubmit = async () => {
         if (!selectedDocument || !documentDescripcion) {
             console.error('Todos los campos son requeridos');
             return;
         }
         const formData = new FormData();
-        const normalizedCategory = String(uploadCategory).trim().toLowerCase();
-        const fieldName = normalizedCategory === 'planos' ? 'plano' : 'document';
-        const tipoValue = normalizedCategory === 'planos' ? 'Planos' : 'Document';
-
+        
+        let fieldName, tipoValue, endpoint;
+        if (uploadCategory === 'planos') {
+            fieldName = 'plano';
+            tipoValue = 'Planos';
+            endpoint = `/api/properties/${property.ref}/planos`;
+        } else if (uploadCategory === 'certificados') {
+            fieldName = 'certificado';
+            tipoValue = 'Certificados';
+            endpoint = `/api/properties/${property.ref}/certificados`;
+        } else {
+            fieldName = 'document';
+            tipoValue = 'Document';
+            endpoint = `/api/properties/${property.ref}/documents`;
+        }
+        
         formData.append(fieldName, selectedDocument);
         formData.append('tipo', tipoValue);
         formData.append('descripcion', documentDescripcion);
         formData.append('ref', property.ref);
 
         try {
-            const endpoint =
-                normalizedCategory === 'planos'
-                    ? `/api/properties/${property.ref}/planos`
-                    : `/api/properties/${property.ref}/documents`;
-
             const response = await fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, {
                 method: 'POST',
                 body: formData,
@@ -655,21 +697,25 @@ const Propiedad = () => {
 
             if (!response.ok) {
                 throw new Error(
-                    normalizedCategory === 'planos'
+                    uploadCategory === 'planos'
                         ? 'Fallo al subir el plano'
+                        : uploadCategory === 'certificados'
+                        ? 'Fallo al subir el certificado'
                         : 'Fallo al subir el documento'
                 );
             }
 
             const newItem = await response.json();
-            if (normalizedCategory === 'planos') {
+            if (uploadCategory === 'planos') {
                 setPlanos(prev => [...prev, newItem]);
+            } else if (uploadCategory === 'certificados') {
+                setCertificados(prev => [...prev, newItem]);
             } else {
                 setDocuments(prev => [...prev, newItem]);
             }
             handleOpenDocumentModal(uploadCategory, false); // Close modal
         } catch (error) {
-            console.error('Error subiendo el documento/plano:', error);
+            console.error('Error subiendo el documento/plano/certificado:', error);
         }
     };
 
@@ -763,11 +809,14 @@ const Propiedad = () => {
                             <Documentation
                                 documents={documents}
                                 planos={planos}              // NEW: Pass planos state
+                                certificados={certificados}  // NEW: Pass certificados state
                                 isEditing={isEditingDocumentation}
                                 handleDocumentUpload={handleDocumentUpload}
                                 handleDeleteDocument={handleDeleteDocument}
                                 handlePlanoUpload={handlePlanoUpload}   // NEW: Pass plano upload handler
                                 handleDeletePlano={handleDeletePlano}     // NEW: Pass plano deletion handler
+                                handleCertificadoUpload={handleCertificadoUpload}  // NEW: Pass certificado upload handler
+                                handleDeleteCertificado={handleDeleteCertificado}  // NEW: Pass certificado deletion handler
                                 handleOpenDocumentModal={handleOpenDocumentModal} // Pass handleOpenDocumentModal as a prop to Anadir
                             />
                         )}
@@ -949,8 +998,7 @@ const Propiedad = () => {
                             value={documentDescripcion}
                             onChange={(e) => setDocumentDescripcion(e.target.value)}
                         />
-
-                        {/* File Input */}
+                        {/* File input */}
                         <Box sx={{ mt: 2 }}>
                             <input
                                 type="file"

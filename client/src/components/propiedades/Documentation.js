@@ -22,14 +22,15 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AddIcon from '@mui/icons-material/Add';
 
+// Updated prop name from certividados to certificados
 const Documentation = ({ 
     documents, 
-    planos,        
+    planos,  
+    certificados,      
     isEditing,  
-    handleDocumentUpload, 
-    handleDeleteDocument,
-    handlePlanoUpload,   
+    handleDeleteDocument, 
     handleDeletePlano,   
+    handleDeleteCertificado,
     handleOpenDocumentModal 
 }) => {
     const [docTab, setDocTab] = useState('documentos');
@@ -38,14 +39,14 @@ const Documentation = ({
         setDocTab(newValue);
     };
 
-    // Filter based on selected subtab. For 'planos', use the planos prop.
+    // Filter based on selected subtab.
     let filteredItems = [];
     if (docTab === 'documentos') {
         filteredItems = documents.filter(document => document.tipo !== 'Planos' && document.tipo !== 'Certificado Electrico');
     } else if (docTab === 'planos') {
         filteredItems = planos;
-    } else if (docTab === 'certificado') {
-        filteredItems = documents.filter(document => document.tipo === 'Certificado Electrico');
+    } else if (docTab === 'certificados') {
+        filteredItems = certificados;
     }
 
     return (
@@ -60,7 +61,8 @@ const Documentation = ({
                 >
                     <StyledTab label="Documentos" value="documentos" />
                     <StyledTab label="Planos" value="planos" />
-                    <StyledTab label="Certificado Electrico" value="certificado" />
+                    {/* Updated certificate tab label */}
+                    <StyledTab label="Certificados" value="certificados" />
                 </Tabs>
             </Box>
             <TableContainer component={Paper}>
@@ -91,6 +93,8 @@ const Documentation = ({
                                         onClick={() => {
                                             if (docTab === 'planos') {
                                                 handleDeletePlano(item.id);
+                                            } else if (docTab === 'certificados') { // Changed condition for certificates
+                                                handleDeleteCertificado(item.id);
                                             } else {
                                                 handleDeleteDocument(item.id);
                                             }

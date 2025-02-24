@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS lhainmobiliaria.vplanos (
-  id SERIAL PRIMARY KEY,
-  ref VARCHAR(255) NOT NULL,
-  url TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);

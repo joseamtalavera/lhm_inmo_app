@@ -75,6 +75,14 @@ app.use('/planos', express.static(path.join(__dirname, 'planos'), {
   }
 }));
 
+// Serve static files = certificados
+app.use('/certificados', express.static(path.join(__dirname, 'certificados'), {
+  setHeaders: (res, filePath, stat) => {
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+    res.set('Access-Control-Allow-Origin', '*');
+  }
+}));
+
 // Check Image Serving in Dev
 app.get('/test-image', (req, res) => {
   res.sendFile(path.join(__dirname, 'uploads', 'test.jpg'));

@@ -34,6 +34,7 @@ export const PropertyImage = styled.img`
   width: 70%;
   height: auto;
   object-fit: cover;
+  max-width: 500px;
 
   @media (max-width: 1024px) {
     width: 100%;

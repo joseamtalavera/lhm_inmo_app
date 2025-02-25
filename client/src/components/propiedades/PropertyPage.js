@@ -7,7 +7,6 @@ import Footer from '../home/Footer';
 import { 
   AppContainer,
   DrawerContainer,
-  ContentWrapper,
   MainContainer,
   ContentWrapperBelowImage,
   StyledTitle,
@@ -28,8 +27,7 @@ import {
   CarouselRequestContainer,
   StyledCarouselContainer,
   StyledArrow,
-  StyledFullScreenContainer, 
-  RequestBoxContainer,   
+  StyledFullScreenContainer,  
   PropertyDetailRef,
   FloatingArrow,
   CenteredContentWrapper,
@@ -73,6 +71,7 @@ const PropertyPage = () => {
   const [images, setImages] = useState([]);
   const [videoUrl, setVideoUrl] = useState(null); // Added video state
   const [planosUrl, setPlanosUrl] = useState(null); // New planos state
+  const [certificateUrl, setCertificateUrl] = useState(null); // New certificate state
   const [amenities, setAmenities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -174,12 +173,22 @@ const PropertyPage = () => {
         const planosResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/planos`);
         if (planosResponse.ok) {
           const planosData = await planosResponse.json();
+          console.log("Planos Data:", planosData); // Log the fetched planos data
           if (Array.isArray(planosData) && planosData.length > 0) {
             setPlanosUrl(planosData[0].url);
           }
         }
+
+        // New fetch for certificate
+        const certResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${data.ref}/certificados`);
+        if (certResponse.ok) {
+          const certData = await certResponse.json();
+          if (Array.isArray(certData) && certData.length > 0) {
+            setCertificateUrl(certData[0].url);
+          }
+        }
       } catch (error) {
-        console.error('Error:', error);
+          console.error('Error:', error);
       } finally {
         setIsLoading(false);
       }
@@ -324,9 +333,16 @@ const PropertyPage = () => {
               </CollapsibleSection>
               <BlueDivider />
 
+                {/* Ojo: if docuement is jpg will render. Otherwise offer the option to download */}
               <CollapsibleSection title="Plano">
                 { planosUrl ? (
-                  <img src={planosUrl} alt="Plano" style={{ width: "100%" }} />
+                  planosUrl.toLowerCase().endsWith('.pdf') ? (
+                    <object data={planosUrl} type="application/pde" width="100%" height="600px">
+                      <p> Para obtener el plano en PDF, por favor haz click <a href={planosUrl} style={{ textDecoration: 'underline', maginLeft: '4px'}}>Aquí</a>.</p>
+                      </object>
+                      ):(                  
+                        <img src={planosUrl} alt="Plano" style={{ width: "100%" }} />
+                      )
                 ) : (
                   <p>No plano available</p>
                 )}
@@ -334,8 +350,17 @@ const PropertyPage = () => {
               <BlueDivider />
 
               <CollapsibleSection title="Certificado Energético">
-                {/* Add energy certificate info here */}
-                <p>Energy certificate details here.</p>
+                { certificateUrl ? (
+                  certificateUrl.toLowerCase().endsWith('.pdf') ? (
+                    <object data={certificateUrl} type="application/pdf" width="100%" height="600px">
+                      <p>Para obtener un PDF, por favor haz click <a href={certificateUrl} style={{ textDecoration: 'underline', marginLeft: '4px' }}>Aquí</a>.</p>
+                    </object>
+                  ) : (
+                    <img src={certificateUrl} alt="Certificado Energético" style={{ width: "100%" }} />
+                  )
+                ) : (
+                  <p>No energy certificate available</p>
+                )}
               </CollapsibleSection>
               <BlueDivider />
 

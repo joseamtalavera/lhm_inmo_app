@@ -22,7 +22,7 @@ const Partners = () => {
       title: "KUKI Mascota Feliz",
       description: "Son una empresa familiar con experiencia el el sector y han creado su tienda on-line con el objetivo de ofrecer a todos sus clientes, la facilidad de comprar con un simple click, una amplia gama de productos para sus mascotas.",
       image: "kuki.png",
-      link: "https://kukimascotafeliz.com"
+      link: "#"
     },
     {
       title: "Ingenium Group",

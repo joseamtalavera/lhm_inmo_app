@@ -122,8 +122,7 @@ export const StyledButton = styled(Button)`
   padding: 4px 16px;
   font-size: 1rem;
   border-color: #1E90FF !important; // Ensure border color is applied
-  color: #1E90FF !important; // Ensure text color is applied
-  background-color: transparent !important; // Ensure background is transparent
+
   &:hover {
     background-color: rgba(30, 144, 255, 0.1) !important; // Ensure hover background color is applied
     border-color: #1E90FF !important; // Ensure hover border color is applied

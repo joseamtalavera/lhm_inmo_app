@@ -30,7 +30,7 @@ const {
 const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');
-
+//const sharp = require('sharp'); // Add Sharp import at the top
 
 // get Controllers
 
@@ -242,7 +242,12 @@ exports.uploadPropertyImage = async (req, res, next) => {
         const uploadPath = path.join(uploadDir, fileName);
 
         // Move the file to the uploads directory
-        fs.copyFileSync(image.path, uploadPath); // Copy file to the final name
+        /* fs.copyFileSync(image.path, uploadPath); // Copy file to the final name */
+        await sharp(image.path)
+            .resize({ width: 1024, withoutEnlargement: true })
+            .toFormat('webp', { quality: 80 })
+            .toFile(uploadPath); // Resize the 
+            
         fs.unlinkSync(image.path); // Delete the temporary file
 
         // Generate the URL

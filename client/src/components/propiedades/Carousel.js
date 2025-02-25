@@ -1,43 +1,44 @@
-// src/components/Carousel.js
-
 import React, { useState } from 'react';
-import Button from '@mui/material/Button'; // added import
-// Added imports for modal dialog
+import Button from '@mui/material/Button'; 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-// New imports for icon buttons and icons
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CloseIcon from '@mui/icons-material/Close';
-import useMediaQuery from '@mui/material/useMediaQuery'; // added import
+import useMediaQuery from '@mui/material/useMediaQuery'; 
 
 const Carousel = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  // Added state to handle modal open/close
   const [open, setOpen] = useState(false);
-  // New state to track the currently displayed image in modal
   const [modalIndex, setModalIndex] = useState(0);
-  
-  const isMobile = useMediaQuery('(max-width:600px)'); // mobile detection
+  const isMobile = useMediaQuery('(max-width:600px)'); 
 
   if (!images || images.length === 0) {
     return <div>No images available</div>;
   }
 
-  // Get four thumbnails starting from the next image(s)
-  const thumbnails = images.slice(currentIndex + 1, currentIndex + 5);
+  // This will make the thumbnails wrap around. No empty spaces. Using modular arithmetic.
+  const getThumbnails = () => {
+    const thumbs = [];
+    for (let i = 1; i <= 4; i++) {
+      thumbs.push(images[(currentIndex + i) % images.length]);
+    }
+    return thumbs;
+  };
+  
+  const thumbnails = getThumbnails();
 
+  // Update handleThumbnailClick to wrap around using modulo
   const handleThumbnailClick = (index) => {
-    // Calculate the new index relative to all images
-    setCurrentIndex(currentIndex + 1 + index);
+    setCurrentIndex((currentIndex + 1 + index) % images.length);
   };
 
   const handleSeeAll = () => {
     if (!isMobile) {
       setModalIndex(currentIndex);
       setOpen(true);
-    } // added missing closing brace for if-block
+    } 
   };
 
   const handleClose = () => {
@@ -116,6 +117,7 @@ const Carousel = ({ images }) => {
                   borderTopLeftRadius: '8px', // added border radius to top left corner
                   borderBottomLeftRadius: '8px' // added border radius to bottom left corner
                 }}
+                // Removed redundant black dot trigger for modal activation from here
               />
             </div>
 
@@ -133,9 +135,9 @@ const Carousel = ({ images }) => {
             >
               {thumbnails.map((img, idx) => (
                 <img
-                  key={currentIndex + 1 + idx}
+                  key={(currentIndex + 1 + idx) % images.length}
                   src={img.url}
-                  alt={`${currentIndex + 1 + idx}`}
+                  alt={`${(currentIndex + 1 + idx) % images.length}`}
                   style={{
                     width: '100%',
                     height: '100%', // Modified to take the full space of its grid cell
@@ -153,7 +155,7 @@ const Carousel = ({ images }) => {
                 onClick={handleSeeAll}
                 sx={{
                   position: 'absolute',
-                  bottom: '5px', // moved from top to botto
+                  bottom: '5px', // moved from top to bottom
                   right: '5px',
                   backgroundColor: 'rgba(0, 0, 255, 0.05)', 
                   textTransform: 'none'

@@ -31,7 +31,7 @@ const PropertyList = ({ properties }) => {
       {properties.map((property) => (
         <Link to={`/viviendas/${property.id}`} key={property.id} style={{ textDecoration: 'none', color: 'inherit' }}>
         <PropertyCard key={property.id}>
-          <PropertyImage src={property.url} alt={property.title} />
+          <PropertyImage src={property.url} alt={property.title}/>
           <PropertyInfo>
             <PropertyTitle>{property.title}</PropertyTitle>
             <PropertyRef>Ref: {property.ref}</PropertyRef>

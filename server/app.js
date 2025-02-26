@@ -24,7 +24,8 @@ const allowedOrigins = [
   'http://localhost:3010',
   'http://13.53.38.238:3010',
   'http://13.53.38.238',
-  'https://app.lhainmobiliaria.es'
+  'https://app.lhainmobiliaria.es',
+  'https://lhainmobiliaria.es'
 ];
 
 app.use(cors({

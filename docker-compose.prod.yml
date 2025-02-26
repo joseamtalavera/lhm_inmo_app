@@ -9,6 +9,9 @@ services:
     volumes:
       - uploads:/usr/share/nginx/uploads
       - documents:/usr/share/nginx/documents
+      - videos:/usr/share/nginx/videos
+      - planos:/usr/share/nginx/planos
+      - certificados:/usr/share/nginx/certificados
     restart: always
 
   backend:
@@ -25,8 +28,14 @@ services:
     volumes:
       - uploads:/usr/share/nginx/uploads
       - documents:/usr/share/nginx/documents
+      - videos:/usr/share/nginx/videos
+      - planos:/usr/share/nginx/planos
+      - certificados:/usr/share/nginx/certificados
     restart: always
 
 volumes:
   uploads:
   documents:
+  videos:
+  planos:
+  certificados:

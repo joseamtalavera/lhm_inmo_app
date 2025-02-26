@@ -207,7 +207,7 @@ const selectOptions = {
         {value: "Calentador placa solar", label: "Calentador placa solar"}
     ],
     "Sum.Agua": [
-        {value: "Individual", label: "Individual"},
+        {value: "Independiente", label: "Independiente"},
         {value: "Comunitaria", label: "Comunitaria"}
     ],
 }

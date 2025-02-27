@@ -462,7 +462,7 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                                     </FormLabel>
                                     <OutlinedInput
                                         size="small"
-                                        name="Descripción"
+                                        name="description" // changed from "Descripción" to "description"
                                         value={property.description || ''}
                                         onChange={handleChange}
                                         disabled={!isEditing}

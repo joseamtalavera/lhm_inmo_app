@@ -174,11 +174,9 @@ const Propiedad = () => {
     // ------------------fetchUpadatedImages logic------------------
     const fetchUpdatedImages = async () => {
         try {
-            console.log('Fetching updated images');
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${property.ref}/images?timestamp=${Date.now()}`);
             if (!response.ok) throw new Error('Failed to fetch updated images');
             const imagesData = await response.json();
-            console.log('Updated images fetched:', imagesData);
             setImages(imagesData);
 
             // If there is at least one image, update property.url dynamically
@@ -369,8 +367,6 @@ const Propiedad = () => {
     
             const updatedProperty = await response.json();
     
-            console.log('Property saved successfully:', updatedProperty);
-            
             return updatedProperty; // Return only the ref
         } catch (error) {
             console.error('Error saving property:', error);
@@ -383,12 +379,26 @@ const Propiedad = () => {
     // ------------------uploadImage logic for Image Uploading------------------
     
     const uploadImage = async (file, ref) => {
+        console.log("Step 1: Checking Inputs Before Fetch");
+        console.log("File received:", file);
+        console.log("Reference (ref):", ref);
+    
+        // Ensure the file exists before proceeding
+        if (!file) {
+            console.error("Error: No file provided");
+            return;
+        }
+    
+        if (!ref) {
+            console.error("Error: No reference (ref) provided");
+            return;
+        }
+    
+        console.log("Step 1 Passed: File and ref are valid.");
+
         const formData = new FormData();
         formData.append('image', file);
         formData.append('ref', ref);
-    
-        console.log('Uploading file:', file);
-    
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/properties/${ref}/images`, {
                 method: 'POST',
@@ -398,13 +408,13 @@ const Propiedad = () => {
             if (!response.ok) {
                 throw new Error('Failed to upload image');
             }
-
+    
             console.log('Image uploaded successfully');
-
+    
             // Wait briefly to allow the server to update the image
             const uploadedImage = await new Promise(resolve => setTimeout(resolve, 500));
             await fetchUpdatedImages(); 
-
+    
             return uploadedImage;
         } catch (error) {
             console.error('Error uploading image:', error);

@@ -250,7 +250,7 @@ const AddPropiedad = () => {
             formData.append('image', file);
             formData.append('ref', property.ref);
 
-            console.log('Uploading file:', file);
+        
             try {
                 console.log('Property ref:', property.ref); // Check if this is defined
                 const response = await fetch(

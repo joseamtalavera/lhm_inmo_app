@@ -25,7 +25,7 @@ const allowedOrigins = [
   'http://13.53.38.238:3010',
   'http://13.53.38.238',
   'https://app.lhainmobiliaria.es',
-  'https://lhainmobiliaria.es'
+  'https://www.lhainmobiliaria.es'
 ];
 
 app.use(cors({

@@ -1,5 +1,3 @@
-
-
 import styled from 'styled-components';
 
 export const FeaturedPropertiesContainer = styled.div`
@@ -14,12 +12,13 @@ export const PropertyCard = styled.div`
   border: 1px solid #ddd;
   margin: 10px auto;
   width: 100%;
-  max-width: 1100px; /* Increased from 600px to 800px */
+  max-width: 1100px; 
   border-radius: 8px;
   overflow: hidden;
-  display: flex; /* Use Flexbox for layout */
+  display: flex; 
   transition: box-shadow 0.3s ease;
   margin-top: 18px;
+  height: 480px;
 
   &:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -27,12 +26,18 @@ export const PropertyCard = styled.div`
 
   @media (max-width: 1024px) {
     flex-direction: column;
+    height: auto;
+  }
+
+  @media (min-width: 1024px) {
+    min-width: 1100px;
+    max-height: 480px;
   }
 `;
 
 export const PropertyImage = styled.img`
   width: 70%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
   max-width: 500px;
 

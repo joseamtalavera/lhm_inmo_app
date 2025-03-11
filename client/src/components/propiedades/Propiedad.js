@@ -379,23 +379,6 @@ const Propiedad = () => {
     // ------------------uploadImage logic for Image Uploading------------------
     
     const uploadImage = async (file, ref) => {
-        console.log("Step 1: Checking Inputs Before Fetch");
-        console.log("File received:", file);
-        console.log("Reference (ref):", ref);
-    
-        // Ensure the file exists before proceeding
-        if (!file) {
-            console.error("Error: No file provided");
-            return;
-        }
-    
-        if (!ref) {
-            console.error("Error: No reference (ref) provided");
-            return;
-        }
-    
-        console.log("Step 1 Passed: File and ref are valid.");
-
         const formData = new FormData();
         formData.append('image', file);
         formData.append('ref', ref);

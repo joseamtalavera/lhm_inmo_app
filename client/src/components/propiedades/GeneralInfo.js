@@ -463,8 +463,11 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                                     <OutlinedInput
                                         size="small"
                                         name="description" // changed from "Descripción" to "description"
-                                        value={property.description || ''}
-                                        onChange={handleChange}
+                                        value={ property.description ?? "" } // using nullish operator to allow empty string
+                                        onChange={(e) => {
+                                            handleChange(e);
+                                            setProperty(prev => ({ ...prev, description: e.target.value }));
+                                        }}
                                         disabled={!isEditing}
                                         multiline
                                         minRows={4}

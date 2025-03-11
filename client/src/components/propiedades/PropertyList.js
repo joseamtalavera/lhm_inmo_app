@@ -30,35 +30,35 @@ const PropertyList = ({ properties }) => {
       }}>
       {properties.map((property) => (
         <Link to={`/viviendas/${property.id}`} key={property.id} style={{ textDecoration: 'none', color: 'inherit' }}>
-        <PropertyCard key={property.id}>
-          <PropertyImage src={property.url} alt={property.title}/>
-          <PropertyInfo>
-            <PropertyTitle>{property.title}</PropertyTitle>
-            <PropertyRef>Ref: {property.ref}</PropertyRef>
-            <PropertyDescription>{property.description}</PropertyDescription>
-            <PropertyLocation>{property.localidad}</PropertyLocation>
-            <PropertyPrice>{property.precio} €</PropertyPrice>
-            <Divider />
-            <PropertyDetails>
-              <PropertyDetailItem>
-                <BedIcon />
-                <span>{property.nestancias} habitaciones</span>
-              </PropertyDetailItem>
-              <PropertyDetailItem>
-                <SquareFootIcon />
-                <span>{property.metrosconstruidos} m²</span>
-              </PropertyDetailItem>
-              <PropertyDetailItem>
-                <BathtubIcon />
-                <span>{property.nbanos} baños</span>
-              </PropertyDetailItem>
-              <PropertyDetailItem>
-                <WcIcon />
-                <span>{property.naseos} aseos</span>
-              </PropertyDetailItem>
-            </PropertyDetails>
-          </PropertyInfo>
-        </PropertyCard>
+          <PropertyCard key={property.id}>
+            <PropertyImage src={property.url} alt={property.title}/>
+            <PropertyInfo>
+              <PropertyTitle>{property.title}</PropertyTitle>
+              <PropertyRef>Ref: {property.ref}</PropertyRef>
+              <PropertyDescription>{property.description}</PropertyDescription>
+              <PropertyLocation>{property.localidad}</PropertyLocation>
+              <PropertyPrice>{property.precio} €</PropertyPrice>
+              <Divider />
+              <PropertyDetails>
+                <PropertyDetailItem>
+                  <BedIcon />
+                  <span>{property.nestancias} habitaciones</span>
+                </PropertyDetailItem>
+                <PropertyDetailItem>
+                  <SquareFootIcon />
+                  <span>{property.metrosconstruidos} m²</span>
+                </PropertyDetailItem>
+                <PropertyDetailItem>
+                  <BathtubIcon />
+                  <span>{property.nbanos} baños</span>
+                </PropertyDetailItem>
+                <PropertyDetailItem>
+                  <WcIcon />
+                  <span>{property.naseos} aseos</span>
+                </PropertyDetailItem>
+              </PropertyDetails>
+            </PropertyInfo>
+          </PropertyCard>
         </Link>
       ))}
     </div>

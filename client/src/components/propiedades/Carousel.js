@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import CloseIcon from '@mui/icons-material/Close';
-import useMediaQuery from '@mui/material/useMediaQuery'; 
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Carousel = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -18,7 +18,7 @@ const Carousel = ({ images }) => {
     return <div>No images available</div>;
   }
 
-  // This will make the thumbnails wrap around. No empty spaces. Using modular arithmetic.
+  // Create thumbnails using modular arithmetic for wrap-around
   const getThumbnails = () => {
     const thumbs = [];
     for (let i = 1; i <= 4; i++) {
@@ -29,7 +29,7 @@ const Carousel = ({ images }) => {
   
   const thumbnails = getThumbnails();
 
-  // Update handleThumbnailClick to wrap around using modulo
+  // Update current image when a thumbnail is clicked
   const handleThumbnailClick = (index) => {
     setCurrentIndex((currentIndex + 1 + index) % images.length);
   };
@@ -45,7 +45,7 @@ const Carousel = ({ images }) => {
     setOpen(false);
   };
 
-  // Handlers to navigate modal images
+  // Modal navigation handlers
   const handleModalPrev = () => {
     setModalIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
@@ -54,7 +54,7 @@ const Carousel = ({ images }) => {
     setModalIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
-  // Shared navigation handlers for mobile
+  // Mobile navigation handlers
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
   };
@@ -66,13 +66,13 @@ const Carousel = ({ images }) => {
   return (
     <>
       {isMobile ? (
-        <div style={{ position: 'relative', width: '100%' /* replaced fixed height */ }}>
+        <div style={{ position: 'relative', width: '100%' }}>
           <img
             src={images[currentIndex].url}
             alt={`${currentIndex + 1}`}
             style={{
               width: '100%',
-              height: 'auto', // updated for responsiveness
+              height: 'auto',
               objectFit: 'cover',
               borderRadius: '8px'
             }}
@@ -84,7 +84,6 @@ const Carousel = ({ images }) => {
               top: '50%',
               left: '10px',
               transform: 'translateY(-50%)'
-              // removed backgroundColor property
             }}
           >
             <ArrowBackIosIcon style={{ color: 'white' }} />
@@ -96,7 +95,6 @@ const Carousel = ({ images }) => {
               top: '50%',
               right: '10px',
               transform: 'translateY(-50%)'
-              // removed backgroundColor property
             }}
           >
             <ArrowForwardIosIcon style={{ color: 'white' }} />
@@ -104,9 +102,26 @@ const Carousel = ({ images }) => {
         </div>
       ) : (
         <>
-          <div style={{ display: 'flex', position: 'relative', height: '500px' /* Increased height */ }}>
+          {/* Desktop layout */}
+          <div
+            style={{
+              display: 'flex',
+              position: 'relative',
+              height: '500px',
+              overflow: 'hidden' // CHANGE: Enforce a fixed container height
+            }}
+          >
             {/* Left half: Main image */}
-            <div style={{ flex: 1, marginRight: '5px', height: '100%' }}>
+            <div
+              style={{
+                flex: 1,
+                marginRight: '5px',
+                height: '100%',
+                display: 'flex', // CHANGE: Use flex to center image
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
               <img
                 src={images[currentIndex].url}
                 alt={`${currentIndex + 1}`}
@@ -114,10 +129,9 @@ const Carousel = ({ images }) => {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  borderTopLeftRadius: '8px', // added border radius to top left corner
-                  borderBottomLeftRadius: '8px' // added border radius to bottom left corner
+                  borderTopLeftRadius: '8px',
+                  borderBottomLeftRadius: '8px'
                 }}
-                // Removed redundant black dot trigger for modal activation from here
               />
             </div>
 
@@ -127,10 +141,11 @@ const Carousel = ({ images }) => {
                 flex: 1,
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
-                gridTemplateRows: '1fr 1fr', // Added to split vertical space equally
-                gridGap: '5px',
+                gridTemplateRows: '1fr 1fr', // CHANGE: Two rows, so each thumbnail gets half the height
+                gap: '5px',
                 position: 'relative',
-                height: '100%'
+                height: '100%',
+                overflow: 'hidden' // CHANGE: Ensure grid does not exceed container height
               }}
             >
               {thumbnails.map((img, idx) => (
@@ -140,11 +155,11 @@ const Carousel = ({ images }) => {
                   alt={`${(currentIndex + 1 + idx) % images.length}`}
                   style={{
                     width: '100%',
-                    height: '100%', // Modified to take the full space of its grid cell
+                    height: '100%',
                     objectFit: 'cover',
                     cursor: 'pointer',
-                    ...(idx === 1 && { borderTopRightRadius: '8px' }), // added border radius to top right corner on second thumbnail
-                    ...(idx === 3 && { borderBottomRightRadius: '8px' }) // added border radius to bottom right corner on fourth thumbnail
+                    ...(idx === 1 && { borderTopRightRadius: '8px' }),
+                    ...(idx === 3 && { borderBottomRightRadius: '8px' })
                   }}
                   onClick={() => handleThumbnailClick(idx)}
                 />
@@ -155,7 +170,7 @@ const Carousel = ({ images }) => {
                 onClick={handleSeeAll}
                 sx={{
                   position: 'absolute',
-                  bottom: '5px', // moved from top to bottom
+                  bottom: '5px',
                   right: '5px',
                   backgroundColor: 'rgba(0, 0, 255, 0.05)', 
                   textTransform: 'none'
@@ -166,7 +181,7 @@ const Carousel = ({ images }) => {
             </div>
           </div>
           
-          {/* Updated Dialog with arrow icons for navigation and X icon to close */}
+          {/* Modal Dialog for viewing all images */}
           <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
             <DialogContent style={{ position: 'relative', textAlign: 'center' }}>
               <img
@@ -174,8 +189,15 @@ const Carousel = ({ images }) => {
                 alt={`${modalIndex + 1}`}
                 style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
               />
-              {/* Removed previous absolute arrow IconButtons and counter */}
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginTop: '10px'
+                }}
+              >
                 <IconButton onClick={handleModalPrev} style={{ backgroundColor: 'transparent' }}>
                   <ArrowBackIosIcon style={{ color: 'black' }} />
                 </IconButton>

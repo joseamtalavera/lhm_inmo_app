@@ -39,6 +39,7 @@ import {
     StyledCancelButton,
     StyledDialogSubir,
 } from '../../styles/PropiedadStyles';
+import imageCompression from 'browser-image-compression';
 
 const Propiedad = () => {
     const { id } = useParams();
@@ -247,10 +248,11 @@ const Propiedad = () => {
     
     // ------------------Tab change logic------------------
     
+    // Navigate to the preview page
     const handleTabChange = (event, newValue) => {
         if (newValue === 4) {
-            // Navigate to preview page
-            navigate(`/viviendas/${id}`);
+            // Open preview in a new page/tab
+            window.open(`/viviendas/${id}`, '_blank');
         } else {
             setActiveTab(newValue);
         }
@@ -414,6 +416,14 @@ const Propiedad = () => {
         setIsUploading(true);
 
         try {
+            // Compress the image before uploading
+            const options = {
+                maxSizeMB: 1,
+                maxWidthOrHeight: 1024,
+                useWebWorker: true,
+            };
+            const compressedFile = await imageCompression(file, options);
+
             // Ensure property is saved and ref is available
             const updatedProperty = property?.ref
                 ? property
@@ -424,7 +434,7 @@ const Propiedad = () => {
                 return;
             }
             setProperty(updatedProperty); // Update property state
-            await uploadImage(file, updatedProperty.ref); // Upload the image
+            await uploadImage(compressedFile, updatedProperty.ref); // Upload the image
 
             await saveProperty(); // Save the property again to update the image count
             await fetchUpdatedImages(); // Fetch the updated images from the server

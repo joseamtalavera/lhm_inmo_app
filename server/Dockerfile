@@ -1,5 +1,5 @@
 
-FROM node:14-alpine
+FROM node:18-alpine
 
 # Install PM2 globally
 # RUN npm install -g pm2

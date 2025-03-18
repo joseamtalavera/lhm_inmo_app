@@ -1,8 +1,10 @@
 
-FROM node:18-alpine
+FROM node:18-bullseye
 
 # Install PM2 globally
 # RUN npm install -g pm2
+# Install system libraries required by sharp
+RUN apt-get update && apt-get install -y python3 make g++ libvips-dev fftw3-dev && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app

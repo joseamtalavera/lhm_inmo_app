@@ -30,14 +30,14 @@ const CookieConsent = () => {
 
   return (
     <ConsentWrapper role="dialog" aria-live="polite" aria-label="Cookie consent">
-      <Message variant="body1">
+      <Message variant="body1" style={{ maxWidth: '400px', margin: '0 auto' }}>
         Usamos cookies para mejorar su experiencia. Al hacer clic en "Aceptar", acepta nuestra política de cookies.
         {' '}
         <Link href="/politica-de-privacidad" target="_blank" rel="noopener noreferrer">
-          Learn more
+          Leer más
         </Link>
       </Message>
-      <ButtonGroup>
+      <ButtonGroup style={{ display: 'flex', width: '100%', justifyContent: 'center', gap: '1em', marginTop: '1em' }}>
         <Button variant="contained" color="primary" onClick={handleAccept}>
           Aceptar
         </Button>

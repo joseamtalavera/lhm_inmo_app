@@ -27,7 +27,7 @@ const {
     uploadPropertyCertificadoDb,
     deletePropertyCertificadoDb
 } = require('../models/propertiesQueries');
-//const sharp = require('sharp');
+const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');
@@ -242,16 +242,16 @@ exports.uploadPropertyImage = async (req, res, next) => {
         const uploadPath = path.join(uploadDir, fileName);
 
         // Move the file to the uploads directory
-        fs.copyFileSync(image.path, uploadPath);
-        fs.unlinkSync(image.path);
+        //fs.copyFileSync(image.path, uploadPath);
+        //fs.unlinkSync(image.path);
 
         // Use sharp to resize the image
-        //await sharp(image.path)
-            //.resize({with: 10124})
-            //.toFile(uploadPath);
+        await sharp(image.path)
+            .resize({with: 10124})
+            .toFile(uploadPath);
 
         // Delete the temporary file
-            //await fs.promises.unlink(image.path);
+            await fs.promises.unlink(image.path);
 
         // Generate the URL
         const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';

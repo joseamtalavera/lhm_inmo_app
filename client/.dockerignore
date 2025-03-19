@@ -3,8 +3,7 @@
 *.env
 
 # Ignore node_modules directories
-client/node_modules
-server/node_modules
+node_modules
 
 # Ignore any logs
 *.log

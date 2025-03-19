@@ -1,4 +1,3 @@
-//GeneralInfo.js
 
 import React from 'react';
 import { Box, Stack, Grid, Typography, FormControl, FormLabel, OutlinedInput, Select, MenuItem, Chip, FormHelperText } from '@mui/material';
@@ -462,12 +461,14 @@ const GeneralInfo = ({ property, handleChange, isEditing, setProperty, setActive
                                     </FormLabel>
                                     <OutlinedInput
                                         size="small"
-                                        name="description" // changed from "Descripción" to "description"
+                                        name="description" 
                                         value={ property.description ?? "" } // using nullish operator to allow empty string
-                                        onChange={(e) => {
-                                            handleChange(e);
-                                            setProperty(prev => ({ ...prev, description: e.target.value }));
-                                        }}
+                                        //onChange={(e) => {
+                                            //handleChange(e);
+                                            //setProperty(prev => ({ ...prev, description: e.target.value }));
+                                        //}}
+                                        onChange={handleChange}
+                                        placeholder="Introduce la Descripción"
                                         disabled={!isEditing}
                                         multiline
                                         minRows={4}

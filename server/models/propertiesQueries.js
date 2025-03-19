@@ -440,7 +440,7 @@ const updatePropertyDb = async (property, id) => {
         );
         
         // Update the description in the vdescriptions table
-        if (description) {
+        if (description !== undefined) {
             const descriptionResult = await pool.query(
               `INSERT INTO lhainmobiliaria.vdescriptions (ref, description, IdLenguaje)
                VALUES ($1, $2, 3)

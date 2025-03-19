@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
@@ -239,6 +240,7 @@ const Propiedad = () => {
             }));
         } else {
             // Other property inputs
+            console.log(`Updating ${name} with value:`, JSON.stringify(value));
             setProperty((prevProperty) => ({
                 ...prevProperty,
                 [name]: value,
